@@ -16,7 +16,7 @@ func NewJWTService(secret string) *JWTService {
 	return &JWTService{secret: secret}
 }
 
-func (s *JWTService) SignJWTWithPayload(username string, role string, tokenType string, tokenLifeSpan time.Duration) (string, domain.CodedError) {
+func (s *JWTService) SignJWTWithPayload(email string, role string, tokenType string, tokenLifeSpan time.Duration) (string, domain.CodedError) {
 	if s.secret == "" {
 		return "", domain.NewError("internal server error", domain.ERR_INTERNAL_SERVER)
 	}
@@ -27,7 +27,7 @@ func (s *JWTService) SignJWTWithPayload(username string, role string, tokenType 
 
 	jwtSecret := []byte(s.secret)
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"username":  username,
+		"email":     email,
 		"role":      role,
 		"expiresAt": time.Now().Round(0).Add(tokenLifeSpan),
 		"tokenType": tokenType,
@@ -75,13 +75,13 @@ func (s *JWTService) GetExpiryDate(token *jwt.Token) (time.Time, domain.CodedErr
 	return expiresAtTime, nil
 }
 
-func (s *JWTService) GetUsername(token *jwt.Token) (string, domain.CodedError) {
-	username, ok := token.Claims.(jwt.MapClaims)["username"]
+func (s *JWTService) GetEmail(token *jwt.Token) (string, domain.CodedError) {
+	email, ok := token.Claims.(jwt.MapClaims)["email"]
 	if !ok {
-		return "", domain.NewError("Invalid token: Username not found", domain.ERR_UNAUTHORIZED)
+		return "", domain.NewError("Invalid token: Email not found", domain.ERR_UNAUTHORIZED)
 	}
 
-	return fmt.Sprintf("%v", username), nil
+	return fmt.Sprintf("%v", email), nil
 }
 
 func (s *JWTService) GetRole(token *jwt.Token) (string, domain.CodedError) {
