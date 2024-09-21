@@ -66,3 +66,19 @@ func (controller *AuthController) Login(c *gin.Context) {
 
 	c.JSON(http.StatusOK, domain.Response{"token": token})
 }
+
+func (controller *AuthController) ChangePassword(c *gin.Context) {
+	var changePasswordDto dtos.ChangePasswordDTO
+	if err := c.ShouldBindJSON(&changePasswordDto); err != nil {
+		c.JSON(http.StatusBadRequest, domain.Response{"error": err.Error()})
+		return
+	}
+
+	sErr := controller.usecase.ChangePassword(c, changePasswordDto)
+	if sErr != nil {
+		c.JSON(GetHTTPErrorCode(sErr), domain.Response{"error": sErr.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, domain.Response{"message": "Password changed successfully"})
+}

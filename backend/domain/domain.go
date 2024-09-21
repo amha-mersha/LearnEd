@@ -34,6 +34,7 @@ type User struct {
 type AuthUsecase interface {
 	Signup(c *gin.Context, user dtos.SignupDTO) CodedError
 	Login(c *gin.Context, user dtos.LoginDTO) (string, CodedError)
+	ChangePassword(c *gin.Context, user dtos.ChangePasswordDTO) CodedError
 }
 
 type AuthRepository interface {

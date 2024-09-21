@@ -26,4 +26,5 @@ func NewAuthRouter(collection *mongo.Collection, router *gin.RouterGroup) {
 
 	authRouter.POST("/signup", authController.Signup)
 	authRouter.POST("/login", authController.Login)
+	authRouter.POST("/change-password", authController.ChangePassword)
 }
