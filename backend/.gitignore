@@ -1,2 +1,6 @@
+.env
+bin
+.dist
 *.out
 coverage.*
+tmp/*
