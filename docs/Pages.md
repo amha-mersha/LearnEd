@@ -1,0 +1,11 @@
+- Signup -> Verify Email
+- Login
+- Forgot Password -> Enter OTP -> Enter New Password
+- Student dashboard
+	- Classroom with posts
+		- Generate Quiz
+		- Generate Summary
+	- History
+- Teacher dashboard -> Classroom with posts
+	- Create classroom
+	- Create post

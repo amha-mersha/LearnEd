@@ -1,0 +1,11 @@
+{
+	"nodes":[
+		{"id":"5dcf7f723dfb6a57","x":-180,"y":-220,"width":250,"height":260,"type":"text","text":"# User\n- id\n- type\n- password\n- email\n- classrooms\n- study_groups\n"},
+		{"id":"2aa95f81fd86e3dc","x":260,"y":150,"width":250,"height":290,"type":"text","text":"# Posts\n- id\n- classroom_id\n- content\n- files\n- questions\n- summary\n- flashcard"},
+		{"id":"2a2dfc5ad13efdf5","x":-160,"y":180,"width":250,"height":320,"type":"text","text":"# Classroom\n- id\n- name\n- teachers\n- students\n- student_grade\n- createdAt\n- posts"}
+	],
+	"edges":[
+		{"id":"104a12fdfdae566b","fromNode":"5dcf7f723dfb6a57","fromSide":"bottom","toNode":"2a2dfc5ad13efdf5","toSide":"top"},
+		{"id":"90d352584ce6058f","fromNode":"2a2dfc5ad13efdf5","fromSide":"right","toNode":"2aa95f81fd86e3dc","toSide":"left"}
+	]
+}
