@@ -1,5 +1,10 @@
 package domain
 
+type HashingServiceInterface interface {
+	HashString(password string) (string, CodedError)
+	ValidateHashedString(hashedString string, plaintextString string) CodedError
+}
+
 type AuthValidation interface {
 	ValidateName(name string) CodedError
 	ValidatieEmail(email string) CodedError
