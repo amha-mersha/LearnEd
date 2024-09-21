@@ -3,6 +3,7 @@ package usecases
 import (
 	"learned-api/domain"
 	"learned-api/domain/dtos"
+	"strings"
 )
 
 type AuthUsecase struct {
@@ -25,7 +26,14 @@ func (usecase *AuthUsecase) Signup(user dtos.SignupDTO) domain.CodedError {
 		Type:     user.Type,
 	}
 
+	newUser.Email = strings.ReplaceAll(strings.TrimSpace(strings.ToLower(user.Email)), " ", "")
+	newUser.Name = strings.TrimSpace(user.Name)
+	newUser.Type = strings.TrimSpace(user.Type)
 	if err := usecase.validation.ValidateUser(newUser); err != nil {
+		return err
+	}
+
+	if err := usecase.repository.CreateUser(newUser); err != nil {
 		return err
 	}
 
