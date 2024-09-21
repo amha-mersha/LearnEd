@@ -1,4 +1,4 @@
-package cryptography
+package hashing_service
 
 import (
 	"learned-api/domain"
