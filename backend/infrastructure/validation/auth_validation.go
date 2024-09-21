@@ -1,11 +1,38 @@
-package validation
+package validation_services
 
 import (
 	"learned-api/domain"
+	"net/mail"
 	"strings"
 )
 
-func ValidatePassword(password string) domain.CodedError {
+type AuthValidation struct{}
+
+func NewAuthValidation() *AuthValidation {
+	return &AuthValidation{}
+}
+
+func (v *AuthValidation) ValidateName(name string) error {
+	if len(name) < 2 {
+		return domain.NewError("Name too short", domain.ERR_BAD_REQUEST)
+	}
+
+	if len(name) > 20 {
+		return domain.NewError("Name too long", domain.ERR_BAD_REQUEST)
+	}
+
+	return nil
+}
+
+func (v *AuthValidation) ValidateEmail(email string) error {
+	if _, err := mail.ParseAddress(email); err != nil {
+		return domain.NewError("Invalid Email", domain.ERR_BAD_REQUEST)
+	}
+
+	return nil
+}
+
+func (v *AuthValidation) ValidatePassword(password string) error {
 	if len(password) < 8 {
 		return domain.NewError("Password too short", domain.ERR_BAD_REQUEST)
 	}

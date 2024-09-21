@@ -7,11 +7,13 @@ import (
 
 type AuthUsecase struct {
 	repository domain.AuthRepository
+	validation domain.AuthValidation
 }
 
-func NewAuthUsecase(repository domain.AuthRepository) *AuthUsecase {
+func NewAuthUsecase(repository domain.AuthRepository, validationRules domain.AuthValidation) *AuthUsecase {
 	return &AuthUsecase{
 		repository: repository,
+		validation: validationRules,
 	}
 }
 
