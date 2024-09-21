@@ -19,6 +19,7 @@ func LoadEnvironmentVariables(filename string) error {
 
 	ENV.DB_ADDRESS = os.Getenv("DB_ADDRESS")
 	ENV.DB_NAME = os.Getenv("DB_NAME")
+	ENV.ROUTEPREFIX = os.Getenv("ROUTEPREFIX")
 
 	port, err := strconv.ParseInt(os.Getenv("PORT"), 10, 64)
 	if err != nil {
@@ -31,6 +32,8 @@ func LoadEnvironmentVariables(filename string) error {
 		return fmt.Errorf("error: couldn't load environment variable 'DB_ADDRESS'")
 	case ENV.DB_NAME == "":
 		return fmt.Errorf("error: couldn't load environment variable 'DB_NAME'")
+	case ENV.ROUTEPREFIX == "":
+		return fmt.Errorf("error: couldn't load environment variable 'ROUTEPREFIX'")
 	default:
 		return nil
 	}

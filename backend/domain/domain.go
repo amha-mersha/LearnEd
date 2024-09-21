@@ -16,9 +16,10 @@ const (
 type Response gin.H
 
 type EnvironmentVariables struct {
-	DB_ADDRESS string
-	DB_NAME    string
-	PORT       int
+	DB_ADDRESS  string
+	DB_NAME     string
+	PORT        int
+	ROUTEPREFIX string
 }
 
 type User struct {
