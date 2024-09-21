@@ -1,6 +1,9 @@
 package usecases
 
-import "learned-api/domain"
+import (
+	"learned-api/domain"
+	"learned-api/domain/dtos"
+)
 
 type AuthUsecase struct {
 	repository domain.AuthRepository
@@ -12,10 +15,10 @@ func NewAuthUsecase(repository domain.AuthRepository) *AuthUsecase {
 	}
 }
 
-func (usecase *AuthUsecase) Signup(user domain.User) domain.CodedError {
+func (usecase *AuthUsecase) Signup(user dtos.SignupDTO) domain.CodedError {
 	return nil
 }
 
-func (usecase *AuthUsecase) Login(user domain.User) (string, domain.CodedError) {
+func (usecase *AuthUsecase) Login(user dtos.LoginDTO) (string, domain.CodedError) {
 	return "", nil
 }
