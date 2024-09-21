@@ -37,4 +37,6 @@ type AuthUsecase interface {
 }
 
 type AuthRepository interface {
+	CreateUser(user User) CodedError
+	GetUserByEmail(email string) (User, CodedError)
 }
