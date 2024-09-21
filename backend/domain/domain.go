@@ -28,3 +28,9 @@ type User struct {
 	Password string `json:"password"`
 	Type     string `json:"type"`
 }
+
+type AuthUsecase interface {
+}
+
+type AuthRepository interface {
+}
