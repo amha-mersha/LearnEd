@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"learned-api/domain"
+	"learned-api/domain/dtos"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -35,7 +36,19 @@ func NewAuthController(usecase domain.AuthUsecase) *AuthController {
 }
 
 func (controller *AuthController) Signup(c *gin.Context) {
+	var signupDto dtos.SignupDTO
+	if err := c.ShouldBindJSON(&signupDto); err != nil {
+		c.JSON(http.StatusBadRequest, domain.Response{"error": err.Error()})
+		return
+	}
 
+	sErr := controller.usecase.Signup(c, signupDto)
+	if sErr != nil {
+		c.JSON(GetHTTPErrorCode(sErr), domain.Response{"error": sErr.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, domain.Response{"message": "User created successfully"})
 }
 
 func (controller *AuthController) Login(c *gin.Context) {

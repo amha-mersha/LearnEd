@@ -1,6 +1,8 @@
 package domain
 
 import (
+	"learned-api/domain/dtos"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -30,6 +32,7 @@ type User struct {
 }
 
 type AuthUsecase interface {
+	Signup(c *gin.Context, user dtos.SignupDTO) CodedError
 }
 
 type AuthRepository interface {
