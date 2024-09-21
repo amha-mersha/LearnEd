@@ -18,6 +18,17 @@ func NewAuthUsecase(repository domain.AuthRepository, validationRules domain.Aut
 }
 
 func (usecase *AuthUsecase) Signup(user dtos.SignupDTO) domain.CodedError {
+	newUser := domain.User{
+		Name:     user.Name,
+		Email:    user.Email,
+		Password: user.Password,
+		Type:     user.Type,
+	}
+
+	if err := usecase.validation.ValidateUser(newUser); err != nil {
+		return err
+	}
+
 	return nil
 }
 
