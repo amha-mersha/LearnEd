@@ -72,3 +72,29 @@ func (usecase *AuthUsecase) Login(c *gin.Context, user dtos.LoginDTO) (string, d
 
 	return token, nil
 }
+
+func (usecase *AuthUsecase) ChangePassword(c *gin.Context, user dtos.ChangePasswordDTO) domain.CodedError {
+	foundUser, err := usecase.repository.GetUserByEmail(c, user.Email)
+	if err != nil {
+		return err
+	}
+
+	err = usecase.hashingService.ValidateHashedString(foundUser.Password, user.OldPassword)
+	if err != nil {
+		return err
+	}
+
+	hashedPwd, hashErr := usecase.hashingService.HashString(user.NewPassword)
+	if hashErr != nil {
+		return hashErr
+	}
+
+	err = usecase.repository.UpdateUser(c, domain.User{
+		Password: hashedPwd,
+	})
+	if err != nil {
+		return nil
+	}
+
+	return nil
+}
