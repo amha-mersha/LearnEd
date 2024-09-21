@@ -18,6 +18,7 @@ type Response gin.H
 type EnvironmentVariables struct {
 	DB_ADDRESS string
 	DB_NAME    string
+	PORT       int
 }
 
 type User struct {
