@@ -52,5 +52,17 @@ func (controller *AuthController) Signup(c *gin.Context) {
 }
 
 func (controller *AuthController) Login(c *gin.Context) {
+	var loginDto dtos.LoginDTO
+	if err := c.ShouldBindJSON(&loginDto); err != nil {
+		c.JSON(http.StatusBadRequest, domain.Response{"error": err.Error()})
+		return
+	}
 
+	token, sErr := controller.usecase.Login(c, loginDto)
+	if sErr != nil {
+		c.JSON(GetHTTPErrorCode(sErr), domain.Response{"error": sErr.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, domain.Response{"token": token})
 }
