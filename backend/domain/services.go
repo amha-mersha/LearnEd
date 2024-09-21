@@ -1,9 +1,11 @@
 package domain
 
 import (
+	"context"
 	"time"
 
 	"github.com/golang-jwt/jwt"
+	"github.com/google/generative-ai-go/genai"
 )
 
 type HashingServiceInterface interface {
@@ -18,6 +20,10 @@ type JWTServiceInterface interface {
 	GetUsername(token *jwt.Token) (string, CodedError)
 	GetRole(token *jwt.Token) (string, CodedError)
 	GetTokenType(token *jwt.Token) (string, CodedError)
+}
+
+type AIModelInterface interface {
+	GenerateContent(context.Context, ...genai.Part) (*genai.GenerateContentResponse, error)
 }
 
 type AuthValidation interface {
