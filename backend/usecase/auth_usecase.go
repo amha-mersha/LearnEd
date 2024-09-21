@@ -4,6 +4,7 @@ import (
 	"learned-api/domain"
 	"learned-api/domain/dtos"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,13 +13,15 @@ type AuthUsecase struct {
 	repository     domain.AuthRepository
 	validation     domain.AuthValidation
 	hashingService domain.HashingServiceInterface
+	jwtService     domain.JWTServiceInterface
 }
 
-func NewAuthUsecase(repository domain.AuthRepository, validationRules domain.AuthValidation, hashingService domain.HashingServiceInterface) *AuthUsecase {
+func NewAuthUsecase(repository domain.AuthRepository, validationRules domain.AuthValidation, hashingService domain.HashingServiceInterface, jwtService domain.JWTServiceInterface) *AuthUsecase {
 	return &AuthUsecase{
 		repository:     repository,
 		validation:     validationRules,
 		hashingService: hashingService,
+		jwtService:     jwtService,
 	}
 }
 
@@ -61,7 +64,11 @@ func (usecase *AuthUsecase) Login(c *gin.Context, user dtos.LoginDTO) (string, d
 		return "", err
 	}
 
-	// TODO: Implement JWT token generation
+	// TODO: replace token duration with an env constant
+	token, err := usecase.jwtService.SignJWTWithPayload(foundUser.Email, foundUser.Type, "accessToken", 15*time.Minute)
+	if err != nil {
+		return "", err
+	}
 
-	return "", nil
+	return token, nil
 }
