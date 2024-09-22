@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"context"
 	"learned-api/domain/dtos"
 
 	"github.com/gin-gonic/gin"
@@ -78,7 +79,8 @@ type AuthRepository interface {
 }
 
 type ClassroomUsecase interface {
-	CreateClassroom(c *gin.Context, creatorEmail string, classroom Classroom) CodedError
+	CreateClassroom(c context.Context, creatorID string, classroom Classroom) CodedError
+	DeleteClassroom(c context.Context, teacherID string, classroomID string) CodedError
 }
 
 type ClassroomRepository interface {
