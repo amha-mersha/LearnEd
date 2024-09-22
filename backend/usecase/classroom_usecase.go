@@ -16,11 +16,11 @@ func NewClassroomController(repository domain.ClassroomRepository) *ClassroomUse
 	}
 }
 
-func (usecase *ClassroomUsecase) CreateClassroom(c *gin.Context, creatorEmail string, classroom domain.Classroom) domain.CodedError {
+func (usecase *ClassroomUsecase) CreateClassroom(c *gin.Context, creatorID string, classroom domain.Classroom) domain.CodedError {
 	newClassroom := domain.Classroom{
 		Name:     classroom.Name,
-		Owner:    creatorEmail,
-		Teachers: []string{creatorEmail},
+		Owner:    creatorID,
+		Teachers: []string{creatorID},
 	}
 
 	if err := usecase.repository.CreateClassroom(c, newClassroom); err != nil {
