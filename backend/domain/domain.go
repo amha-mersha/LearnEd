@@ -85,5 +85,7 @@ type ClassroomUsecase interface {
 }
 
 type ClassroomRepository interface {
-	CreateClassroom(c *gin.Context, classroom Classroom) CodedError
+	CreateClassroom(c context.Context, classroom Classroom) CodedError
+	DeleteClassroom(c context.Context, classroomID string) CodedError
+	FindClassroom(c context.Context, classroomID string) (Classroom, CodedError)
 }
