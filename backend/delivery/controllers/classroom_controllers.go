@@ -24,14 +24,14 @@ func (controller *ClassroomController) CreateClassroom(c *gin.Context) {
 		return
 	}
 
-	email, exists := c.Keys["email"]
+	id, exists := c.Keys["id"]
 	if !exists {
-		c.JSON(http.StatusForbidden, gin.H{"message": "coudn't find the email field"})
+		c.JSON(http.StatusForbidden, gin.H{"message": "coudn't find the id field"})
 		return
 	}
 
-	creatorEmail := email.(string)
-	err := controller.usecase.CreateClassroom(c, creatorEmail, classroom)
+	creatorID := id.(string)
+	err := controller.usecase.CreateClassroom(c, creatorID, classroom)
 	if err != nil {
 		c.JSON(GetHTTPErrorCode(err), domain.Response{"error": err.Error()})
 		return
