@@ -17,14 +17,21 @@ func NewClassroomController(usecase domain.ClassroomUsecase) *ClassroomControlle
 	}
 }
 
-func (controller *ClassroomController) CreateClaassroom(c *gin.Context) {
+func (controller *ClassroomController) CreateClassroom(c *gin.Context) {
 	var classroom domain.Classroom
 	if err := c.ShouldBindJSON(&classroom); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	err := controller.usecase.CreateClassroom(c, classroom)
+	email, exists := c.Keys["email"]
+	if !exists {
+		c.JSON(http.StatusForbidden, gin.H{"message": "coudn't find the email field"})
+		return
+	}
+
+	creatorEmail := email.(string)
+	err := controller.usecase.CreateClassroom(c, creatorEmail, classroom)
 	if err != nil {
 		c.JSON(GetHTTPErrorCode(err), domain.Response{"error": err.Error()})
 		return
