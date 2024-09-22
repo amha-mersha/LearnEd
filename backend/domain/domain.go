@@ -77,6 +77,7 @@ type AuthRepository interface {
 }
 
 type ClassroomUsecase interface {
+	CreateClassroom(c *gin.Context, classroom Classroom) CodedError
 }
 
 type ClassroomRepository interface {
