@@ -39,3 +39,26 @@ func (controller *ClassroomController) CreateClassroom(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, domain.Response{"message": "Classroom created successfully"})
 }
+
+func (controller *ClassroomController) DeleteClassroom(c *gin.Context) {
+	classroomID := c.Param("id")
+	if classroomID == "" {
+		c.JSON(http.StatusBadRequest, domain.Response{"error": "missing classroom id"})
+		return
+	}
+
+	id, exists := c.Keys["id"]
+	if !exists {
+		c.JSON(http.StatusForbidden, gin.H{"message": "coudn't find the id field"})
+		return
+	}
+
+	creatorID := id.(string)
+	err := controller.usecase.DeleteClassroom(c, creatorID, classroomID)
+	if err != nil {
+		c.JSON(GetHTTPErrorCode(err), domain.Response{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, domain.Response{"message": "classroom deleted successfully"})
+}
