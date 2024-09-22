@@ -52,16 +52,17 @@ type Post struct {
 
 type Classroom struct {
 	Name          string         `json:"name"`
-	Teachers      []interface{}  `json:"teachers"`
-	Students      []interface{}  `json:"students"`
+	Owner         string         `json:"owner"`
+	Teachers      []string       `json:"teachers"`
+	Students      []string       `json:"students"`
 	StudentGrades []StudentGrade `json:"student_grades"`
 	Posts         []Post         `json:"posts"`
 }
 
 type StudyGroup struct {
-	Name     string        `json:"name"`
-	Students []interface{} `json:"students"`
-	Posts    []Post        `json:"posts"`
+	Name     string   `json:"name"`
+	Students []string `json:"students"`
+	Posts    []Post   `json:"posts"`
 }
 
 type AuthUsecase interface {
@@ -77,8 +78,9 @@ type AuthRepository interface {
 }
 
 type ClassroomUsecase interface {
-	CreateClassroom(c *gin.Context, classroom Classroom) CodedError
+	CreateClassroom(c *gin.Context, creatorEmail string, classroom Classroom) CodedError
 }
 
 type ClassroomRepository interface {
+	CreateClassroom(c *gin.Context, classroom Classroom) CodedError
 }
