@@ -49,3 +49,25 @@ func (r *AuthRepository) GetUserByEmail(c *gin.Context, email string) (domain.Us
 
 	return foundUser, nil
 }
+
+func (r *AuthRepository) UpdateUser(c *gin.Context, updateData domain.User) domain.CodedError {
+	updateFields := bson.D{}
+	if updateData.Name != "" {
+		updateFields = append(updateFields, bson.E{Key: "name", Value: updateData.Name})
+	}
+
+	if updateData.Email != "" {
+		updateFields = append(updateFields, bson.E{Key: "email", Value: updateData.Email})
+	}
+
+	res := r.collection.FindOneAndUpdate(c, bson.D{{Key: "email", Value: updateData.Email}}, bson.D{{Key: "$set", Value: updateFields}})
+	if res.Err() == mongo.ErrNoDocuments {
+		return domain.NewError("user not found", domain.ERR_NOT_FOUND)
+	}
+
+	if res.Err() != nil {
+		return domain.NewError(res.Err().Error(), domain.ERR_INTERNAL_SERVER)
+	}
+
+	return nil
+}
