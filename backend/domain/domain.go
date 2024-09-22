@@ -75,3 +75,9 @@ type AuthRepository interface {
 	GetUserByEmail(c *gin.Context, email string) (User, CodedError)
 	UpdateUser(c *gin.Context, userEmail string, user User) CodedError
 }
+
+type ClassroomUsecase interface {
+}
+
+type ClassroomRepository interface {
+}
