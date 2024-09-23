@@ -127,7 +127,7 @@ func (controller *ClassroomController) RemovePost(c *gin.Context) {
 		c.JSON(GetHTTPErrorCode(err), domain.Response{"error": err.Error()})
 	}
 
-	c.JSON(http.StatusOK, domain.Response{"message": "post removed successfully"})
+	c.JSON(http.StatusNoContent, domain.Response{"message": "post removed successfully"})
 }
 
 func (controller *ClassroomController) AddComment(c *gin.Context) {
@@ -152,4 +152,24 @@ func (controller *ClassroomController) AddComment(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, domain.Response{"message": "comment added successfully"})
+}
+
+func (controller *ClassroomController) RemoveComment(c *gin.Context) {
+	classroomID := c.Param("classroomID")
+	postID := c.Param("postID")
+	commentID := c.Param("commentID")
+	creatorID, exists := c.Keys["id"]
+	if !exists {
+		c.JSON(http.StatusForbidden, gin.H{"message": "coudn't find the id field"})
+		return
+	}
+
+	id := creatorID.(string)
+	err := controller.usecase.RemoveComment(c, id, classroomID, postID, commentID)
+	if err != nil {
+		c.JSON(GetHTTPErrorCode(err), domain.Response{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusNoContent, domain.Response{"message": "comment removed successfully"})
 }
