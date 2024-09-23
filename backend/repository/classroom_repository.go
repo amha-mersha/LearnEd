@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"learned-api/domain"
+	"learned-api/domain/dtos"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -61,6 +62,28 @@ func (repository *ClassroomRepository) AddPost(c context.Context, classroomID st
 	_, err := repository.collection.UpdateOne(c, bson.D{{Key: "_id", Value: classroomID}}, bson.D{{Key: "$push", Value: bson.D{{Key: "posts", Value: post}}}})
 	if err == mongo.ErrNoDocuments {
 		return domain.NewError("classroom not found", domain.ERR_NOT_FOUND)
+	}
+
+	if err != nil {
+		return domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
+	}
+
+	return nil
+}
+
+func (repository *ClassroomRepository) UpdatePost(c context.Context, classroomID string, postID string, updateData dtos.UpdatePostDTO) domain.CodedError {
+	updateFields := bson.D{}
+	if updateData.Deadline.Unix() != 0 {
+		updateFields = append(updateFields, bson.E{Key: "deadline", Value: updateData.Deadline})
+	}
+
+	if updateData.Content != "" {
+		updateFields = append(updateFields, bson.E{Key: "content", Value: updateData.Content})
+	}
+
+	_, err := repository.collection.UpdateOne(c, bson.D{{Key: "_id", Value: classroomID}, {Key: "posts._id", Value: postID}}, bson.D{{Key: "$set", Value: updateFields}})
+	if err == mongo.ErrNoDocuments {
+		return domain.NewError("post not found", domain.ERR_NOT_FOUND)
 	}
 
 	if err != nil {
