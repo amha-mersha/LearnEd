@@ -5,6 +5,7 @@ import (
 	"learned-api/domain"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -48,6 +49,33 @@ func (repository *ClassroomRepository) CreateClassroom(c context.Context, classr
 
 func (repository *ClassroomRepository) DeleteClassroom(c context.Context, classroomID string) domain.CodedError {
 	_, err := repository.collection.DeleteOne(c, bson.D{{Key: "_id", Value: classroomID}})
+	if err != nil {
+		return domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
+	}
+
+	return nil
+}
+
+func (repository *ClassroomRepository) AddPost(c context.Context, classroomID string, post domain.Post) domain.CodedError {
+	post.ID = primitive.NewObjectID().Hex()
+	_, err := repository.collection.UpdateOne(c, bson.D{{Key: "_id", Value: classroomID}}, bson.D{{Key: "$push", Value: bson.D{{Key: "posts", Value: post}}}})
+	if err == mongo.ErrNoDocuments {
+		return domain.NewError("classroom not found", domain.ERR_NOT_FOUND)
+	}
+
+	if err != nil {
+		return domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
+	}
+
+	return nil
+}
+
+func (repository *ClassroomRepository) RemovePost(c context.Context, classroomID string, postID string) domain.CodedError {
+	_, err := repository.collection.UpdateOne(c, bson.D{{Key: "_id", Value: classroomID}}, bson.D{{Key: "$pull", Value: bson.D{{Key: "posts", Value: bson.D{{Key: "_id", Value: postID}}}}}})
+	if err == mongo.ErrNoDocuments {
+		return domain.NewError("classroom not found", domain.ERR_NOT_FOUND)
+	}
+
 	if err != nil {
 		return domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
 	}
