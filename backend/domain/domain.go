@@ -44,6 +44,7 @@ type StudentGrade struct {
 }
 
 type Post struct {
+	ID          string   `json:"id" bson:"_id"`
 	GroupID     string   `json:"group_id"`
 	Content     string   `json:"content"`
 	Files       []string `json:"files"`
@@ -81,7 +82,8 @@ type AuthRepository interface {
 type ClassroomUsecase interface {
 	CreateClassroom(c context.Context, creatorID string, classroom Classroom) CodedError
 	DeleteClassroom(c context.Context, teacherID string, classroomID string) CodedError
-	AddPost(c context.Context, creatorID string, classroomID string) CodedError
+	AddPost(c context.Context, creatorID string, classroomID string, post Post) CodedError
+	RemovePost(c context.Context, creatorID string, classroomID string, postID string) CodedError
 }
 
 type ClassroomRepository interface {
