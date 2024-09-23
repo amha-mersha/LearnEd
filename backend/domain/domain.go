@@ -45,11 +45,11 @@ type StudentGrade struct {
 }
 
 type Post struct {
-	ID          string   `json:"id" bson:"_id"`
-	GroupID     string   `json:"group_id"`
-	Content     string   `json:"content"`
-	Files       []string `json:"files"`
-	IsProcessed bool     `json:"is_processed"`
+	ID          string `json:"id" bson:"_id"`
+	GroupID     string `json:"group_id"`
+	Content     string `json:"content"`
+	File        string `json:"file"`
+	IsProcessed bool   `json:"is_processed"`
 	// TODO: Add fields for the processed data
 }
 
