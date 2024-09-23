@@ -91,4 +91,5 @@ type ClassroomRepository interface {
 	DeleteClassroom(c context.Context, classroomID string) CodedError
 	FindClassroom(c context.Context, classroomID string) (Classroom, CodedError)
 	AddPost(c context.Context, classroomID string, post Post) CodedError
+	RemovePost(c context.Context, classroomID string, postID string) CodedError
 }

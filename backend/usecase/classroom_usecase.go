@@ -72,3 +72,28 @@ func (usecase *ClassroomUsecase) AddPost(c context.Context, creatorID string, cl
 
 	return nil
 }
+
+func (usecase *ClassroomUsecase) RemovePost(c context.Context, creatorID string, classroomID string, postID string) domain.CodedError {
+	classroom, err := usecase.repository.FindClassroom(c, classroomID)
+	if err != nil {
+		return err
+	}
+
+	allowed := false
+	for _, teacherID := range classroom.Teachers {
+		if teacherID == creatorID {
+			allowed = true
+			break
+		}
+	}
+
+	if !allowed {
+		return domain.NewError("only teachers added to the classroom can remove posts", domain.ERR_FORBIDDEN)
+	}
+
+	if err = usecase.repository.RemovePost(c, classroomID, postID); err != nil {
+		return err
+	}
+
+	return nil
+}
