@@ -89,11 +89,16 @@ func (usecase *AuthUsecase) ChangePassword(c *gin.Context, user dtos.ChangePassw
 		return hashErr
 	}
 
-	err = usecase.repository.UpdateUser(c, domain.User{
+	err = usecase.validation.ValidatePassword(user.NewPassword)
+	if err != nil {
+		return err
+	}
+
+	err = usecase.repository.UpdateUser(c, user.Email, domain.User{
 		Password: hashedPwd,
 	})
 	if err != nil {
-		return nil
+		return err
 	}
 
 	return nil
