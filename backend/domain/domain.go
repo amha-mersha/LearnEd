@@ -3,6 +3,7 @@ package domain
 import (
 	"context"
 	"learned-api/domain/dtos"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -45,11 +46,13 @@ type StudentGrade struct {
 }
 
 type Post struct {
-	ID          string `json:"id" bson:"_id"`
-	GroupID     string `json:"group_id"`
-	Content     string `json:"content"`
-	File        string `json:"file"`
-	IsProcessed bool   `json:"is_processed"`
+	ID           string    `json:"id" bson:"_id"`
+	GroupID      string    `json:"group_id"`
+	Content      string    `json:"content"`
+	File         string    `json:"file"`
+	IsProcessed  bool      `json:"is_processed"`
+	IsAssignment bool      `json:"is_assignment"`
+	Deadline     time.Time `json:"deadline"`
 	// TODO: Add fields for the processed data
 }
 
