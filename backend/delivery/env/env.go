@@ -20,6 +20,7 @@ func LoadEnvironmentVariables(filename string) error {
 	ENV.DB_ADDRESS = os.Getenv("DB_ADDRESS")
 	ENV.DB_NAME = os.Getenv("DB_NAME")
 	ENV.ROUTEPREFIX = os.Getenv("ROUTEPREFIX")
+	ENV.JWT_SECRET = os.Getenv("JWT_SECRET")
 
 	port, err := strconv.ParseInt(os.Getenv("PORT"), 10, 64)
 	if err != nil {
@@ -34,6 +35,8 @@ func LoadEnvironmentVariables(filename string) error {
 		return fmt.Errorf("error: couldn't load environment variable 'DB_NAME'")
 	case ENV.ROUTEPREFIX == "":
 		return fmt.Errorf("error: couldn't load environment variable 'ROUTEPREFIX'")
+	case ENV.JWT_SECRET == "":
+		return fmt.Errorf("error: couldn't load environment variable 'JWT_SECRET'")
 	default:
 		return nil
 	}

@@ -23,6 +23,7 @@ type EnvironmentVariables struct {
 	DB_NAME     string
 	PORT        int
 	ROUTEPREFIX string
+	JWT_SECRET  string
 }
 
 type User struct {

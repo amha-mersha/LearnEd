@@ -1,6 +1,7 @@
 package routers
 
 import (
+	"fmt"
 	"learned-api/domain"
 
 	"github.com/gin-gonic/gin"
@@ -12,4 +13,6 @@ func InitRouter(database *mongo.Database, port int, routePrefix string) {
 
 	authRouter := router.Group("/api/" + routePrefix + "/auth")
 	NewAuthRouter(database.Collection(domain.CollectionUsers), authRouter)
+
+	router.Run(fmt.Sprintf(":%v", port))
 }
