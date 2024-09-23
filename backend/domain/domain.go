@@ -41,5 +41,5 @@ type AuthUsecase interface {
 type AuthRepository interface {
 	CreateUser(c *gin.Context, user User) CodedError
 	GetUserByEmail(c *gin.Context, email string) (User, CodedError)
-	UpdateUser(c *gin.Context, user User) CodedError
+	UpdateUser(c *gin.Context, userEmail string, user User) CodedError
 }
