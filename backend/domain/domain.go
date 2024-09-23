@@ -87,6 +87,7 @@ type ClassroomUsecase interface {
 	CreateClassroom(c context.Context, creatorID string, classroom Classroom) CodedError
 	DeleteClassroom(c context.Context, teacherID string, classroomID string) CodedError
 	AddPost(c context.Context, creatorID string, classroomID string, post Post) CodedError
+	UpdatePost(c context.Context, creatorID string, classroomID string, postID string, post dtos.UpdatePostDTO) CodedError
 	RemovePost(c context.Context, creatorID string, classroomID string, postID string) CodedError
 }
 

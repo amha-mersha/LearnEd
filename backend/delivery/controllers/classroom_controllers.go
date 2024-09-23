@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"learned-api/domain"
+	"learned-api/domain/dtos"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -102,4 +103,29 @@ func (controller *ClassroomController) RemovePost(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, domain.Response{"message": "post removed successfully"})
+}
+
+func (controller *ClassroomController) UpdatePost(c *gin.Context) {
+	var updateDto dtos.UpdatePostDTO
+	if err := c.ShouldBindJSON(&updateDto); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	classroomID := c.Param("classroomID")
+	postID := c.Param("postID")
+	creatorID, exists := c.Keys["id"]
+	if !exists {
+		c.JSON(http.StatusForbidden, gin.H{"message": "coudn't find the id field"})
+		return
+	}
+
+	id := creatorID.(string)
+	err := controller.usecase.UpdatePost(c, id, classroomID, postID, updateDto)
+	if err != nil {
+		c.JSON(GetHTTPErrorCode(err), domain.Response{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, domain.Response{"message": "post updated successfully"})
 }
