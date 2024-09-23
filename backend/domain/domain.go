@@ -45,6 +45,14 @@ type StudentGrade struct {
 	Records   []StudentRecord `json:"records"`
 }
 
+type Comment struct {
+	ID          string    `json:"id" bson:"_id"`
+	CreatorID   string    `json:"creator_id"`
+	CreatorName string    `json:"creator_name"`
+	Content     string    `json:"content"`
+	CreatedAt   time.Time `json:"created_at"`
+}
+
 type Post struct {
 	ID           string    `json:"id" bson:"_id"`
 	GroupID      string    `json:"group_id"`
@@ -53,6 +61,7 @@ type Post struct {
 	IsProcessed  bool      `json:"is_processed"`
 	IsAssignment bool      `json:"is_assignment"`
 	Deadline     time.Time `json:"deadline"`
+	Comments     []Comment `json:"comments"`
 	// TODO: Add fields for the processed data
 }
 
@@ -89,6 +98,7 @@ type ClassroomUsecase interface {
 	AddPost(c context.Context, creatorID string, classroomID string, post Post) CodedError
 	UpdatePost(c context.Context, creatorID string, classroomID string, postID string, post dtos.UpdatePostDTO) CodedError
 	RemovePost(c context.Context, creatorID string, classroomID string, postID string) CodedError
+	AddComment(c context.Context, creatorID string, classroomID string, postID string, comment Comment) CodedError
 }
 
 type ClassroomRepository interface {
