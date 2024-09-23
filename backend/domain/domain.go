@@ -82,6 +82,7 @@ type AuthRepository interface {
 type ClassroomUsecase interface {
 	CreateClassroom(c context.Context, creatorID string, classroom Classroom) CodedError
 	DeleteClassroom(c context.Context, teacherID string, classroomID string) CodedError
+	AddPost(c context.Context, creatorID string, classroomID string) CodedError
 }
 
 type ClassroomRepository interface {
