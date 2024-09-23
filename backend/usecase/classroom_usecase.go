@@ -3,6 +3,7 @@ package usecases
 import (
 	"context"
 	"learned-api/domain"
+	"learned-api/domain/dtos"
 
 	"github.com/gin-gonic/gin"
 )
@@ -67,6 +68,31 @@ func (usecase *ClassroomUsecase) AddPost(c context.Context, creatorID string, cl
 	}
 
 	if err = usecase.repository.AddPost(c, classroomID, post); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (usecase *ClassroomUsecase) UpdatePost(c context.Context, creatorID string, classroomID string, postID string, post dtos.UpdatePostDTO) domain.CodedError {
+	classroom, err := usecase.repository.FindClassroom(c, classroomID)
+	if err != nil {
+		return err
+	}
+
+	allowed := false
+	for _, teacherID := range classroom.Teachers {
+		if teacherID == creatorID {
+			allowed = true
+			break
+		}
+	}
+
+	if !allowed {
+		return domain.NewError("only teachers added to the classroom can update posts", domain.ERR_FORBIDDEN)
+	}
+
+	if err = usecase.repository.UpdatePost(c, classroomID, postID, post); err != nil {
 		return err
 	}
 
