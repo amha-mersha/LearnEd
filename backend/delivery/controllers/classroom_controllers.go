@@ -64,6 +64,12 @@ func (controller *ClassroomController) DeleteClassroom(c *gin.Context) {
 }
 
 func (controller *ClassroomController) AddPost(c *gin.Context) {
+	var post domain.Post
+	if err := c.ShouldBindJSON(&post); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
 	classroomID := c.Param("classroomID")
 	creatorID, exists := c.Keys["id"]
 	if !exists {
@@ -72,10 +78,28 @@ func (controller *ClassroomController) AddPost(c *gin.Context) {
 	}
 
 	id := creatorID.(string)
-	err := controller.usecase.AddPost(c, id, classroomID)
+	err := controller.usecase.AddPost(c, id, classroomID, post)
 	if err != nil {
 		c.JSON(GetHTTPErrorCode(err), domain.Response{"error": err.Error()})
 	}
 
 	c.JSON(http.StatusCreated, domain.Response{"message": "post added successfully"})
+}
+
+func (controller *ClassroomController) RemovePost(c *gin.Context) {
+	classroomID := c.Param("classroomID")
+	postID := c.Param("postID")
+	creatorID, exists := c.Keys["id"]
+	if !exists {
+		c.JSON(http.StatusForbidden, gin.H{"message": "coudn't find the id field"})
+		return
+	}
+
+	id := creatorID.(string)
+	err := controller.usecase.RemovePost(c, id, classroomID, postID)
+	if err != nil {
+		c.JSON(GetHTTPErrorCode(err), domain.Response{"error": err.Error()})
+	}
+
+	c.JSON(http.StatusOK, domain.Response{"message": "post removed successfully"})
 }
