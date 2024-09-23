@@ -38,7 +38,7 @@ func (usecase *ClassroomUsecase) DeleteClassroom(c context.Context, teacherID st
 	}
 
 	if foundClassroom.Owner != teacherID {
-		return domain.NewError(domain.ERR_FORBIDDEN, "only the original owner can delete the classroom")
+		return domain.NewError("only the original owner can delete the classroom", domain.ERR_FORBIDDEN)
 	}
 
 	if err = usecase.repository.DeleteClassroom(c, classroomID); err != nil {
