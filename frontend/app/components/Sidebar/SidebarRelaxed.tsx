@@ -1,10 +1,10 @@
 import React from "react";
-import logo from "../../../public/Images/LearnEd.svg";
-import classroom from "../../../public/Images/mdi_google-classroom.svg";
-import history from "../../../public/Images/history.svg";
-import setting from "../../../public/Images/uil_setting.svg";
-import hamburger from "../../../public/Images/solar_hamburger-menu-broken.svg"
-import logout from "../../../public/Images/logout.svg";
+const logo = require("../../../public/Images/LearnEd.svg");
+const classroom = require("../../../public/Images/mdi_google-classroom.svg");
+const history = require("../../../public/Images/history.svg");
+const setting = require("../../../public/Images/uil_setting.svg");
+const hamburger = require("../../../public/Images/solar_hamburger-menu-broken.svg");
+const logout = require("../../../public/Images/logout.svg");
 import Image from "next/image";
 import { useDispatch } from "react-redux";
 import { collapse } from "@/lib/redux/slices/sidebarSlice";

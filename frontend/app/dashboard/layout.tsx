@@ -19,7 +19,7 @@ export default function RootLayout({
               <div className=' min-h-screen'>
                 <Sidebar />
               </div>
-              <main className={relaxed ? `ml-64 pl-4` : `ml-28`}>
+              <main className={relaxed ? `ml-64 pl-4 w-full` : `ml-28 w-full`}>
                 {children}
               </main>
             </body>
