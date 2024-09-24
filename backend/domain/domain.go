@@ -68,14 +68,14 @@ type Post struct {
 }
 
 type Classroom struct {
-	Name          string         `json:"name"`
-	CourseName    string         `json:"course_name"`
-	Season        string         `json:"season"`
-	Owner         string         `json:"owner"`
-	Teachers      []string       `json:"teachers"`
-	Students      []string       `json:"students"`
-	StudentGrades []StudentGrade `json:"student_grades"`
-	Posts         []Post         `json:"posts"`
+	Name          string               `json:"name"`
+	CourseName    string               `json:"course_name"`
+	Season        string               `json:"season"`
+	Owner         primitive.ObjectID   `json:"owner"`
+	Teachers      []primitive.ObjectID `json:"teachers"`
+	Students      []primitive.ObjectID `json:"students"`
+	StudentGrades []StudentGrade       `json:"student_grades"`
+	Posts         []Post               `json:"posts"`
 }
 
 type StudyGroup struct {
@@ -108,7 +108,7 @@ type ClassroomUsecase interface {
 }
 
 type ClassroomRepository interface {
-	CreateClassroom(c context.Context, classroom Classroom) CodedError
+	CreateClassroom(c context.Context, creatorID string, classroom Classroom) CodedError
 	DeleteClassroom(c context.Context, classroomID string) CodedError
 	FindClassroom(c context.Context, classroomID string) (Classroom, CodedError)
 	AddPost(c context.Context, classroomID string, post Post) CodedError
@@ -117,4 +117,5 @@ type ClassroomRepository interface {
 	AddComment(c context.Context, classroomID string, postID string, comment Comment) CodedError
 	FindPost(c context.Context, classroomID string, postID string) (Post, CodedError)
 	RemoveComment(c context.Context, classroomID string, postID string, commentID string) CodedError
+	StringifyID(id primitive.ObjectID) string
 }

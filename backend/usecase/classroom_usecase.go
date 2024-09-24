@@ -20,12 +20,12 @@ func NewClassroomUsecase(classroomRepository domain.ClassroomRepository, authRep
 
 func (usecase *ClassroomUsecase) CreateClassroom(c context.Context, creatorID string, classroom domain.Classroom) domain.CodedError {
 	newClassroom := domain.Classroom{
-		Name:     classroom.Name,
-		Owner:    creatorID,
-		Teachers: []string{creatorID},
+		Name:       classroom.Name,
+		CourseName: classroom.CourseName,
+		Season:     classroom.Season,
 	}
 
-	if err := usecase.classroomRepository.CreateClassroom(c, newClassroom); err != nil {
+	if err := usecase.classroomRepository.CreateClassroom(c, creatorID, newClassroom); err != nil {
 		return err
 	}
 
@@ -38,7 +38,7 @@ func (usecase *ClassroomUsecase) DeleteClassroom(c context.Context, teacherID st
 		return err
 	}
 
-	if foundClassroom.Owner != teacherID {
+	if usecase.classroomRepository.StringifyID(foundClassroom.Owner) != teacherID {
 		return domain.NewError("only the original owner can delete the classroom", domain.ERR_FORBIDDEN)
 	}
 
@@ -57,7 +57,7 @@ func (usecase *ClassroomUsecase) AddPost(c context.Context, creatorID string, cl
 
 	allowed := false
 	for _, teacherID := range classroom.Teachers {
-		if teacherID == creatorID {
+		if usecase.classroomRepository.StringifyID(teacherID) == creatorID {
 			allowed = true
 			break
 		}
@@ -82,7 +82,7 @@ func (usecase *ClassroomUsecase) UpdatePost(c context.Context, creatorID string,
 
 	allowed := false
 	for _, teacherID := range classroom.Teachers {
-		if teacherID == creatorID {
+		if usecase.classroomRepository.StringifyID(teacherID) == creatorID {
 			allowed = true
 			break
 		}
@@ -107,7 +107,7 @@ func (usecase *ClassroomUsecase) RemovePost(c context.Context, creatorID string,
 
 	allowed := false
 	for _, teacherID := range classroom.Teachers {
-		if teacherID == creatorID {
+		if usecase.classroomRepository.StringifyID(teacherID) == creatorID {
 			allowed = true
 			break
 		}
@@ -132,7 +132,7 @@ func (usecase *ClassroomUsecase) AddComment(c context.Context, creatorID string,
 
 	allowed := false
 	for _, teacherID := range classroom.Teachers {
-		if teacherID == creatorID {
+		if usecase.classroomRepository.StringifyID(teacherID) == creatorID {
 			allowed = true
 			break
 		}
@@ -140,7 +140,7 @@ func (usecase *ClassroomUsecase) AddComment(c context.Context, creatorID string,
 
 	if !allowed {
 		for _, studentID := range classroom.Students {
-			if studentID == creatorID {
+			if usecase.classroomRepository.StringifyID(studentID) == creatorID {
 				allowed = true
 				break
 			}

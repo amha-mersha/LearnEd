@@ -39,7 +39,7 @@ func (repository *ClassroomRepository) FindClassroom(c context.Context, classroo
 	return classroom, nil
 }
 
-func (repository *ClassroomRepository) CreateClassroom(c context.Context, classroom domain.Classroom) domain.CodedError {
+func (repository *ClassroomRepository) CreateClassroom(c context.Context, creatorID string, classroom domain.Classroom) domain.CodedError {
 	_, err := repository.collection.InsertOne(c, classroom)
 	if err != nil {
 		return domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
@@ -146,4 +146,8 @@ func (repository *ClassroomRepository) FindPost(c context.Context, classroomID s
 	}
 
 	return domain.Post{}, domain.NewError("post not found", domain.ERR_NOT_FOUND)
+}
+
+func (repository *ClassroomRepository) StringifyID(id primitive.ObjectID) string {
+	return id.String()
 }
