@@ -157,7 +157,7 @@ func (usecase *ClassroomUsecase) AddComment(c context.Context, creatorID string,
 	}
 
 	comment.CreatorName = user.Name
-	comment.CreatorID = user.ID
+	comment.CreatorID = user.ID.String()
 	if err = usecase.classroomRepository.AddComment(c, classroomID, postID, comment); err != nil {
 		return err
 	}

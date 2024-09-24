@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -18,6 +19,7 @@ func NewAuthRepository(collection *mongo.Collection) *AuthRepository {
 }
 
 func (r *AuthRepository) CreateUser(c context.Context, user domain.User) domain.CodedError {
+	user.ID = primitive.NewObjectID()
 	_, err := r.collection.InsertOne(c, user)
 	if mongo.IsDuplicateKeyError(err) && strings.Contains(err.Error(), "email") {
 		return *domain.NewError("an account with that email already exists", domain.ERR_CONFLICT)
@@ -52,8 +54,12 @@ func (r *AuthRepository) GetUserByEmail(c context.Context, email string) (domain
 
 func (r *AuthRepository) GetUserByID(c context.Context, id string) (domain.User, domain.CodedError) {
 	var foundUser domain.User
+	userID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return foundUser, domain.NewError(err.Error(), domain.ERR_BAD_REQUEST)
+	}
 
-	res := r.collection.FindOne(c, bson.D{{Key: "_id", Value: id}})
+	res := r.collection.FindOne(c, bson.D{{Key: "_id", Value: userID}})
 	if res.Err() == mongo.ErrNoDocuments {
 		return foundUser, domain.NewError("user not found", domain.ERR_NOT_FOUND)
 	}
@@ -62,7 +68,7 @@ func (r *AuthRepository) GetUserByID(c context.Context, id string) (domain.User,
 		return foundUser, domain.NewError(res.Err().Error(), domain.ERR_INTERNAL_SERVER)
 	}
 
-	err := res.Decode(&foundUser)
+	err = res.Decode(&foundUser)
 	if err != nil {
 		return foundUser, domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
 	}

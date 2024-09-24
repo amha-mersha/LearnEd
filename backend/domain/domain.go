@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
@@ -29,11 +30,11 @@ type EnvironmentVariables struct {
 }
 
 type User struct {
-	ID       string `json:"id" bson:"_id"`
-	Name     string `json:"name"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
-	Type     string `json:"type"`
+	ID       primitive.ObjectID `json:"id" bson:"_id"`
+	Name     string             `json:"name"`
+	Email    string             `json:"email"`
+	Password string             `json:"password"`
+	Type     string             `json:"type"`
 }
 
 type StudentRecord struct {

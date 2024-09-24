@@ -22,5 +22,5 @@ func NewAuthRouter(authRepository domain.AuthRepository, jwtService domain.JWTSe
 
 	router.POST("/signup", authController.Signup)
 	router.POST("/login", authController.Login)
-	router.POST("/change-password", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleStudent, domain.RoleStudent), authController.ChangePassword)
+	router.POST("/change-password", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleStudent, domain.RoleTeacher), authController.ChangePassword)
 }
