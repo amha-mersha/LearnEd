@@ -97,3 +97,7 @@ func (r *AuthRepository) UpdateUser(c context.Context, userEmail string, updateD
 
 	return nil
 }
+
+func (r *AuthRepository) HexifyString(id primitive.ObjectID) string {
+	return id.Hex()
+}

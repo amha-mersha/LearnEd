@@ -21,6 +21,8 @@ const (
 
 type Response gin.H
 
+type ObjectID primitive.ObjectID
+
 type EnvironmentVariables struct {
 	DB_ADDRESS  string
 	DB_NAME     string
@@ -95,6 +97,7 @@ type AuthRepository interface {
 	GetUserByEmail(c context.Context, email string) (User, CodedError)
 	GetUserByID(c context.Context, id string) (User, CodedError)
 	UpdateUser(c context.Context, userEmail string, user User) CodedError
+	HexifyString(id primitive.ObjectID) string
 }
 
 type ClassroomUsecase interface {
@@ -118,4 +121,5 @@ type ClassroomRepository interface {
 	FindPost(c context.Context, classroomID string, postID string) (Post, CodedError)
 	RemoveComment(c context.Context, classroomID string, postID string, commentID string) CodedError
 	StringifyID(id primitive.ObjectID) string
+	ParseID(id string) (primitive.ObjectID, CodedError)
 }

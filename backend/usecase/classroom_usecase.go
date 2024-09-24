@@ -19,10 +19,16 @@ func NewClassroomUsecase(classroomRepository domain.ClassroomRepository, authRep
 }
 
 func (usecase *ClassroomUsecase) CreateClassroom(c context.Context, creatorID string, classroom domain.Classroom) domain.CodedError {
+	id, err := usecase.classroomRepository.ParseID(creatorID)
+	if err != nil {
+		return err
+	}
+
 	newClassroom := domain.Classroom{
 		Name:       classroom.Name,
 		CourseName: classroom.CourseName,
 		Season:     classroom.Season,
+		Owner:      id,
 	}
 
 	if err := usecase.classroomRepository.CreateClassroom(c, creatorID, newClassroom); err != nil {

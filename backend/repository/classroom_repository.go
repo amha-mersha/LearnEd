@@ -151,3 +151,12 @@ func (repository *ClassroomRepository) FindPost(c context.Context, classroomID s
 func (repository *ClassroomRepository) StringifyID(id primitive.ObjectID) string {
 	return id.String()
 }
+
+func (repository *ClassroomRepository) ParseID(id string) (primitive.ObjectID, domain.CodedError) {
+	parsedID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return parsedID, domain.NewError("invalid object id "+id, domain.ERR_BAD_REQUEST)
+	}
+
+	return parsedID, nil
+}
