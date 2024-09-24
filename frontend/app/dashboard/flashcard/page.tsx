@@ -1,84 +1,98 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from 'react'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { Button } from "@/components/ui/button"
-import { Progress } from "@/components/ui/progress"
-
-interface Flashcard {
-  question: string
-  answer: string
-}
+import { useState, useEffect } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { Flashcard } from "@/types/flashcard";
+import { getFlashcards } from "@/utils/dummy_flashcard";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Component() {
-  const [cards] = useState<Flashcard[]>([
-    { question: "What is React?", answer: "A JavaScript library for building user interfaces" },
-    { question: "What is JSX?", answer: "A syntax extension for JavaScript that allows you to write HTML-like code in your JavaScript files" },
-    { question: "What is a component in React?", answer: "A reusable piece of UI that can be composed to create complex interfaces" }
-  ])
-  const [currentCard, setCurrentCard] = useState(0)
-  const [isFlipped, setIsFlipped] = useState(false)
-  const [touchStart, setTouchStart] = useState(0)
-  const [touchEnd, setTouchEnd] = useState(0)
+  const [cards, setCards] = useState<Flashcard[]>([]);
+  const [currentCard, setCurrentCard] = useState(0);
+  const [isFlipped, setIsFlipped] = useState(false);
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
+
+  useEffect(() => {
+    getFlashcards().then((data) => {
+      setCards(data);
+    });
+  }, []);
 
   const flipCard = () => {
-    setIsFlipped(!isFlipped)
-  }
+    setIsFlipped(!isFlipped);
+  };
 
   const nextCard = () => {
     if (currentCard < cards.length - 1) {
-      setCurrentCard(currentCard + 1)
-      setIsFlipped(false)
+      setCurrentCard(currentCard + 1);
+      setIsFlipped(false);
     }
-  }
+  };
 
   const prevCard = () => {
     if (currentCard > 0) {
-      setCurrentCard(currentCard - 1)
-      setIsFlipped(false)
+      setCurrentCard(currentCard - 1);
+      setIsFlipped(false);
     }
-  }
+  };
 
   const handleTouchStart = (e: React.TouchEvent) => {
-    setTouchStart(e.targetTouches[0].clientX)
-  }
+    setTouchStart(e.targetTouches[0].clientX);
+  };
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientX)
-  }
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
 
   const handleTouchEnd = () => {
     if (touchStart - touchEnd > 150) {
-      nextCard()
+      nextCard();
     }
 
     if (touchStart - touchEnd < -150) {
-      prevCard()
+      prevCard();
     }
-  }
+  };
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft') {
-        prevCard()
-      } else if (e.key === 'ArrowRight') {
-        nextCard()
-      } else if (e.key === 'Enter') {
-        flipCard()
+      if (e.key === "ArrowLeft") {
+        prevCard();
+      } else if (e.key === "ArrowRight") {
+        nextCard();
+      } else if (e.key === "Enter") {
+        flipCard();
       }
-    }
+    };
 
-    window.addEventListener('keydown', handleKeyDown)
+    window.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      window.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [currentCard])
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [currentCard]);
+
+  // If cards are not loaded yet, show loading message
+  if (cards.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+        <div className="flex flex-col space-y-3">
+          <Skeleton className="h-[250px] w-[400px] rounded-xl" />
+          <div className="space-y-4">
+            <Skeleton className="h-4 w-[400px]" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
       <div className="w-full max-w-md">
-        <div 
+        <div
           className="relative w-full h-64 [perspective:1000px]"
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
@@ -86,7 +100,7 @@ export default function Component() {
         >
           <div
             className={`absolute w-full h-full [transform-style:preserve-3d] transition-transform duration-500 ease-in-out ${
-              isFlipped ? '[transform:rotateY(180deg)]' : ''
+              isFlipped ? "[transform:rotateY(180deg)]" : ""
             }`}
           >
             <div
@@ -106,18 +120,31 @@ export default function Component() {
           </div>
         </div>
         <div className="flex justify-between items-center mt-4">
-          <Button onClick={prevCard} disabled={currentCard === 0}>
-            <ChevronLeft className="mr-2 h-4 w-4" /> Previous
+          <Button
+            onClick={prevCard}
+            disabled={currentCard === 0}
+            variant="outline"
+            size="icon"
+          >
+            <ChevronLeft className="h-4 w-4" />
           </Button>
-          <Button onClick={nextCard} disabled={currentCard === cards.length - 1}>
-            Next <ChevronRight className="ml-2 h-4 w-4" />
+          <Button
+            onClick={nextCard}
+            disabled={currentCard === cards.length - 1}
+            variant="outline"
+            size="icon"
+          >
+            <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
-        <Progress value={(currentCard + 1) / cards.length * 100} className="mt-4" />
+        <Progress
+          value={((currentCard + 1) / cards.length) * 100}
+          className="mt-4"
+        />
         <p className="text-center mt-2">
           Card {currentCard + 1} of {cards.length}
         </p>
       </div>
     </div>
-  )
+  );
 }
