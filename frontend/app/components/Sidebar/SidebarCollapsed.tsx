@@ -32,7 +32,7 @@ const SidebarCollapsed = () => {
         </div>
       </div>
 
-      <div className=" flex bottom-8 left-10 absolute items-center flex-col space-y-4">
+      <div className=" flex mt-64 items-center flex-col space-y-4">
         <div className="flex space-x-3">
           <Image className="w-7" src={setting} alt=""></Image>
         </div>

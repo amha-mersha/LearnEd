@@ -39,7 +39,7 @@ const SidebarRelaxed = () => {
         </div>
       </div>
 
-      <div className=" flex bottom-8 left-2 absolute flex-col ml-16 space-y-4">
+      <div className=" flex mt-64 flex-col ml-16 space-y-4">
         <div className="flex space-x-3">
           <Image className="w-7" src={setting} alt=""></Image>
           <h1 className="font-semibold">Setting</h1>
