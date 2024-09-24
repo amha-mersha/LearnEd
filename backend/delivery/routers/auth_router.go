@@ -2,10 +2,8 @@ package routers
 
 import (
 	"learned-api/delivery/controllers"
-	"learned-api/delivery/env"
 	"learned-api/domain"
 	hashing_service "learned-api/infrastructure/hashing"
-	jwt_service "learned-api/infrastructure/jwt"
 	"learned-api/infrastructure/middleware"
 	validation_services "learned-api/infrastructure/validation"
 	usecases "learned-api/usecase"
@@ -13,8 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func NewAuthRouter(authRepository domain.AuthRepository, router *gin.RouterGroup) {
-	jwtService := jwt_service.NewJWTService(env.ENV.JWT_SECRET)
+func NewAuthRouter(authRepository domain.AuthRepository, jwtService domain.JWTServiceInterface, router *gin.RouterGroup) {
 	authUsecase := usecases.NewAuthUsecase(
 		authRepository,
 		validation_services.NewAuthValidation(),
