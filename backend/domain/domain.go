@@ -69,6 +69,7 @@ type Post struct {
 type Classroom struct {
 	Name          string         `json:"name"`
 	CourseName    string         `json:"course_name"`
+	Season        string         `json:"season"`
 	Owner         string         `json:"owner"`
 	Teachers      []string       `json:"teachers"`
 	Students      []string       `json:"students"`

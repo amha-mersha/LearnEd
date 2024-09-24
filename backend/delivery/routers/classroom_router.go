@@ -12,5 +12,13 @@ func NewClassroomRouter(classroomRepository domain.ClassroomRepository, authRepo
 	classroomUsecase := usecases.NewClassroomUsecase(classroomRepository, authRepository)
 	classroomController := controllers.NewClassroomController(classroomUsecase)
 
-	router.POST("", classroomController.CreateClassroom)
+	router.POST("/", classroomController.CreateClassroom)
+	router.DELETE("/:classroomID", classroomController.DeleteClassroom)
+
+	router.POST("/:classroomID/posts", classroomController.AddPost)
+	router.PATCH("/:classroomID/posts/:postID", classroomController.UpdatePost)
+	router.DELETE("/:classroomID/posts/:postID", classroomController.RemovePost)
+
+	router.POST("/:classroomID/posts/:postID", classroomController.AddComment)
+	router.POST("/:classroomID/posts/:postID/comments/:commentID", classroomController.RemoveComment)
 }

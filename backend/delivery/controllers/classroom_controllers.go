@@ -42,7 +42,7 @@ func (controller *ClassroomController) CreateClassroom(c *gin.Context) {
 }
 
 func (controller *ClassroomController) DeleteClassroom(c *gin.Context) {
-	classroomID := c.Param("id")
+	classroomID := c.Param("classroomID")
 	if classroomID == "" {
 		c.JSON(http.StatusBadRequest, domain.Response{"error": "missing classroom id"})
 		return
