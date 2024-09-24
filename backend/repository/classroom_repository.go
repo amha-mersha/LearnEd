@@ -20,7 +20,7 @@ func NewClassroomRepository(collection *mongo.Collection) *ClassroomRepository {
 	}
 }
 
-func (repository *ClassroomRepository) FindClassroom(c context.Context, classroomID string) (domain.Classroom, error) {
+func (repository *ClassroomRepository) FindClassroom(c context.Context, classroomID string) (domain.Classroom, domain.CodedError) {
 	var classroom domain.Classroom
 	res := repository.collection.FindOne(c, bson.D{{Key: "_id", Value: classroomID}})
 	if res.Err() == mongo.ErrNoDocuments {
@@ -28,12 +28,12 @@ func (repository *ClassroomRepository) FindClassroom(c context.Context, classroo
 	}
 
 	if res.Err() != nil {
-		return classroom, res.Err()
+		return classroom, domain.NewError(res.Err().Error(), domain.ERR_INTERNAL_SERVER)
 	}
 
 	err := res.Decode(&classroom)
 	if err != nil {
-		return classroom, err
+		return classroom, domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
 	}
 
 	return classroom, nil

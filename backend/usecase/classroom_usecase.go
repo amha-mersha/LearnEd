@@ -4,8 +4,6 @@ import (
 	"context"
 	"learned-api/domain"
 	"learned-api/domain/dtos"
-
-	"github.com/gin-gonic/gin"
 )
 
 type ClassroomUsecase struct {
@@ -20,7 +18,7 @@ func NewClassroomUsecase(classroomRepository domain.ClassroomRepository, authRep
 	}
 }
 
-func (usecase *ClassroomUsecase) CreateClassroom(c *gin.Context, creatorID string, classroom domain.Classroom) domain.CodedError {
+func (usecase *ClassroomUsecase) CreateClassroom(c context.Context, creatorID string, classroom domain.Classroom) domain.CodedError {
 	newClassroom := domain.Classroom{
 		Name:     classroom.Name,
 		Owner:    creatorID,

@@ -11,4 +11,6 @@ import (
 func NewClassroomRouter(classroomRepository domain.ClassroomRepository, authRepository domain.AuthRepository, router *gin.RouterGroup) {
 	classroomUsecase := usecases.NewClassroomUsecase(classroomRepository, authRepository)
 	classroomController := controllers.NewClassroomController(classroomUsecase)
+
+	router.POST("", classroomController.CreateClassroom)
 }
