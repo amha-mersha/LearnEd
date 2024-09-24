@@ -50,6 +50,26 @@ func (r *AuthRepository) GetUserByEmail(c context.Context, email string) (domain
 	return foundUser, nil
 }
 
+func (r *AuthRepository) GetUserByID(c context.Context, id string) (domain.User, domain.CodedError) {
+	var foundUser domain.User
+
+	res := r.collection.FindOne(c, bson.D{{Key: "_id", Value: id}})
+	if res.Err() == mongo.ErrNoDocuments {
+		return foundUser, domain.NewError("user not found", domain.ERR_NOT_FOUND)
+	}
+
+	if res.Err() != nil {
+		return foundUser, domain.NewError(res.Err().Error(), domain.ERR_INTERNAL_SERVER)
+	}
+
+	err := res.Decode(&foundUser)
+	if err != nil {
+		return foundUser, domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
+	}
+
+	return foundUser, nil
+}
+
 func (r *AuthRepository) UpdateUser(c context.Context, userEmail string, updateData domain.User) domain.CodedError {
 	updateFields := bson.D{}
 	if updateData.Name != "" {
