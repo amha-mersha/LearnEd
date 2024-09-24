@@ -130,9 +130,35 @@ func (repository *ClassroomRepository) UpdatePost(c context.Context, classroomID
 }
 
 func (repository *ClassroomRepository) RemovePost(c context.Context, classroomID string, postID string) domain.CodedError {
-	_, err := repository.collection.UpdateOne(c, bson.D{{Key: "_id", Value: classroomID}}, bson.D{{Key: "$pull", Value: bson.D{{Key: "posts", Value: bson.D{{Key: "_id", Value: postID}}}}}})
+	id, pErr := repository.ParseID(classroomID)
+	if pErr != nil {
+		return pErr
+	}
+
+	pid, pErr := repository.ParseID(postID)
+	if pErr != nil {
+		return pErr
+	}
+
+	filter := bson.M{
+		"_id": id,
+	}
+
+	update := bson.M{
+		"$pull": bson.M{
+			"posts": bson.M{
+				"_id": pid,
+			},
+		},
+	}
+
+	res, err := repository.collection.UpdateOne(c, filter, update)
 	if err == mongo.ErrNoDocuments {
 		return domain.NewError("classroom not found", domain.ERR_NOT_FOUND)
+	}
+
+	if res.ModifiedCount == 0 {
+		return domain.NewError("post not found", domain.ERR_NOT_FOUND)
 	}
 
 	if err != nil {
