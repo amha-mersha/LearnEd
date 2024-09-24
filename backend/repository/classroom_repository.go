@@ -40,6 +40,8 @@ func (repository *ClassroomRepository) FindClassroom(c context.Context, classroo
 }
 
 func (repository *ClassroomRepository) CreateClassroom(c context.Context, creatorID string, classroom domain.Classroom) domain.CodedError {
+	classroom.Teachers = []primitive.ObjectID{}
+	classroom.Students = []primitive.ObjectID{}
 	_, err := repository.collection.InsertOne(c, classroom)
 	if err != nil {
 		return domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)

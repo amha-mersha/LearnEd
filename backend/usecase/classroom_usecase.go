@@ -25,10 +25,12 @@ func (usecase *ClassroomUsecase) CreateClassroom(c context.Context, creatorID st
 	}
 
 	newClassroom := domain.Classroom{
-		Name:       classroom.Name,
-		CourseName: classroom.CourseName,
-		Season:     classroom.Season,
-		Owner:      id,
+		Name:          classroom.Name,
+		CourseName:    classroom.CourseName,
+		Season:        classroom.Season,
+		Owner:         id,
+		Posts:         []domain.Post{},
+		StudentGrades: []domain.StudentGrade{},
 	}
 
 	if err := usecase.classroomRepository.CreateClassroom(c, creatorID, newClassroom); err != nil {
