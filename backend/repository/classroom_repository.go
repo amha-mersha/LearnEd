@@ -132,3 +132,18 @@ func (repository *ClassroomRepository) RemoveComment(c context.Context, classroo
 
 	return nil
 }
+
+func (repository *ClassroomRepository) FindPost(c context.Context, classroomID string, postID string) (domain.Post, domain.CodedError) {
+	classroom, err := repository.FindClassroom(c, classroomID)
+	if err != nil {
+		return domain.Post{}, err
+	}
+
+	for _, post := range classroom.Posts {
+		if post.ID == postID {
+			return post, nil
+		}
+	}
+
+	return domain.Post{}, domain.NewError("post not found", domain.ERR_NOT_FOUND)
+}
