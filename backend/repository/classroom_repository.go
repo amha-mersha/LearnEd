@@ -105,3 +105,17 @@ func (repository *ClassroomRepository) RemovePost(c context.Context, classroomID
 
 	return nil
 }
+
+func (repository *ClassroomRepository) AddComment(c context.Context, classroomID string, postID string, comment domain.Comment) domain.CodedError {
+	comment.ID = primitive.NewObjectID().Hex()
+	_, err := repository.collection.UpdateOne(c, bson.D{{Key: "_id", Value: classroomID}, {Key: "posts._id", Value: postID}}, bson.D{{Key: "$push", Value: bson.D{{Key: "comments", Value: comment}}}})
+	if err == mongo.ErrNoDocuments {
+		return domain.NewError("post not found", domain.ERR_NOT_FOUND)
+	}
+
+	if err != nil {
+		return domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
+	}
+
+	return nil
+}
