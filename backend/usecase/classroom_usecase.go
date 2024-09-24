@@ -13,7 +13,7 @@ type ClassroomUsecase struct {
 	authRepository      domain.AuthRepository
 }
 
-func NewClassroomController(classroomRepository domain.ClassroomRepository, authRepository domain.AuthRepository) *ClassroomUsecase {
+func NewClassroomUsecase(classroomRepository domain.ClassroomRepository, authRepository domain.AuthRepository) *ClassroomUsecase {
 	return &ClassroomUsecase{
 		classroomRepository: classroomRepository,
 		authRepository:      authRepository,

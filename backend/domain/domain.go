@@ -9,7 +9,8 @@ import (
 )
 
 const (
-	CollectionUsers = "users"
+	CollectionUsers      = "users"
+	CollectionClassrooms = "classrooms"
 )
 
 const (

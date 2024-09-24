@@ -14,7 +14,7 @@ type ClassroomRepository struct {
 	collection *mongo.Collection
 }
 
-func NewClassroomController(collection *mongo.Collection) *ClassroomRepository {
+func NewClassroomRepository(collection *mongo.Collection) *ClassroomRepository {
 	return &ClassroomRepository{
 		collection: collection,
 	}

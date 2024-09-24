@@ -8,15 +8,12 @@ import (
 	jwt_service "learned-api/infrastructure/jwt"
 	"learned-api/infrastructure/middleware"
 	validation_services "learned-api/infrastructure/validation"
-	"learned-api/repository"
 	usecases "learned-api/usecase"
 
 	"github.com/gin-gonic/gin"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func NewAuthRouter(collection *mongo.Collection, router *gin.RouterGroup) {
-	authRepository := repository.NewAuthRepository(collection)
+func NewAuthRouter(authRepository domain.AuthRepository, router *gin.RouterGroup) {
 	jwtService := jwt_service.NewJWTService(env.ENV.JWT_SECRET)
 	authUsecase := usecases.NewAuthUsecase(
 		authRepository,
