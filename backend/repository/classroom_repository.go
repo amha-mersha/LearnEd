@@ -89,16 +89,35 @@ func (repository *ClassroomRepository) AddPost(c context.Context, classroomID st
 }
 
 func (repository *ClassroomRepository) UpdatePost(c context.Context, classroomID string, postID string, updateData dtos.UpdatePostDTO) domain.CodedError {
-	updateFields := bson.D{}
-	if updateData.Deadline.Unix() != 0 {
-		updateFields = append(updateFields, bson.E{Key: "deadline", Value: updateData.Deadline})
+	updateFields := bson.M{}
+	if updateData.Deadline.Unix() > 0 {
+		updateFields["posts.$.deadline"] = updateData.Deadline
 	}
 
 	if updateData.Content != "" {
-		updateFields = append(updateFields, bson.E{Key: "content", Value: updateData.Content})
+		updateFields["posts.$.content"] = updateData.Content
 	}
 
-	_, err := repository.collection.UpdateOne(c, bson.D{{Key: "_id", Value: classroomID}, {Key: "posts._id", Value: postID}}, bson.D{{Key: "$set", Value: updateFields}})
+	id, pErr := repository.ParseID(classroomID)
+	if pErr != nil {
+		return pErr
+	}
+
+	pid, pErr := repository.ParseID(postID)
+	if pErr != nil {
+		return pErr
+	}
+
+	filter := bson.M{
+		"_id":       id,
+		"posts._id": pid,
+	}
+
+	update := bson.M{
+		"$set": updateFields,
+	}
+
+	_, err := repository.collection.UpdateOne(c, filter, update)
 	if err == mongo.ErrNoDocuments {
 		return domain.NewError("post not found", domain.ERR_NOT_FOUND)
 	}
