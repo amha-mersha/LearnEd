@@ -82,16 +82,16 @@ type StudyGroup struct {
 }
 
 type AuthUsecase interface {
-	Signup(c *gin.Context, user dtos.SignupDTO) CodedError
-	Login(c *gin.Context, user dtos.LoginDTO) (string, CodedError)
-	ChangePassword(c *gin.Context, user dtos.ChangePasswordDTO) CodedError
+	Signup(c context.Context, user dtos.SignupDTO) CodedError
+	Login(c context.Context, user dtos.LoginDTO) (string, CodedError)
+	ChangePassword(c context.Context, user dtos.ChangePasswordDTO) CodedError
 }
 
 type AuthRepository interface {
-	CreateUser(c *gin.Context, user User) CodedError
-	GetUserByEmail(c *gin.Context, email string) (User, CodedError)
-	GetUserByID(c *gin.Context, id string) (User, CodedError)
-	UpdateUser(c *gin.Context, userEmail string, user User) CodedError
+	CreateUser(c context.Context, user User) CodedError
+	GetUserByEmail(c context.Context, email string) (User, CodedError)
+	GetUserByID(c context.Context, id string) (User, CodedError)
+	UpdateUser(c context.Context, userEmail string, user User) CodedError
 }
 
 type ClassroomUsecase interface {
@@ -112,4 +112,6 @@ type ClassroomRepository interface {
 	UpdatePost(c context.Context, classroomID string, postID string, post dtos.UpdatePostDTO) CodedError
 	RemovePost(c context.Context, classroomID string, postID string) CodedError
 	AddComment(c context.Context, classroomID string, postID string, comment Comment) CodedError
+	FindPost(c context.Context, classroomID string, postID string) (Post, CodedError)
+	RemoveComment(c context.Context, classroomID string, postID string, commentID string) CodedError
 }

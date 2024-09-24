@@ -166,3 +166,36 @@ func (usecase *ClassroomUsecase) AddComment(c context.Context, creatorID string,
 
 	return nil
 }
+
+func (usecase *ClassroomUsecase) RemoveComment(c context.Context, userID string, classroomID string, postID string, commentID string) domain.CodedError {
+	_, err := usecase.classroomRepository.FindClassroom(c, classroomID)
+	if err != nil {
+		return err
+	}
+
+	post, err := usecase.classroomRepository.FindPost(c, classroomID, postID)
+	if err != nil {
+		return err
+	}
+
+	found := false
+	for _, comment := range post.Comments {
+		if comment.ID == commentID {
+			if comment.CreatorID != userID {
+				return domain.NewError("only the creator of the comment can remove it", domain.ERR_FORBIDDEN)
+			}
+			found = true
+			break
+		}
+	}
+
+	if !found {
+		return domain.NewError("comment not found", domain.ERR_NOT_FOUND)
+	}
+
+	if err = usecase.classroomRepository.RemoveComment(c, classroomID, postID, commentID); err != nil {
+		return err
+	}
+
+	return nil
+}

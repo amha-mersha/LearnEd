@@ -1,12 +1,11 @@
 package usecases
 
 import (
+	"context"
 	"learned-api/domain"
 	"learned-api/domain/dtos"
 	"strings"
 	"time"
-
-	"github.com/gin-gonic/gin"
 )
 
 type AuthUsecase struct {
@@ -25,7 +24,7 @@ func NewAuthUsecase(repository domain.AuthRepository, validationRules domain.Aut
 	}
 }
 
-func (usecase *AuthUsecase) Signup(c *gin.Context, user dtos.SignupDTO) domain.CodedError {
+func (usecase *AuthUsecase) Signup(c context.Context, user dtos.SignupDTO) domain.CodedError {
 	newUser := domain.User{
 		Name:     user.Name,
 		Email:    user.Email,
@@ -53,7 +52,7 @@ func (usecase *AuthUsecase) Signup(c *gin.Context, user dtos.SignupDTO) domain.C
 	return nil
 }
 
-func (usecase *AuthUsecase) Login(c *gin.Context, user dtos.LoginDTO) (string, domain.CodedError) {
+func (usecase *AuthUsecase) Login(c context.Context, user dtos.LoginDTO) (string, domain.CodedError) {
 	user.Email = strings.ReplaceAll(strings.TrimSpace(strings.ToLower(user.Email)), " ", "")
 	foundUser, err := usecase.repository.GetUserByEmail(c, user.Email)
 	if err != nil {
@@ -73,7 +72,7 @@ func (usecase *AuthUsecase) Login(c *gin.Context, user dtos.LoginDTO) (string, d
 	return token, nil
 }
 
-func (usecase *AuthUsecase) ChangePassword(c *gin.Context, user dtos.ChangePasswordDTO) domain.CodedError {
+func (usecase *AuthUsecase) ChangePassword(c context.Context, user dtos.ChangePasswordDTO) domain.CodedError {
 	foundUser, err := usecase.repository.GetUserByEmail(c, user.Email)
 	if err != nil {
 		return err
