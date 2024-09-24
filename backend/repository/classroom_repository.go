@@ -22,7 +22,12 @@ func NewClassroomRepository(collection *mongo.Collection) *ClassroomRepository {
 
 func (repository *ClassroomRepository) FindClassroom(c context.Context, classroomID string) (domain.Classroom, domain.CodedError) {
 	var classroom domain.Classroom
-	res := repository.collection.FindOne(c, bson.D{{Key: "_id", Value: classroomID}})
+	id, pErr := repository.ParseID(classroomID)
+	if pErr != nil {
+		return classroom, pErr
+	}
+
+	res := repository.collection.FindOne(c, bson.D{{Key: "_id", Value: id}})
 	if res.Err() == mongo.ErrNoDocuments {
 		return classroom, domain.NewError("classroom not found", domain.ERR_NOT_FOUND)
 	}
@@ -39,8 +44,8 @@ func (repository *ClassroomRepository) FindClassroom(c context.Context, classroo
 	return classroom, nil
 }
 
-func (repository *ClassroomRepository) CreateClassroom(c context.Context, creatorID string, classroom domain.Classroom) domain.CodedError {
-	classroom.Teachers = []primitive.ObjectID{}
+func (repository *ClassroomRepository) CreateClassroom(c context.Context, creatorID primitive.ObjectID, classroom domain.Classroom) domain.CodedError {
+	classroom.Teachers = []primitive.ObjectID{creatorID}
 	classroom.Students = []primitive.ObjectID{}
 	_, err := repository.collection.InsertOne(c, classroom)
 	if err != nil {
@@ -51,7 +56,12 @@ func (repository *ClassroomRepository) CreateClassroom(c context.Context, creato
 }
 
 func (repository *ClassroomRepository) DeleteClassroom(c context.Context, classroomID string) domain.CodedError {
-	_, err := repository.collection.DeleteOne(c, bson.D{{Key: "_id", Value: classroomID}})
+	id, pErr := repository.ParseID(classroomID)
+	if pErr != nil {
+		return pErr
+	}
+
+	_, err := repository.collection.DeleteOne(c, bson.D{{Key: "_id", Value: id}})
 	if err != nil {
 		return domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
 	}
@@ -60,8 +70,13 @@ func (repository *ClassroomRepository) DeleteClassroom(c context.Context, classr
 }
 
 func (repository *ClassroomRepository) AddPost(c context.Context, classroomID string, post domain.Post) domain.CodedError {
-	post.ID = primitive.NewObjectID().Hex()
-	_, err := repository.collection.UpdateOne(c, bson.D{{Key: "_id", Value: classroomID}}, bson.D{{Key: "$push", Value: bson.D{{Key: "posts", Value: post}}}})
+	post.ID = primitive.NewObjectID()
+	id, pErr := repository.ParseID(classroomID)
+	if pErr != nil {
+		return pErr
+	}
+
+	_, err := repository.collection.UpdateOne(c, bson.D{{Key: "_id", Value: id}}, bson.D{{Key: "$push", Value: bson.D{{Key: "posts", Value: post}}}})
 	if err == mongo.ErrNoDocuments {
 		return domain.NewError("classroom not found", domain.ERR_NOT_FOUND)
 	}
@@ -142,7 +157,7 @@ func (repository *ClassroomRepository) FindPost(c context.Context, classroomID s
 	}
 
 	for _, post := range classroom.Posts {
-		if post.ID == postID {
+		if repository.StringifyID(post.ID) == postID {
 			return post, nil
 		}
 	}
@@ -151,7 +166,7 @@ func (repository *ClassroomRepository) FindPost(c context.Context, classroomID s
 }
 
 func (repository *ClassroomRepository) StringifyID(id primitive.ObjectID) string {
-	return id.String()
+	return id.Hex()
 }
 
 func (repository *ClassroomRepository) ParseID(id string) (primitive.ObjectID, domain.CodedError) {

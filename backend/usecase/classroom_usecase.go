@@ -33,7 +33,7 @@ func (usecase *ClassroomUsecase) CreateClassroom(c context.Context, creatorID st
 		StudentGrades: []domain.StudentGrade{},
 	}
 
-	if err := usecase.classroomRepository.CreateClassroom(c, creatorID, newClassroom); err != nil {
+	if err := usecase.classroomRepository.CreateClassroom(c, id, newClassroom); err != nil {
 		return err
 	}
 
@@ -75,6 +75,7 @@ func (usecase *ClassroomUsecase) AddPost(c context.Context, creatorID string, cl
 		return domain.NewError("only teachers added to the classroom can add posts", domain.ERR_FORBIDDEN)
 	}
 
+	post.Comments = []domain.Comment{}
 	if err = usecase.classroomRepository.AddPost(c, classroomID, post); err != nil {
 		return err
 	}

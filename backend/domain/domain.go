@@ -58,14 +58,13 @@ type Comment struct {
 }
 
 type Post struct {
-	ID           string    `json:"id" bson:"_id"`
-	GroupID      string    `json:"group_id"`
-	Content      string    `json:"content"`
-	File         string    `json:"file"`
-	IsProcessed  bool      `json:"is_processed"`
-	IsAssignment bool      `json:"is_assignment"`
-	Deadline     time.Time `json:"deadline"`
-	Comments     []Comment `json:"comments"`
+	ID           primitive.ObjectID `json:"id" bson:"_id"`
+	Content      string             `json:"content"`
+	File         string             `json:"file"`
+	IsProcessed  bool               `json:"is_processed" bson:"is_processed"`
+	IsAssignment bool               `json:"is_assignment" bson:"is_assignment"`
+	Deadline     time.Time          `json:"deadline"`
+	Comments     []Comment          `json:"comments"`
 	// TODO: Add fields for the processed data
 }
 
@@ -111,7 +110,7 @@ type ClassroomUsecase interface {
 }
 
 type ClassroomRepository interface {
-	CreateClassroom(c context.Context, creatorID string, classroom Classroom) CodedError
+	CreateClassroom(c context.Context, creatorID primitive.ObjectID, classroom Classroom) CodedError
 	DeleteClassroom(c context.Context, classroomID string) CodedError
 	FindClassroom(c context.Context, classroomID string) (Classroom, CodedError)
 	AddPost(c context.Context, classroomID string, post Post) CodedError

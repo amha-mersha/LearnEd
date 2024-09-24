@@ -82,6 +82,7 @@ func (controller *ClassroomController) AddPost(c *gin.Context) {
 	err := controller.usecase.AddPost(c, id, classroomID, post)
 	if err != nil {
 		c.JSON(GetHTTPErrorCode(err), domain.Response{"error": err.Error()})
+		return
 	}
 
 	c.JSON(http.StatusCreated, domain.Response{"message": "post added successfully"})
@@ -125,6 +126,7 @@ func (controller *ClassroomController) RemovePost(c *gin.Context) {
 	err := controller.usecase.RemovePost(c, id, classroomID, postID)
 	if err != nil {
 		c.JSON(GetHTTPErrorCode(err), domain.Response{"error": err.Error()})
+		return
 	}
 
 	c.JSON(http.StatusNoContent, domain.Response{"message": "post removed successfully"})
@@ -149,6 +151,7 @@ func (controller *ClassroomController) AddComment(c *gin.Context) {
 	err := controller.usecase.AddComment(c, id, classroomID, postID, comment)
 	if err != nil {
 		c.JSON(GetHTTPErrorCode(err), domain.Response{"error": err.Error()})
+		return
 	}
 
 	c.JSON(http.StatusCreated, domain.Response{"message": "comment added successfully"})
