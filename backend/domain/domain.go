@@ -67,6 +67,7 @@ type Post struct {
 
 type Classroom struct {
 	Name          string         `json:"name"`
+	CourseName    string         `json:"course_name"`
 	Owner         string         `json:"owner"`
 	Teachers      []string       `json:"teachers"`
 	Students      []string       `json:"students"`
@@ -89,6 +90,7 @@ type AuthUsecase interface {
 type AuthRepository interface {
 	CreateUser(c *gin.Context, user User) CodedError
 	GetUserByEmail(c *gin.Context, email string) (User, CodedError)
+	GetUserByID(c *gin.Context, id string) (User, CodedError)
 	UpdateUser(c *gin.Context, userEmail string, user User) CodedError
 }
 
@@ -109,4 +111,5 @@ type ClassroomRepository interface {
 	AddPost(c context.Context, classroomID string, post Post) CodedError
 	UpdatePost(c context.Context, classroomID string, postID string, post dtos.UpdatePostDTO) CodedError
 	RemovePost(c context.Context, classroomID string, postID string) CodedError
+	AddComment(c context.Context, classroomID string, postID string, comment Comment) CodedError
 }
