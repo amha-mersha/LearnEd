@@ -8,6 +8,7 @@ const logout = require("../../../public/Images/logout.svg");
 import Image from "next/image";
 import { useDispatch } from "react-redux";
 import { collapse } from "@/lib/redux/slices/sidebarSlice";
+import Link from "next/link";
 
 const SidebarRelaxed = () => {
   const dispatch = useDispatch();
@@ -29,7 +30,7 @@ const SidebarRelaxed = () => {
 
       <div className=" flex flex-col ml-16 space-y-4">
         <div className="flex space-x-3">
-          <Image className="w-6" src={classroom} alt="class"></Image>
+          <Link href = '/dashboard/quiz'><Image className="w-6" src={classroom} alt="class"></Image></Link>
           <h1 className="font-semibold">Class Rooms</h1>
         </div>
 
