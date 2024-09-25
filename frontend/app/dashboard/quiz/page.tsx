@@ -72,7 +72,7 @@ export default function Component() {
           >
             <h2 className="text-lg font-semibold mb-4">{question.text}</h2>
             <RadioGroup
-              onValueChange={(value) => handleAnswerChange(question.id, value)}
+              onValueChange={(value: string) => handleAnswerChange(question.id, value)}
               value={userAnswers[question.id]}
               disabled={submitted}
             >
