@@ -1,7 +1,7 @@
 import React from 'react'
 import { cardType } from '../types/cardType'
-import book from '../../public/Images/mynaui_book-open.svg'
-import people from '../../public/Images/fluent_people-16-regular.svg'
+const book = require('../../public/Images/mynaui_book-open.svg');
+const people = require('../../public/Images/fluent_people-16-regular.svg');
 import Image from 'next/image'
 
 interface Props{
