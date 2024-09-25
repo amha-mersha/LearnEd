@@ -58,6 +58,10 @@ func (usecase *ClassroomUsecase) DeleteClassroom(c context.Context, teacherID st
 }
 
 func (usecase *ClassroomUsecase) AddPost(c context.Context, creatorID string, classroomID string, post domain.Post) domain.CodedError {
+	if post.Content == "" {
+		return domain.NewError("post content cannot be empty", domain.ERR_BAD_REQUEST)
+	}
+
 	classroom, err := usecase.classroomRepository.FindClassroom(c, classroomID)
 	if err != nil {
 		return err
@@ -134,6 +138,10 @@ func (usecase *ClassroomUsecase) RemovePost(c context.Context, creatorID string,
 }
 
 func (usecase *ClassroomUsecase) AddComment(c context.Context, creatorID string, classroomID string, postID string, comment domain.Comment) domain.CodedError {
+	if comment.Content == "" {
+		return domain.NewError("comment content cannot be empty", domain.ERR_BAD_REQUEST)
+	}
+
 	classroom, err := usecase.classroomRepository.FindClassroom(c, classroomID)
 	if err != nil {
 		return err
