@@ -298,18 +298,63 @@ func (repository *ClassroomRepository) AddGrade(c context.Context, classroomID s
 		{
 			Key: "$push",
 			Value: bson.D{
-				{
-					Key: "student_grades",
-					Value: domain.StudentGrade{
-						StudentID: sID,
-						Records:   records,
-					},
-				},
+				{Key: "student_grades", Value: domain.StudentGrade{StudentID: sID, Records: records}},
 			},
 		},
 	}
 
 	res, err := repository.collection.UpdateOne(c, filter, update)
+	if err != nil {
+		return domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
+	}
+
+	if res.ModifiedCount == 0 {
+		return domain.NewError("classroom not found", domain.ERR_NOT_FOUND)
+	}
+
+	return nil
+}
+
+func (repository *ClassroomRepository) UpdateGrade(c context.Context, classroomID string, studentID string, records []domain.StudentRecord) domain.CodedError {
+	cID, pErr := repository.ParseID(classroomID)
+	if pErr != nil {
+		return pErr
+	}
+
+	sID, pErr := repository.ParseID(studentID)
+	if pErr != nil {
+		return pErr
+	}
+
+	filter := bson.M{"_id": cID}
+
+	pull := bson.M{
+		"$pull": bson.M{
+			"student_grades": bson.M{
+				"student_id": sID,
+			},
+		},
+	}
+
+	res, err := repository.collection.UpdateOne(c, filter, pull)
+	if err != nil {
+		return domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
+	}
+
+	if res.ModifiedCount == 0 {
+		return domain.NewError("classroom not found", domain.ERR_NOT_FOUND)
+	}
+
+	push := bson.D{
+		{
+			Key: "$push",
+			Value: bson.D{
+				{Key: "student_grades", Value: domain.StudentGrade{StudentID: sID, Records: records}},
+			},
+		},
+	}
+
+	res, err = repository.collection.UpdateOne(c, filter, push)
 	if err != nil {
 		return domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
 	}
