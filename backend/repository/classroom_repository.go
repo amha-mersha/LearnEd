@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"fmt"
 	"learned-api/domain"
 	"learned-api/domain/dtos"
 
@@ -103,5 +104,17 @@ func (repository *ClassroomRepository) RemovePost(c context.Context, classroomID
 		return domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
 	}
 
+	return nil
+}
+
+func (repository *ClassroomRepository) AddQuestionsAndSummary(cxt context.Context, postId primitive.ObjectID, content dtos.GenerateContentDTO) domain.CodedError {
+	_, err := repository.collection.InsertOne(cxt, bson.D{
+		{Key: "postID", Value: postId},
+		{Key: "questions", Value: content.Questions},
+		{Key: "summary", Value: content.Summarys}, 
+	})
+	if err != nil {
+		return domain.NewError(fmt.Sprintf("failed to insert questions and summary into database: %s", err), domain.ERR_INTERNAL_SERVER)
+	}
 	return nil
 }
