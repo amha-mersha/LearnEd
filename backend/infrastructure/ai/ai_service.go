@@ -25,6 +25,8 @@ var AllowedFileTypes = map[string]string{
 	"pdf": "application/pdf",
 }
 
+var numberOfQuestions = 100
+
 func NewAIService(context context.Context, apiKey string) *AIService {
 	client, err := genai.NewClient(context, option.WithAPIKey(apiKey))
 	if err != nil {
@@ -69,8 +71,8 @@ func (s *AIService) ExtractText(value interface{}) string {
 	}
 }
 
-// send file to generate question
-func (s *AIService) GenerateQuestionsFromFile(post domain.Post) domain.CodedError {
+// send file to generate question and summary for a given file in post
+func (s *AIService) GenerateContentFromFile(post domain.Post) domain.CodedError {
 	if err := s.ValidateFile(post.File); err != nil {
 		return err
 	}
@@ -111,6 +113,69 @@ func (s *AIService) GenerateQuestionsFromFile(post domain.Post) domain.CodedErro
     `, 100)),genai.FileData{URI: file.URI})
 	if err != nil{
 		return domain.NewError(fmt.Sprintf("failed to generate questions through gemini: %s", err), domain.ERR_INTERNAL_SERVER)
+	}
+
+	_, err = s.model.GenerateContent(s.context,genai.Text(fmt.Sprintf(`
+	Based on the given content below , generate a summary for the material and return JSON format.
+	Format: 
+	{
+	"summary": "summary of the given document as detailed as possible"
+	} `)), genai.FileData{URI: file.URI})
+	if err != nil{
+		return domain.NewError(fmt.Sprintf("failed to generate summary through gemini: %s", err), domain.ERR_INTERNAL_SERVER)
+	}
+	return nil
+}
+
+
+//generate questions from an input text
+func (s *AIService) GenerateContentFromText(post domain.Post)domain.CodedError{
+	cleanedText := s.CleanText(post.Content)
+	if cleanedText == ""{
+		return domain.NewError("the post contains an empty content", domain.ERR_BAD_REQUEST)
+	}
+	_, err := s.model.GenerateContent(s.context, genai.Text(fmt.Sprintf(`
+        Based on the following content, generate %d multiple-choice questions with 4 choices each. 
+        Also, provide an explanation for the correct answer. Return the result in JSON format.
+		Content: %s
+		Format: 
+		  [
+        {
+            "question": "Question 1 text",
+            "choices": [
+                "Choice A",
+                "Choice B",
+                "Choice C",
+                "Choice D"
+            ],
+            "correct_answer": "Index of the correct answer",
+            "explanation": "Explanation of why choice A is correct."
+        },
+        {
+            "question": "Question 2 text",
+            "choices": [
+                "Choice A",
+                "Choice B",
+                "Choice C",
+                "Choice D"
+            ],
+            "correct_answer": "Index of the correct answer",
+            "explanation": "Explanation of why choice B is correct."
+        }
+    ]
+    `,numberOfQuestions,cleanedText)))
+	if err != nil{
+		return domain.NewError(fmt.Sprintf("failed to generate questions from text content through gemini: %s", err), domain.ERR_INTERNAL_SERVER)
+	}
+	_, err = s.model.GenerateContent(s.context,genai.Text(fmt.Sprintf(`
+	Based on the given content below , generate a summary and return JSON format.
+	Content: %s
+	Format: 
+	{
+	"summary": "summary of the given content as detailed as possible"
+	} `,cleanedText)))
+	if err != nil{
+		return domain.NewError(fmt.Sprintf("failed to generate summary for the text content through gemini: %s", err), domain.ERR_INTERNAL_SERVER)
 	}
 	return nil
 }
