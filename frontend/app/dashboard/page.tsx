@@ -7,7 +7,7 @@ const page = () => {
   const cards = cardinfo;
 
   return (
-    <div className=" bg-[#F6F6F6] min-h-screen  pr-36 pt-16">
+    <div className=" bg-[#F6F6F6] min-h-screen  pr-36 pt-16 pb-10">
       <h1 className="text-3xl font-black ml-24">Classes</h1>
       <div className="  justify-center w-full flex flex-wrap">
         {cards.map((item, ind) => (
