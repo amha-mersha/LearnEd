@@ -213,3 +213,15 @@ func (controller *ClassroomController) AddStudent(c *gin.Context) {
 
 	c.JSON(http.StatusOK, domain.Response{"message": "student added to classroom successfully"})
 }
+
+func (controller *ClassroomController) RemoveStudent(c *gin.Context) {
+	classroomID := c.Param("classroomID")
+	studentID := c.Param("studentID")
+	err := controller.usecase.RemoveStudent(c, classroomID, studentID)
+	if err != nil {
+		c.JSON(GetHTTPErrorCode(err), domain.Response{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, domain.Response{"message": "student removed from classroom successfully"})
+}
