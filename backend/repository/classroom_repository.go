@@ -315,7 +315,7 @@ func (repository *ClassroomRepository) AddGrade(c context.Context, classroomID s
 	return nil
 }
 
-func (repository *ClassroomRepository) UpdateGrade(c context.Context, classroomID string, studentID string, records []domain.StudentRecord) domain.CodedError {
+func (repository *ClassroomRepository) RemoveGrade(c context.Context, classroomID string, studentID string) domain.CodedError {
 	cID, pErr := repository.ParseID(classroomID)
 	if pErr != nil {
 		return pErr
@@ -337,24 +337,6 @@ func (repository *ClassroomRepository) UpdateGrade(c context.Context, classroomI
 	}
 
 	res, err := repository.collection.UpdateOne(c, filter, pull)
-	if err != nil {
-		return domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
-	}
-
-	if res.ModifiedCount == 0 {
-		return domain.NewError("classroom not found", domain.ERR_NOT_FOUND)
-	}
-
-	push := bson.D{
-		{
-			Key: "$push",
-			Value: bson.D{
-				{Key: "student_grades", Value: domain.StudentGrade{StudentID: sID, Records: records}},
-			},
-		},
-	}
-
-	res, err = repository.collection.UpdateOne(c, filter, push)
 	if err != nil {
 		return domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
 	}

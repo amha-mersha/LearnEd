@@ -278,16 +278,16 @@ func (usecase *ClassroomUsecase) PutGrade(c context.Context, teacherID string, c
 		}
 	}
 
-	if !isGraded {
-		err = usecase.classroomRepository.AddGrade(c, classroomID, studentID, records)
+	if isGraded {
+		err = usecase.classroomRepository.RemoveGrade(c, classroomID, studentID)
 		if err != nil {
 			return err
 		}
-	} else {
-		err = usecase.classroomRepository.UpdateGrade(c, classroomID, studentID, records)
-		if err != nil {
-			return err
-		}
+	}
+
+	err = usecase.classroomRepository.AddGrade(c, classroomID, studentID, records)
+	if err != nil {
+		return err
 	}
 
 	return nil

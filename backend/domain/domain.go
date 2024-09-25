@@ -127,6 +127,6 @@ type ClassroomRepository interface {
 	StringifyID(id primitive.ObjectID) string
 	ParseID(id string) (primitive.ObjectID, CodedError)
 	AddGrade(c context.Context, classroomID string, studentID string, studentGrade []StudentRecord) CodedError
-	UpdateGrade(c context.Context, classroomID string, studentID string, records []StudentRecord) CodedError
+	RemoveGrade(c context.Context, classroomID string, studentID string) CodedError
 	AddStudent(c context.Context, studentID string, classroomID string) CodedError
 }
