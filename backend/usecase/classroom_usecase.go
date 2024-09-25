@@ -292,3 +292,35 @@ func (usecase *ClassroomUsecase) PutGrade(c context.Context, teacherID string, c
 
 	return nil
 }
+
+func (usecase *ClassroomUsecase) AddStudent(c context.Context, studentEmail string, classroomID string) domain.CodedError {
+	foundUser, err := usecase.authRepository.GetUserByEmail(c, studentEmail)
+	if err != nil {
+		return err
+	}
+
+	clsroom, err := usecase.classroomRepository.FindClassroom(c, classroomID)
+	if err != nil {
+		return err
+	}
+
+	targetID := usecase.classroomRepository.StringifyID(foundUser.ID)
+	found := false
+	for _, student := range clsroom.Students {
+		if usecase.classroomRepository.StringifyID(student) == targetID {
+			found = true
+			break
+		}
+	}
+
+	if found {
+		return domain.NewError("student has already been added to the classroom", domain.ERR_BAD_REQUEST)
+	}
+
+	err = usecase.classroomRepository.AddStudent(c, targetID, classroomID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

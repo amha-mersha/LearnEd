@@ -128,4 +128,5 @@ type ClassroomRepository interface {
 	ParseID(id string) (primitive.ObjectID, CodedError)
 	AddGrade(c context.Context, classroomID string, studentID string, studentGrade []StudentRecord) CodedError
 	UpdateGrade(c context.Context, classroomID string, studentID string, records []StudentRecord) CodedError
+	AddStudent(c context.Context, studentID string, classroomID string) CodedError
 }
