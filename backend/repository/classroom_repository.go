@@ -169,8 +169,28 @@ func (repository *ClassroomRepository) RemovePost(c context.Context, classroomID
 }
 
 func (repository *ClassroomRepository) AddComment(c context.Context, classroomID string, postID string, comment domain.Comment) domain.CodedError {
-	comment.ID = primitive.NewObjectID().Hex()
-	_, err := repository.collection.UpdateOne(c, bson.D{{Key: "_id", Value: classroomID}, {Key: "posts._id", Value: postID}}, bson.D{{Key: "$push", Value: bson.D{{Key: "comments", Value: comment}}}})
+	comment.ID = primitive.NewObjectID()
+
+	cID, pErr := repository.ParseID(classroomID)
+	if pErr != nil {
+		return pErr
+	}
+
+	pID, pErr := repository.ParseID(postID)
+	if pErr != nil {
+		return pErr
+	}
+
+	filter := bson.M{
+		"_id":       cID,
+		"posts._id": pID,
+	}
+
+	update := bson.M{
+		"$push": bson.D{{Key: "posts.comments", Value: comment}},
+	}
+
+	_, err := repository.collection.UpdateOne(c, filter, update)
 	if err == mongo.ErrNoDocuments {
 		return domain.NewError("post not found", domain.ERR_NOT_FOUND)
 	}

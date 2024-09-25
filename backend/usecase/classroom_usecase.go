@@ -4,6 +4,7 @@ import (
 	"context"
 	"learned-api/domain"
 	"learned-api/domain/dtos"
+	"time"
 )
 
 type ClassroomUsecase struct {
@@ -142,6 +143,19 @@ func (usecase *ClassroomUsecase) AddComment(c context.Context, creatorID string,
 		return domain.NewError("comment content cannot be empty", domain.ERR_BAD_REQUEST)
 	}
 
+	id, err := usecase.classroomRepository.ParseID(creatorID)
+	if err != nil {
+		return err
+	}
+
+	foundUser, err := usecase.authRepository.GetUserByID(c, creatorID)
+	if err != nil {
+		return err
+	}
+
+	comment.CreatedAt = time.Now().Round(0)
+	comment.CreatorID = id
+	comment.CreatorName = foundUser.Name
 	classroom, err := usecase.classroomRepository.FindClassroom(c, classroomID)
 	if err != nil {
 		return err
@@ -168,13 +182,6 @@ func (usecase *ClassroomUsecase) AddComment(c context.Context, creatorID string,
 		return domain.NewError("only teachers added to the classroom can remove posts", domain.ERR_FORBIDDEN)
 	}
 
-	user, err := usecase.authRepository.GetUserByID(c, creatorID)
-	if err != nil {
-		return err
-	}
-
-	comment.CreatorName = user.Name
-	comment.CreatorID = user.ID.String()
 	if err = usecase.classroomRepository.AddComment(c, classroomID, postID, comment); err != nil {
 		return err
 	}
@@ -195,8 +202,8 @@ func (usecase *ClassroomUsecase) RemoveComment(c context.Context, userID string,
 
 	found := false
 	for _, comment := range post.Comments {
-		if comment.ID == commentID {
-			if comment.CreatorID != userID {
+		if usecase.classroomRepository.StringifyID(comment.ID) == commentID {
+			if usecase.classroomRepository.StringifyID(comment.CreatorID) != userID {
 				return domain.NewError("only the creator of the comment can remove it", domain.ERR_FORBIDDEN)
 			}
 			found = true

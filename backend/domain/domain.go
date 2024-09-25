@@ -50,11 +50,11 @@ type StudentGrade struct {
 }
 
 type Comment struct {
-	ID          string    `json:"id" bson:"_id"`
-	CreatorID   string    `json:"creator_id"`
-	CreatorName string    `json:"creator_name"`
-	Content     string    `json:"content"`
-	CreatedAt   time.Time `json:"created_at"`
+	ID          primitive.ObjectID `json:"id" bson:"_id"`
+	CreatorID   primitive.ObjectID `json:"creator_id"`
+	CreatorName string             `json:"creator_name"`
+	Content     string             `json:"content"`
+	CreatedAt   time.Time          `json:"created_at"`
 }
 
 type Post struct {
