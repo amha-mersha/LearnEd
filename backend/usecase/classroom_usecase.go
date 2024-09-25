@@ -228,3 +228,31 @@ func (usecase *ClassroomUsecase) RemoveComment(c context.Context, userID string,
 
 	return nil
 }
+
+func (usecase *ClassroomUsecase) PutGrade(c context.Context, teacherID string, classroomID string, studentID string, gradeDto dtos.GradeDTO) domain.CodedError {
+	classroom, err := usecase.classroomRepository.FindClassroom(c, classroomID)
+	if err != nil {
+		return err
+	}
+
+	allowed := false
+	for _, tID := range classroom.Teachers {
+		if usecase.classroomRepository.StringifyID(tID) == teacherID {
+			allowed = true
+			break
+		}
+	}
+
+	if !allowed {
+		return domain.NewError("only teachers added to the classroom can add posts", domain.ERR_FORBIDDEN)
+	}
+
+	// TODO: validate grades
+
+	err = usecase.classroomRepository.PutGrade(c, classroomID, studentID, gradeDto)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

@@ -124,4 +124,5 @@ type ClassroomRepository interface {
 	RemoveComment(c context.Context, classroomID string, postID string, commentID string) CodedError
 	StringifyID(id primitive.ObjectID) string
 	ParseID(id string) (primitive.ObjectID, CodedError)
+	PutGrade(c context.Context, classroomID string, studentID string, gradeDto dtos.GradeDTO) CodedError
 }
