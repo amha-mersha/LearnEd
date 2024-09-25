@@ -365,3 +365,35 @@ func (repository *ClassroomRepository) UpdateGrade(c context.Context, classroomI
 
 	return nil
 }
+
+func (repository *ClassroomRepository) AddStudent(c context.Context, studentID string, classroomID string) domain.CodedError {
+	sID, pErr := repository.ParseID(studentID)
+	if pErr != nil {
+		return pErr
+	}
+
+	cID, pErr := repository.ParseID(classroomID)
+	if pErr != nil {
+		return pErr
+	}
+
+	filter := bson.M{"_id": cID}
+	update := bson.D{
+		{
+			Key: "$push",
+			Value: bson.D{
+				{Key: "students", Value: sID}},
+		},
+	}
+
+	res, err := repository.collection.UpdateOne(c, filter, update)
+	if err != nil {
+		return domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
+	}
+
+	if res.ModifiedCount == 0 {
+		return domain.NewError("classroom not found", domain.ERR_NOT_FOUND)
+	}
+
+	return nil
+}
