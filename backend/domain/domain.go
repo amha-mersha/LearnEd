@@ -59,12 +59,14 @@ type Comment struct {
 
 type Post struct {
 	ID           primitive.ObjectID `json:"id" bson:"_id"`
+	CreatorID    primitive.ObjectID `json:"creator_id" bson:"creator_id"`
 	Content      string             `json:"content"`
 	File         string             `json:"file"`
 	IsProcessed  bool               `json:"is_processed" bson:"is_processed"`
 	IsAssignment bool               `json:"is_assignment" bson:"is_assignment"`
 	Deadline     time.Time          `json:"deadline"`
 	Comments     []Comment          `json:"comments"`
+	CreatedAt    time.Time          `json:"created_at" bson:"created_at"`
 	// TODO: Add fields for the processed data
 }
 

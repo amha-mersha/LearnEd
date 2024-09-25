@@ -80,7 +80,14 @@ func (usecase *ClassroomUsecase) AddPost(c context.Context, creatorID string, cl
 		return domain.NewError("only teachers added to the classroom can add posts", domain.ERR_FORBIDDEN)
 	}
 
+	cID, err := usecase.classroomRepository.ParseID(creatorID)
+	if err != nil {
+		return err
+	}
+
 	post.Comments = []domain.Comment{}
+	post.CreatedAt = time.Now().Round(0)
+	post.CreatorID = cID
 	if err = usecase.classroomRepository.AddPost(c, classroomID, post); err != nil {
 		return err
 	}

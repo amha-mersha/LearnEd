@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"fmt"
 	"learned-api/domain"
 	"learned-api/domain/dtos"
 
@@ -76,6 +77,7 @@ func (repository *ClassroomRepository) AddPost(c context.Context, classroomID st
 		return pErr
 	}
 
+	fmt.Println(post)
 	_, err := repository.collection.UpdateOne(c, bson.D{{Key: "_id", Value: id}}, bson.D{{Key: "$push", Value: bson.D{{Key: "posts", Value: post}}}})
 	if err == mongo.ErrNoDocuments {
 		return domain.NewError("classroom not found", domain.ERR_NOT_FOUND)
