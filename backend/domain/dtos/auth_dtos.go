@@ -17,13 +17,3 @@ type ChangePasswordDTO struct {
 	OldPassword string `json:"old_password"`
 	NewPassword string `json:"new_password"`
 }
-
-type GradeRecord struct {
-	RecordName string `json:"record_name"`
-	Grade      int    `json:"grade"`
-	MaxGrade   int    `json:"max_grade"`
-}
-
-type GradeDTO struct {
-	Grades []GradeRecord `json:"grades"`
-}

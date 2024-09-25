@@ -40,13 +40,14 @@ type User struct {
 }
 
 type StudentRecord struct {
-	PostID string `json:"post_id"`
-	Grade  int    `json:"grade"`
+	RecordName string `json:"record_name"`
+	Grade      int    `json:"grade"`
+	MaxGrade   int    `json:"max_grade"`
 }
 
 type StudentGrade struct {
-	StudentID string          `json:"student_id"`
-	Records   []StudentRecord `json:"records"`
+	StudentID primitive.ObjectID `json:"student_id"`
+	Records   []StudentRecord    `json:"records"`
 }
 
 type Comment struct {
@@ -77,7 +78,7 @@ type Classroom struct {
 	Owner         primitive.ObjectID   `json:"owner"`
 	Teachers      []primitive.ObjectID `json:"teachers"`
 	Students      []primitive.ObjectID `json:"students"`
-	StudentGrades []StudentGrade       `json:"student_grades"`
+	StudentGrades []StudentGrade       `json:"student_grades" bson:"student_grades"`
 	Posts         []Post               `json:"posts"`
 }
 
@@ -124,5 +125,5 @@ type ClassroomRepository interface {
 	RemoveComment(c context.Context, classroomID string, postID string, commentID string) CodedError
 	StringifyID(id primitive.ObjectID) string
 	ParseID(id string) (primitive.ObjectID, CodedError)
-	PutGrade(c context.Context, classroomID string, studentID string, gradeDto dtos.GradeDTO) CodedError
+	AddGrade(c context.Context, classroomID string, studentID string, studentGrade []StudentRecord) CodedError
 }

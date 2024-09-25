@@ -247,9 +247,18 @@ func (usecase *ClassroomUsecase) PutGrade(c context.Context, teacherID string, c
 		return domain.NewError("only teachers added to the classroom can add posts", domain.ERR_FORBIDDEN)
 	}
 
+	records := []domain.StudentRecord{}
+	for _, g := range gradeDto.Grades {
+		records = append(records, domain.StudentRecord{
+			RecordName: g.RecordName,
+			Grade:      g.Grade,
+			MaxGrade:   g.MaxGrade,
+		})
+	}
+
 	// TODO: validate grades
 
-	err = usecase.classroomRepository.PutGrade(c, classroomID, studentID, gradeDto)
+	err = usecase.classroomRepository.AddGrade(c, classroomID, studentID, records)
 	if err != nil {
 		return err
 	}
