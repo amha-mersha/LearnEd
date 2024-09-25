@@ -130,4 +130,5 @@ type ClassroomRepository interface {
 	AddGrade(c context.Context, classroomID string, studentID string, studentGrade []StudentRecord) CodedError
 	RemoveGrade(c context.Context, classroomID string, studentID string) CodedError
 	AddStudent(c context.Context, studentID string, classroomID string) CodedError
+	RemoveStudent(c context.Context, studentID string, classroomID string) CodedError
 }

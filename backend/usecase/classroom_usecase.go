@@ -324,3 +324,35 @@ func (usecase *ClassroomUsecase) AddStudent(c context.Context, studentEmail stri
 
 	return nil
 }
+
+func (usecase *ClassroomUsecase) RemoveStudent(c context.Context, classroomID string, studentID string) domain.CodedError {
+	foundUser, err := usecase.authRepository.GetUserByID(c, classroomID)
+	if err != nil {
+		return err
+	}
+
+	clsroom, err := usecase.classroomRepository.FindClassroom(c, classroomID)
+	if err != nil {
+		return err
+	}
+
+	targetID := usecase.classroomRepository.StringifyID(foundUser.ID)
+	found := false
+	for _, student := range clsroom.Students {
+		if usecase.classroomRepository.StringifyID(student) == targetID {
+			found = true
+			break
+		}
+	}
+
+	if !found {
+		return domain.NewError("student is not in the classroom", domain.ERR_BAD_REQUEST)
+	}
+
+	err = usecase.classroomRepository.RemoveStudent(c, targetID, classroomID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
