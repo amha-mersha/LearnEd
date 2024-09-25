@@ -247,6 +247,18 @@ func (usecase *ClassroomUsecase) PutGrade(c context.Context, teacherID string, c
 		return domain.NewError("only teachers added to the classroom can add posts", domain.ERR_FORBIDDEN)
 	}
 
+	inClassroom := false
+	for _, sID := range classroom.Students {
+		if usecase.classroomRepository.StringifyID(sID) == studentID {
+			inClassroom = true
+			break
+		}
+	}
+
+	if !inClassroom {
+		return domain.NewError("the student isn't added to the classroom", domain.ERR_BAD_REQUEST)
+	}
+
 	records := []domain.StudentRecord{}
 	for _, g := range gradeDto.Grades {
 		records = append(records, domain.StudentRecord{
@@ -258,9 +270,24 @@ func (usecase *ClassroomUsecase) PutGrade(c context.Context, teacherID string, c
 
 	// TODO: validate grades
 
-	err = usecase.classroomRepository.AddGrade(c, classroomID, studentID, records)
-	if err != nil {
-		return err
+	isGraded := false
+	for _, grade := range classroom.StudentGrades {
+		if usecase.classroomRepository.StringifyID(grade.StudentID) == studentID {
+			isGraded = true
+			break
+		}
+	}
+
+	if !isGraded {
+		err = usecase.classroomRepository.AddGrade(c, classroomID, studentID, records)
+		if err != nil {
+			return err
+		}
+	} else {
+		err = usecase.classroomRepository.UpdateGrade(c, classroomID, studentID, records)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
