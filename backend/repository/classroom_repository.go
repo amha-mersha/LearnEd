@@ -2,7 +2,6 @@ package repository
 
 import (
 	"context"
-	"fmt"
 	"learned-api/domain"
 	"learned-api/domain/dtos"
 
@@ -77,7 +76,6 @@ func (repository *ClassroomRepository) AddPost(c context.Context, classroomID st
 		return pErr
 	}
 
-	fmt.Println(post)
 	_, err := repository.collection.UpdateOne(c, bson.D{{Key: "_id", Value: id}}, bson.D{{Key: "$push", Value: bson.D{{Key: "posts", Value: post}}}})
 	if err == mongo.ErrNoDocuments {
 		return domain.NewError("classroom not found", domain.ERR_NOT_FOUND)
@@ -281,4 +279,44 @@ func (repository *ClassroomRepository) ParseID(id string) (primitive.ObjectID, d
 	}
 
 	return parsedID, nil
+}
+
+func (repository *ClassroomRepository) AddGrade(c context.Context, classroomID string, studentID string, records []domain.StudentRecord) domain.CodedError {
+	cID, pErr := repository.ParseID(classroomID)
+	if pErr != nil {
+		return pErr
+	}
+
+	sID, pErr := repository.ParseID(studentID)
+	if pErr != nil {
+		return pErr
+	}
+
+	filter := bson.M{"_id": cID}
+
+	update := bson.D{
+		{
+			Key: "$push",
+			Value: bson.D{
+				{
+					Key: "student_grades",
+					Value: domain.StudentGrade{
+						StudentID: sID,
+						Records:   records,
+					},
+				},
+			},
+		},
+	}
+
+	res, err := repository.collection.UpdateOne(c, filter, update)
+	if err != nil {
+		return domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
+	}
+
+	if res.ModifiedCount == 0 {
+		return domain.NewError("classroom not found", domain.ERR_NOT_FOUND)
+	}
+
+	return nil
 }
