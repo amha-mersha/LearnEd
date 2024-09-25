@@ -187,11 +187,17 @@ func (repository *ClassroomRepository) AddComment(c context.Context, classroomID
 	}
 
 	update := bson.M{
-		"$push": bson.D{{Key: "posts.comments", Value: comment}},
+		"$push": bson.M{
+			"posts.$.comments": comment,
+		},
 	}
 
-	_, err := repository.collection.UpdateOne(c, filter, update)
+	res, err := repository.collection.UpdateOne(c, filter, update)
 	if err == mongo.ErrNoDocuments {
+		return domain.NewError("post not found", domain.ERR_NOT_FOUND)
+	}
+
+	if res.ModifiedCount == 0 {
 		return domain.NewError("post not found", domain.ERR_NOT_FOUND)
 	}
 
