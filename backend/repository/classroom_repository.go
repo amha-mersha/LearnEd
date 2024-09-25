@@ -293,7 +293,6 @@ func (repository *ClassroomRepository) AddGrade(c context.Context, classroomID s
 	}
 
 	filter := bson.M{"_id": cID}
-
 	update := bson.D{
 		{
 			Key: "$push",
@@ -327,8 +326,7 @@ func (repository *ClassroomRepository) RemoveGrade(c context.Context, classroomI
 	}
 
 	filter := bson.M{"_id": cID}
-
-	pull := bson.M{
+	update := bson.M{
 		"$pull": bson.M{
 			"student_grades": bson.M{
 				"student_id": sID,
@@ -336,7 +334,7 @@ func (repository *ClassroomRepository) RemoveGrade(c context.Context, classroomI
 		},
 	}
 
-	res, err := repository.collection.UpdateOne(c, filter, pull)
+	res, err := repository.collection.UpdateOne(c, filter, update)
 	if err != nil {
 		return domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
 	}
@@ -365,6 +363,36 @@ func (repository *ClassroomRepository) AddStudent(c context.Context, studentID s
 			Key: "$push",
 			Value: bson.D{
 				{Key: "students", Value: sID}},
+		},
+	}
+
+	res, err := repository.collection.UpdateOne(c, filter, update)
+	if err != nil {
+		return domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
+	}
+
+	if res.ModifiedCount == 0 {
+		return domain.NewError("classroom not found", domain.ERR_NOT_FOUND)
+	}
+
+	return nil
+}
+
+func (repository *ClassroomRepository) RemoveStudent(c context.Context, studentID string, classroomID string) domain.CodedError {
+	sID, pErr := repository.ParseID(studentID)
+	if pErr != nil {
+		return pErr
+	}
+
+	cID, pErr := repository.ParseID(classroomID)
+	if pErr != nil {
+		return pErr
+	}
+
+	filter := bson.M{"_id": cID}
+	update := bson.M{
+		"$pull": bson.M{
+			"students": sID,
 		},
 	}
 
