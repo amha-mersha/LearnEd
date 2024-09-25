@@ -21,5 +21,5 @@ func NewClassroomRouter(classroomRepository domain.ClassroomRepository, authRepo
 	router.DELETE("/:classroomID/posts/:postID", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleTeacher), classroomController.RemovePost)
 
 	router.POST("/:classroomID/posts/:postID", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleTeacher, domain.RoleStudent), classroomController.AddComment)
-	router.POST("/:classroomID/posts/:postID/comments/:commentID", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleTeacher, domain.RoleStudent), classroomController.RemoveComment)
+	router.DELETE("/:classroomID/posts/:postID/comments/:commentID", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleTeacher, domain.RoleStudent), classroomController.RemoveComment)
 }
