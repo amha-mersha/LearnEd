@@ -16,3 +16,7 @@ type GradeRecord struct {
 type GradeDTO struct {
 	Grades []GradeRecord `json:"grades"`
 }
+
+type AddStudentDTO struct {
+	Email string `json:"email"`
+}
