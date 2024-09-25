@@ -176,3 +176,23 @@ func (controller *ClassroomController) RemoveComment(c *gin.Context) {
 
 	c.JSON(http.StatusNoContent, domain.Response{"message": "comment removed successfully"})
 }
+
+func (controller *ClassroomController) PutGrade(c *gin.Context) {
+	var gradeDto dtos.GradeDTO
+	classroomID := c.Param("classroomID")
+	studentID := c.Param("studentID")
+	creatorID, exists := c.Keys["id"]
+	if !exists {
+		c.JSON(http.StatusForbidden, gin.H{"message": "coudn't find the id field"})
+		return
+	}
+
+	id := creatorID.(string)
+	err := controller.usecase.PutGrade(c, id, classroomID, studentID, gradeDto)
+	if err != nil {
+		c.JSON(GetHTTPErrorCode(err), domain.Response{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusNoContent, domain.Response{"message": "grade updated successfully"})
+}

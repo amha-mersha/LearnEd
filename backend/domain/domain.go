@@ -109,6 +109,7 @@ type ClassroomUsecase interface {
 	RemovePost(c context.Context, creatorID string, classroomID string, postID string) CodedError
 	AddComment(c context.Context, creatorID string, classroomID string, postID string, comment Comment) CodedError
 	RemoveComment(c context.Context, creatorID string, classroomID string, postID string, commentID string) CodedError
+	PutGrade(c context.Context, teacherID string, classroomID string, studentID string, gradeDto dtos.GradeDTO) CodedError
 }
 
 type ClassroomRepository interface {
