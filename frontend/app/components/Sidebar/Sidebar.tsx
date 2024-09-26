@@ -1,25 +1,23 @@
-import React from 'react'
-import SidebarRelaxed from './SidebarRelaxed'
-import { useSelector } from 'react-redux'
-import SidebarCollapsed from './SidebarCollapsed'
+import React from "react";
+import SidebarRelaxed from "./SidebarRelaxed";
+import { useSelector } from "react-redux";
+import SidebarCollapsed from "./SidebarCollapsed";
 
 const Sidebar = () => {
-  const relaxed = useSelector((state:any) => state.hamburger.value)
-  if (relaxed){
+  const relaxed = useSelector((state: any) => state.hamburger.value);
+  if (relaxed) {
     return (
       <div>
-          <SidebarRelaxed/>
+        <SidebarRelaxed />
       </div>
-    )
-  }
-  else{
+    );
+  } else {
     return (
       <div>
-          <SidebarCollapsed/>
+        <SidebarCollapsed />
       </div>
-    )
+    );
   }
+};
 
-}
-
-export default Sidebar
+export default Sidebar;
