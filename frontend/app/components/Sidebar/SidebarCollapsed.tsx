@@ -12,7 +12,7 @@ const SidebarCollapsed = () => {
   const dispatch = useDispatch();
 
   return (
-    <div className=" w-1/12 bg-white bottom-0 top-0 absolute ">
+    <div className=" w-1/12 bg-white left-0 top-0 fixed ">
       <div className="flex mt-6 cursor-pointer  justify-center ">
         <Image
           className="border w-6 h-6 mr-2 mt-2 flex justify-center"

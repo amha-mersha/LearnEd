@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal, FileText } from "lucide-react";
-import { postType } from "@/app/types/postType";
+import { postType } from "@/types/postType";
 import Comment from "./Comment";
 
 interface Props {
