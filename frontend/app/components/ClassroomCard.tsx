@@ -1,3 +1,4 @@
+"use client"
 import React from 'react'
 import { cardType } from '../../types/cardType'
 const book = require('../../public/Images/mynaui_book-open.svg');

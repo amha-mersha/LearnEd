@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 
-export default function CreateClassroomModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+export default function StudentInvite({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const [classroomName, setClassroomName] = useState('')
   const [courseName, setCourseName] = useState('')
 
@@ -11,42 +11,29 @@ export default function CreateClassroomModal({ isOpen, onClose }: { isOpen: bool
     e.preventDefault()
     // Handle form submission logic here
     console.log('Classroom created:', { classroomName, courseName })
-    onClose()
+    // onClose()
+    setClassroomName("")
   }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px] py-20 px-20">
+      <DialogContent className="sm:max-w-[500px] py-24 px-20">
         <DialogHeader className=''>
-          <DialogTitle className=" text-center font-black">Create ClassRoom</DialogTitle>
+          <DialogTitle className=" text-center font-black">Invite Students</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4 mt-2">
+        <form onSubmit={handleSubmit} className="space-y-20 mt-2">
           <div className="space-y-2">
-            <label htmlFor="classroomName" className="text-sm font-medium">
-              Classroom Name
-            </label>
             <Input
               id="classroomName"
-              placeholder="e.g Math"
+              placeholder="Email of the student"
               value={classroomName}
               onChange={(e) => setClassroomName(e.target.value)}
               required
             />
           </div>
-          <div className="space-y-2">
-            <label htmlFor="courseName" className="text-sm font-medium">
-              Course Name
-            </label>
-            <Input
-              id="courseName"
-              placeholder="e.g Math for Grade 3"
-              value={courseName}
-              onChange={(e) => setCourseName(e.target.value)}
-              required
-            />
-          </div>
+         
           <Button type="submit" className="w-full">
-            Create Classroom
+            Invite
           </Button>
         </form>
       </DialogContent>
