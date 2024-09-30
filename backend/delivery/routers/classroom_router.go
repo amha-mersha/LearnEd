@@ -30,4 +30,5 @@ func NewClassroomRouter(classroomRepository domain.ClassroomRepository, authRepo
 	router.GET("/:classroomID/grades", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleTeacher), classroomController.GetGrades)
 	router.GET("/:classroomID/grades/:studentID", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleStudent, domain.RoleTeacher), classroomController.GetStudentGrade)
 	router.GET("/:classroomID/posts", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleStudent, domain.RoleTeacher), classroomController.GetPosts)
+	router.GET("/", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleStudent, domain.RoleTeacher), classroomController.GetClassrooms)
 }
