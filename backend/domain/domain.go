@@ -12,6 +12,7 @@ import (
 const (
 	CollectionUsers      = "users"
 	CollectionClassrooms = "classrooms"
+	CollectionStudyGroup = "study_group"
 )
 
 const (
