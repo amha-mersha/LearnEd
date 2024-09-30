@@ -121,6 +121,7 @@ type ClassroomUsecase interface {
 	GetGrades(c context.Context, teacherID string, classroomID string) ([]StudentGrade, CodedError)
 	GetStudentGrade(c context.Context, tokenID string, studentID string, classroomID string) (StudentGrade, CodedError)
 	GetPosts(c context.Context, tokenID string, classroomID string) ([]GetPostDTO, CodedError)
+	GetClassrooms(c context.Context, tokenID string) ([]Classroom, CodedError)
 }
 
 type ClassroomRepository interface {

@@ -285,3 +285,20 @@ func (controller *ClassroomController) GetPosts(c *gin.Context) {
 
 	c.JSON(http.StatusOK, posts)
 }
+
+func (controller *ClassroomController) GetClassrooms(c *gin.Context) {
+	creatorID, exists := c.Keys["id"]
+	if !exists {
+		c.JSON(http.StatusForbidden, domain.Response{"message": "coudn't find the id field"})
+		return
+	}
+
+	id := creatorID.(string)
+	classrooms, err := controller.usecase.GetClassrooms(c, id)
+	if err != nil {
+		c.JSON(GetHTTPErrorCode(err), domain.Response{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, classrooms)
+}
