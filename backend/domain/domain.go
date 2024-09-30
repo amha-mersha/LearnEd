@@ -71,6 +71,11 @@ type Post struct {
 	// TODO: Add fields for the processed data
 }
 
+type GetPostDTO struct {
+	CreatorName string
+	Data        Post
+}
+
 type Classroom struct {
 	Name          string               `json:"name"`
 	CourseName    string               `json:"course_name"`
@@ -115,6 +120,7 @@ type ClassroomUsecase interface {
 	RemoveStudent(c context.Context, classroomID string, studentID string) CodedError
 	GetGrades(c context.Context, teacherID string, classroomID string) ([]StudentGrade, CodedError)
 	GetStudentGrade(c context.Context, tokenID string, studentID string, classroomID string) (StudentGrade, CodedError)
+	GetPosts(c context.Context, tokenID string, classroomID string) (GetPostDTO, CodedError)
 }
 
 type ClassroomRepository interface {

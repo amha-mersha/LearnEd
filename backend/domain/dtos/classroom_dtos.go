@@ -1,6 +1,8 @@
 package dtos
 
-import "time"
+import (
+	"time"
+)
 
 type UpdatePostDTO struct {
 	Deadline time.Time `json:"deadline"`
