@@ -495,5 +495,9 @@ func (usecase *ClassroomUsecase) GetClassrooms(c context.Context, tokenID string
 		return []domain.Classroom{}, err
 	}
 
+	if len(classrooms) == 0 {
+		return []domain.Classroom{}, nil
+	}
+
 	return classrooms, nil
 }
