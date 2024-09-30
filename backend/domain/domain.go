@@ -120,7 +120,7 @@ type ClassroomUsecase interface {
 	RemoveStudent(c context.Context, classroomID string, studentID string) CodedError
 	GetGrades(c context.Context, teacherID string, classroomID string) ([]StudentGrade, CodedError)
 	GetStudentGrade(c context.Context, tokenID string, studentID string, classroomID string) (StudentGrade, CodedError)
-	GetPosts(c context.Context, tokenID string, classroomID string) (GetPostDTO, CodedError)
+	GetPosts(c context.Context, tokenID string, classroomID string) ([]GetPostDTO, CodedError)
 }
 
 type ClassroomRepository interface {
