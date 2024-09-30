@@ -483,3 +483,17 @@ func (usecase *ClassroomUsecase) GetPosts(c context.Context, tokenID string, cla
 
 	return res, nil
 }
+
+func (usecase *ClassroomUsecase) GetClassrooms(c context.Context, tokenID string) ([]domain.Classroom, domain.CodedError) {
+	foundUser, err := usecase.authRepository.GetUserByID(c, tokenID)
+	if err != nil {
+		return []domain.Classroom{}, err
+	}
+
+	classrooms, err := usecase.classroomRepository.GetClassrooms(c, usecase.classroomRepository.StringifyID(foundUser.ID), foundUser.Type)
+	if err != nil {
+		return []domain.Classroom{}, err
+	}
+
+	return classrooms, nil
+}
