@@ -58,13 +58,13 @@ func (controller *AuthController) Login(c *gin.Context) {
 		return
 	}
 
-	token, sErr := controller.usecase.Login(c, loginDto)
+	token, role, sErr := controller.usecase.Login(c, loginDto)
 	if sErr != nil {
 		c.JSON(GetHTTPErrorCode(sErr), domain.Response{"error": sErr.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, domain.Response{"token": token})
+	c.JSON(http.StatusOK, domain.Response{"token": token, "role": role})
 }
 
 func (controller *AuthController) ChangePassword(c *gin.Context) {
