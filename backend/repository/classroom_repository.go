@@ -407,3 +407,25 @@ func (repository *ClassroomRepository) RemoveStudent(c context.Context, studentI
 
 	return nil
 }
+
+func (repository *ClassroomRepository) GetClassrooms(c context.Context, userID string, userType string) ([]domain.Classroom, domain.CodedError) {
+	filter := bson.M{
+		"$or": []bson.M{
+			{"students": bson.M{"$in": []interface{}{userID}}},
+			{"teachers": bson.M{"$in": []interface{}{userID}}},
+		},
+	}
+
+	var classrooms []domain.Classroom
+	res, err := repository.collection.Find(c, filter)
+	if err != nil {
+		return []domain.Classroom{}, domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
+	}
+
+	err = res.All(c, &classrooms)
+	if err != nil {
+		return []domain.Classroom{}, domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
+	}
+
+	return classrooms, nil
+}
