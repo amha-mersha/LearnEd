@@ -387,3 +387,41 @@ func (usecase *ClassroomUsecase) GetGrades(c context.Context, teacherID string, 
 
 	return clsroom.StudentGrades, nil
 }
+
+func (usecase *ClassroomUsecase) GetStudentGrade(c context.Context, tokenID string, studentID string, classroomID string) (domain.StudentGrade, domain.CodedError) {
+	foundUser, err := usecase.authRepository.GetUserByID(c, tokenID)
+	if err != nil {
+		return domain.StudentGrade{}, err
+	}
+
+	clsroom, err := usecase.classroomRepository.FindClassroom(c, classroomID)
+	if err != nil {
+		return domain.StudentGrade{}, err
+	}
+
+	if foundUser.Type == domain.RoleStudent && tokenID != studentID {
+		return domain.StudentGrade{}, domain.NewError("students can only get grades for their own accounts", domain.ERR_FORBIDDEN)
+	}
+
+	if foundUser.Type == domain.RoleTeacher {
+		allowed := false
+		for _, tID := range clsroom.Teachers {
+			if usecase.classroomRepository.StringifyID(tID) == tokenID {
+				allowed = true
+				break
+			}
+		}
+
+		if !allowed {
+			return domain.StudentGrade{}, domain.NewError("only teachers added to the classroom can get grades", domain.ERR_FORBIDDEN)
+		}
+	}
+
+	for _, grade := range clsroom.StudentGrades {
+		if usecase.classroomRepository.StringifyID(grade.StudentID) == studentID {
+			return grade, nil
+		}
+	}
+
+	return domain.StudentGrade{}, domain.NewError("grades for the student not found", domain.ERR_NOT_FOUND)
+}
