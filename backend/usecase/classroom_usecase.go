@@ -299,6 +299,10 @@ func (usecase *ClassroomUsecase) AddStudent(c context.Context, studentEmail stri
 		return err
 	}
 
+	if foundUser.Type == domain.RoleTeacher {
+		return domain.NewError("can not add teachers as students", domain.ERR_BAD_REQUEST)
+	}
+
 	clsroom, err := usecase.classroomRepository.FindClassroom(c, classroomID)
 	if err != nil {
 		return err
