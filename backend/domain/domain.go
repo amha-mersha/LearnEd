@@ -88,9 +88,11 @@ type Classroom struct {
 }
 
 type StudyGroup struct {
-	Name     string   `json:"name"`
-	Students []string `json:"students"`
-	Posts    []Post   `json:"posts"`
+	Name       string               `json:"name"`
+	CourseName string               `json:"course_name"`
+	Owner      primitive.ObjectID   `json:"owner"`
+	Students   []primitive.ObjectID `json:"students"`
+	Posts      []Post               `json:"posts"`
 }
 
 type AuthUsecase interface {
@@ -141,4 +143,10 @@ type ClassroomRepository interface {
 	AddStudent(c context.Context, studentID string, classroomID string) CodedError
 	RemoveStudent(c context.Context, studentID string, classroomID string) CodedError
 	GetClassrooms(c context.Context, userID string, userType string) ([]Classroom, CodedError)
+}
+
+type StudyGroupUsecase interface {
+}
+
+type StudyGroupRepository interface {
 }
