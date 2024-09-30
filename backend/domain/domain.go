@@ -114,6 +114,7 @@ type ClassroomUsecase interface {
 	AddStudent(c context.Context, studentEmail string, classroomID string) CodedError
 	RemoveStudent(c context.Context, classroomID string, studentID string) CodedError
 	GetGrades(c context.Context, teacherID string, classroomID string) ([]StudentGrade, CodedError)
+	GetStudentGrade(c context.Context, tokenID string, studentID string, classroomID string) (StudentGrade, CodedError)
 }
 
 type ClassroomRepository interface {

@@ -248,3 +248,22 @@ func (controller *ClassroomController) GetGrades(c *gin.Context) {
 
 	c.JSON(http.StatusOK, grades)
 }
+
+func (controller *ClassroomController) GetStudentGrade(c *gin.Context) {
+	classroomID := c.Param("classroomID")
+	studentID := c.Param("studentID")
+	creatorID, exists := c.Keys["id"]
+	if !exists {
+		c.JSON(http.StatusForbidden, domain.Response{"message": "coudn't find the id field"})
+		return
+	}
+
+	id := creatorID.(string)
+	grade, err := controller.usecase.GetStudentGrade(c, id, studentID, classroomID)
+	if err != nil {
+		c.JSON(GetHTTPErrorCode(err), domain.Response{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, grade)
+}
