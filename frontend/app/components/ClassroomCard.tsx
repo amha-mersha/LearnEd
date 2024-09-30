@@ -1,7 +1,8 @@
+"use client"
 import React from 'react'
-import { cardType } from '../types/cardType'
-import book from '../../public/Images/mynaui_book-open.svg'
-import people from '../../public/Images/fluent_people-16-regular.svg'
+import { cardType } from '../../types/cardType'
+const book = require('../../public/Images/mynaui_book-open.svg');
+const people = require('../../public/Images/fluent_people-16-regular.svg');
 import Image from 'next/image'
 
 interface Props{
@@ -9,7 +10,7 @@ interface Props{
 }
 
 
-const Card = ({info}: Props) => {
+const ClassroomCard = ({info}: Props) => {
 
     return (
             <div className='w-full h-52 p-4 flex flex-col shadow-md justify-between rounded-3xl bg-white'>
@@ -36,4 +37,4 @@ const Card = ({info}: Props) => {
   )
 }
 
-export default Card
+export default ClassroomCard
