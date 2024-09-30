@@ -52,24 +52,24 @@ func (usecase *AuthUsecase) Signup(c context.Context, user dtos.SignupDTO) domai
 	return nil
 }
 
-func (usecase *AuthUsecase) Login(c context.Context, user dtos.LoginDTO) (string, domain.CodedError) {
+func (usecase *AuthUsecase) Login(c context.Context, user dtos.LoginDTO) (string, string, domain.CodedError) {
 	user.Email = strings.ReplaceAll(strings.TrimSpace(strings.ToLower(user.Email)), " ", "")
 	foundUser, err := usecase.repository.GetUserByEmail(c, user.Email)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 
 	if err := usecase.hashingService.ValidateHashedString(foundUser.Password, user.Password); err != nil {
-		return "", err
+		return "", "", err
 	}
 
 	// TODO: replace token duration with an env constant
 	token, err := usecase.jwtService.SignJWTWithPayload(usecase.repository.HexifyString(foundUser.ID), foundUser.Type, "accessToken", 200*time.Minute)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 
-	return token, nil
+	return token, foundUser.Type, nil
 }
 
 func (usecase *AuthUsecase) ChangePassword(c context.Context, user dtos.ChangePasswordDTO) domain.CodedError {

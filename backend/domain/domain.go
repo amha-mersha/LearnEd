@@ -90,7 +90,7 @@ type StudyGroup struct {
 
 type AuthUsecase interface {
 	Signup(c context.Context, user dtos.SignupDTO) CodedError
-	Login(c context.Context, user dtos.LoginDTO) (string, CodedError)
+	Login(c context.Context, user dtos.LoginDTO) (string, string, CodedError)
 	ChangePassword(c context.Context, user dtos.ChangePasswordDTO) CodedError
 }
 
