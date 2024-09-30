@@ -361,3 +361,29 @@ func (usecase *ClassroomUsecase) RemoveStudent(c context.Context, classroomID st
 	usecase.classroomRepository.RemoveGrade(c, classroomID, targetID)
 	return nil
 }
+
+func (usecase *ClassroomUsecase) GetGrades(c context.Context, teacherID string, classroomID string) ([]domain.StudentGrade, domain.CodedError) {
+	_, err := usecase.authRepository.GetUserByID(c, teacherID)
+	if err != nil {
+		return []domain.StudentGrade{}, err
+	}
+
+	clsroom, err := usecase.classroomRepository.FindClassroom(c, classroomID)
+	if err != nil {
+		return []domain.StudentGrade{}, err
+	}
+
+	allowed := false
+	for _, tID := range clsroom.Teachers {
+		if usecase.classroomRepository.StringifyID(tID) == teacherID {
+			allowed = true
+			break
+		}
+	}
+
+	if !allowed {
+		return []domain.StudentGrade{}, domain.NewError("only teachers added to the classroom can get grades", domain.ERR_FORBIDDEN)
+	}
+
+	return clsroom.StudentGrades, nil
+}
