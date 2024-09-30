@@ -1,4 +1,4 @@
-import { commentType } from "@/app/types/commentType";
+import { commentType } from "@/types/commentType";
 import React from "react";
 interface Props {
   info: commentType;
