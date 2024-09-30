@@ -187,6 +187,11 @@ func (controller *ClassroomController) PutGrade(c *gin.Context) {
 		return
 	}
 
+	if err := c.ShouldBindJSON(&gradeDto); err != nil {
+		c.JSON(http.StatusBadRequest, domain.Response{"error": err.Error()})
+		return
+	}
+
 	id := creatorID.(string)
 	err := controller.usecase.PutGrade(c, id, classroomID, studentID, gradeDto)
 	if err != nil {

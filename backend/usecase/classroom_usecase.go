@@ -326,7 +326,7 @@ func (usecase *ClassroomUsecase) AddStudent(c context.Context, studentEmail stri
 }
 
 func (usecase *ClassroomUsecase) RemoveStudent(c context.Context, classroomID string, studentID string) domain.CodedError {
-	foundUser, err := usecase.authRepository.GetUserByID(c, classroomID)
+	foundUser, err := usecase.authRepository.GetUserByID(c, studentID)
 	if err != nil {
 		return err
 	}
@@ -354,5 +354,6 @@ func (usecase *ClassroomUsecase) RemoveStudent(c context.Context, classroomID st
 		return err
 	}
 
+	usecase.classroomRepository.RemoveGrade(c, classroomID, targetID)
 	return nil
 }

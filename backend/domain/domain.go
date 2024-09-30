@@ -40,13 +40,13 @@ type User struct {
 }
 
 type StudentRecord struct {
-	RecordName string `json:"record_name"`
+	RecordName string `json:"record_name" bson:"record_name"`
 	Grade      int    `json:"grade"`
-	MaxGrade   int    `json:"max_grade"`
+	MaxGrade   int    `json:"max_grade" bson:"max_grade"`
 }
 
 type StudentGrade struct {
-	StudentID primitive.ObjectID `json:"student_id"`
+	StudentID primitive.ObjectID `json:"student_id" bson:"student_id"`
 	Records   []StudentRecord    `json:"records"`
 }
 
