@@ -132,9 +132,3 @@ type ClassroomRepository interface {
 	AddStudent(c context.Context, studentID string, classroomID string) CodedError
 	RemoveStudent(c context.Context, studentID string, classroomID string) CodedError
 }
-
-type ClassroomUsecase interface {
-}
-
-type ClassroomRepository interface {
-}
