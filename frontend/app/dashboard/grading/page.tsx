@@ -105,8 +105,8 @@ export default function GradingPage() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {students.map(student => (
-            <Grade_students student={student} parameters={parameters} calculateTotal={calculateTotal} toggleEdit={toggleEdit} updateScore={updateScore} />
+          {students.map((student, ind) => (
+            <Grade_students key={ind} student={student} parameters={parameters} calculateTotal={calculateTotal} toggleEdit={toggleEdit} updateScore={updateScore} />
           ))}
         </TableBody>
       </Table>

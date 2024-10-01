@@ -11,8 +11,8 @@ import { signOut, useSession } from "next-auth/react";
 const page = () => {
   const cards = cardinfo;
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { data: session } = useSession();
-  console.log(session)
+  // const { data: session } = useSession();
+  // console.log(session)
   
   return (
     <div className=" bg-[#F6F6F6] min-h-screen  pr-36 pt-10">

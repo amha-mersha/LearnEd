@@ -5,12 +5,16 @@ import logo from "../../../public/Images/LearnEd.svg";
 import { MouseEvent, useState } from "react";
 import { getSession, signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import { settoken } from "@/lib/redux/slices/tokenSlice";
+import { setrole } from "@/lib/redux/slices/roleSlice";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const { data: session } = useSession();
+  const dispatch = useDispatch()
+  // const { data: session } = useSession();
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -24,7 +28,10 @@ export default function SignIn() {
 
     if (result?.ok) {
       const updatedSession = await getSession();
+      console.log("updatedsession", updatedSession)
       if (updatedSession) {
+        dispatch(settoken({payload: updatedSession.user.accessToken}))
+        dispatch(setrole({payload: updatedSession.user.role}))
         router.push(`/`);
       }
     } else {
