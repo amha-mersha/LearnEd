@@ -186,7 +186,7 @@ func (usecase *ClassroomUsecase) AddComment(c context.Context, creatorID string,
 	}
 
 	if !allowed {
-		return domain.NewError("only teachers added to the classroom can remove posts", domain.ERR_FORBIDDEN)
+		return domain.NewError("only users added to the classroom can add comments", domain.ERR_FORBIDDEN)
 	}
 
 	if err = usecase.classroomRepository.AddComment(c, classroomID, postID, comment); err != nil {

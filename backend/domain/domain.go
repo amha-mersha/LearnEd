@@ -52,7 +52,7 @@ type StudentGrade struct {
 }
 
 type Comment struct {
-	ID          primitive.ObjectID `json:"id" bson:"_id"`
+	ID          primitive.ObjectID `json:"id" bson:"_id,omitempty"`
 	CreatorID   primitive.ObjectID `json:"creator_id"`
 	CreatorName string             `json:"creator_name"`
 	Content     string             `json:"content"`
@@ -60,7 +60,7 @@ type Comment struct {
 }
 
 type Post struct {
-	ID           primitive.ObjectID `json:"id" bson:"_id"`
+	ID           primitive.ObjectID `json:"id" bson:"_id,omitempty"`
 	CreatorID    primitive.ObjectID `json:"creator_id" bson:"creator_id"`
 	Content      string             `json:"content"`
 	File         string             `json:"file"`
@@ -90,6 +90,7 @@ type Classroom struct {
 }
 
 type StudyGroup struct {
+	ID         primitive.ObjectID   `json:"id" bson:"_id,omitempty"`
 	Name       string               `json:"name"`
 	CourseName string               `json:"course_name"`
 	Owner      primitive.ObjectID   `json:"owner"`
