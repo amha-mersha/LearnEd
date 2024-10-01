@@ -19,7 +19,7 @@ func NewStudyGroupRepository(collection *mongo.Collection) *StudyGroupRepository
 	}
 }
 
-func (repository *ClassroomRepository) FindStudyGroup(c context.Context, studyGroupID string) (domain.StudyGroup, domain.CodedError) {
+func (repository *StudyGroupRepository) FindStudyGroup(c context.Context, studyGroupID string) (domain.StudyGroup, domain.CodedError) {
 	var studyGroup domain.StudyGroup
 	id, pErr := repository.ParseID(studyGroupID)
 	if pErr != nil {
@@ -43,7 +43,7 @@ func (repository *ClassroomRepository) FindStudyGroup(c context.Context, studyGr
 	return studyGroup, nil
 }
 
-func (repository *ClassroomRepository) CreateStudyGroup(c context.Context, creatorID primitive.ObjectID, studyGroup domain.StudyGroup) domain.CodedError {
+func (repository *StudyGroupRepository) CreateStudyGroup(c context.Context, creatorID primitive.ObjectID, studyGroup domain.StudyGroup) domain.CodedError {
 	studyGroup.Students = []primitive.ObjectID{creatorID}
 	_, err := repository.collection.InsertOne(c, studyGroup)
 	if err != nil {
@@ -60,6 +60,25 @@ func (repository *StudyGroupRepository) DeleteStudyGroup(c context.Context, stud
 	}
 
 	_, err := repository.collection.DeleteOne(c, bson.D{{Key: "_id", Value: id}})
+	if err != nil {
+		return domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
+	}
+
+	return nil
+}
+
+func (repository *StudyGroupRepository) AddPost(c context.Context, studyGroupID string, post domain.Post) domain.CodedError {
+	post.ID = primitive.NewObjectID()
+	id, pErr := repository.ParseID(studyGroupID)
+	if pErr != nil {
+		return pErr
+	}
+
+	_, err := repository.collection.UpdateOne(c, bson.D{{Key: "_id", Value: id}}, bson.D{{Key: "$push", Value: bson.D{{Key: "posts", Value: post}}}})
+	if err == mongo.ErrNoDocuments {
+		return domain.NewError("study group not found not found", domain.ERR_NOT_FOUND)
+	}
+
 	if err != nil {
 		return domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
 	}
