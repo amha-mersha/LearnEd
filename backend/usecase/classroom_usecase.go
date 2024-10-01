@@ -293,7 +293,7 @@ func (usecase *ClassroomUsecase) PutGrade(c context.Context, teacherID string, c
 	return nil
 }
 
-func (usecase *ClassroomUsecase) AddStudent(c context.Context, studentEmail string, classroomID string) domain.CodedError {
+func (usecase *ClassroomUsecase) AddStudent(c context.Context, tokenID string, studentEmail string, classroomID string) domain.CodedError {
 	foundUser, err := usecase.authRepository.GetUserByEmail(c, studentEmail)
 	if err != nil {
 		return err
@@ -306,6 +306,18 @@ func (usecase *ClassroomUsecase) AddStudent(c context.Context, studentEmail stri
 	clsroom, err := usecase.classroomRepository.FindClassroom(c, classroomID)
 	if err != nil {
 		return err
+	}
+
+	allowed := false
+	for _, teacher := range clsroom.Teachers {
+		if usecase.classroomRepository.StringifyID(teacher) == tokenID {
+			allowed = true
+			break
+		}
+	}
+
+	if !allowed {
+		return domain.NewError("only teachers added to the classroom can add students", domain.ERR_FORBIDDEN)
 	}
 
 	targetID := usecase.classroomRepository.StringifyID(foundUser.ID)
@@ -329,7 +341,7 @@ func (usecase *ClassroomUsecase) AddStudent(c context.Context, studentEmail stri
 	return nil
 }
 
-func (usecase *ClassroomUsecase) RemoveStudent(c context.Context, classroomID string, studentID string) domain.CodedError {
+func (usecase *ClassroomUsecase) RemoveStudent(c context.Context, tokenID string, classroomID string, studentID string) domain.CodedError {
 	foundUser, err := usecase.authRepository.GetUserByID(c, studentID)
 	if err != nil {
 		return err
@@ -338,6 +350,18 @@ func (usecase *ClassroomUsecase) RemoveStudent(c context.Context, classroomID st
 	clsroom, err := usecase.classroomRepository.FindClassroom(c, classroomID)
 	if err != nil {
 		return err
+	}
+
+	allowed := false
+	for _, teacher := range clsroom.Teachers {
+		if usecase.classroomRepository.StringifyID(teacher) == tokenID {
+			allowed = true
+			break
+		}
+	}
+
+	if !allowed {
+		return domain.NewError("only teachers added to the classroom can add students", domain.ERR_FORBIDDEN)
 	}
 
 	targetID := usecase.classroomRepository.StringifyID(foundUser.ID)
