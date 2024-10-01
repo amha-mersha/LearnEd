@@ -154,6 +154,8 @@ type StudyGroupUsecase interface {
 	RemovePost(c context.Context, creatorID string, studyGroupID string, postID string) CodedError
 	AddComment(c context.Context, creatorID string, studyGroupID string, postID string, comment Comment) CodedError
 	RemoveComment(c context.Context, creatorID string, studyGroupID string, postID string, commentID string) CodedError
+	AddStudent(c context.Context, studentID string, classroomID string) CodedError
+	RemoveStudent(c context.Context, studentID string, classroomID string) CodedError
 }
 
 type StudyGroupRepository interface {

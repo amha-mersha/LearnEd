@@ -176,3 +176,32 @@ func (controller *StudyGroupController) RemoveComment(c *gin.Context) {
 
 	c.JSON(http.StatusNoContent, domain.Response{"message": "comment removed successfully"})
 }
+
+func (controller *StudyGroupController) AddStudent(c *gin.Context) {
+	var addStudentDto dtos.AddStudentDTO
+	studyGroupID := c.Param("studyGroupID")
+	if err := c.ShouldBindJSON(&addStudentDto); err != nil {
+		c.JSON(http.StatusBadRequest, domain.Response{"error": err.Error()})
+		return
+	}
+
+	err := controller.usecase.AddStudent(c, addStudentDto.Email, studyGroupID)
+	if err != nil {
+		c.JSON(GetHTTPErrorCode(err), domain.Response{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, domain.Response{"message": "student added to classroom successfully"})
+}
+
+func (controller *StudyGroupController) RemoveStudent(c *gin.Context) {
+	studyGroupID := c.Param("studyGroupID")
+	studentID := c.Param("studentID")
+	err := controller.usecase.RemoveStudent(c, studyGroupID, studentID)
+	if err != nil {
+		c.JSON(GetHTTPErrorCode(err), domain.Response{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, domain.Response{"message": "student removed from classroom successfully"})
+}
