@@ -1,4 +1,3 @@
-// page.tsx
 "use client";
 import React, { useState } from "react";
 import Sidebar from "../components/Sidebar/Sidebar";
@@ -6,7 +5,6 @@ import Card from "../components/ClassroomCard";
 import Link from "next/link";
 import CreateClassroomModal from "../components/ClassroomPopup";
 import { Button } from "@/components/ui/button";
-import { signOut, useSession } from "next-auth/react";
 import { useGetClassroomsQuery } from "@/lib/redux/api/getApi";
 import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton
 
@@ -21,9 +19,7 @@ interface Classroom {
 
 const Page = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { data: session } = useSession();
-  console.log(session)
-    const {
+  const {
     data: classrooms = [],
     isLoading,
     error,
@@ -33,8 +29,7 @@ const Page = () => {
   ); // Fetch classrooms data
 
   return (
-    <div className=" bg-[#F6F6F6] min-h-screen  pr-36 pt-10">
-    <div className=" bg-[#F6F6F6] min-h-screen  pr-36 pt-10">
+    <div className="bg-[#F6F6F6] min-h-screen pr-36 pt-16">
       <div className="ml-24 flex justify-between">
         <h1 className="text-3xl font-black">Classes</h1>
         <Button className="mr-16" onClick={() => setIsModalOpen(true)}>
@@ -89,7 +84,8 @@ const SkeletonCard = () => {
       <div className="flex justify-between w-full align-middle">
         <div>
           <Skeleton className="w-32 h-8" /> {/* Skeleton for class name */}
-          <Skeleton className="w-24 h-5 mt-2" /> {/* Skeleton for course name */}
+          <Skeleton className="w-24 h-5 mt-2" />{" "}
+          {/* Skeleton for course name */}
         </div>
         <Skeleton className="w-16 h-5 mt-2" /> {/* Skeleton for season */}
       </div>
