@@ -166,3 +166,43 @@ func (repository *StudyGroupRepository) RemovePost(c context.Context, studyGroup
 
 	return nil
 }
+
+func (repository *StudyGroupRepository) AddComment(c context.Context, studyGroupID string, postID string, comment domain.Comment) domain.CodedError {
+	comment.ID = primitive.NewObjectID()
+
+	cID, pErr := repository.ParseID(studyGroupID)
+	if pErr != nil {
+		return pErr
+	}
+
+	pID, pErr := repository.ParseID(postID)
+	if pErr != nil {
+		return pErr
+	}
+
+	filter := bson.M{
+		"_id":       cID,
+		"posts._id": pID,
+	}
+
+	update := bson.M{
+		"$push": bson.M{
+			"posts.$.comments": comment,
+		},
+	}
+
+	res, err := repository.collection.UpdateOne(c, filter, update)
+	if err == mongo.ErrNoDocuments {
+		return domain.NewError("study group not found", domain.ERR_NOT_FOUND)
+	}
+
+	if res.ModifiedCount == 0 {
+		return domain.NewError("post not found", domain.ERR_NOT_FOUND)
+	}
+
+	if err != nil {
+		return domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
+	}
+
+	return nil
+}
