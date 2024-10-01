@@ -4,8 +4,11 @@ import (
 	"learned-api/domain"
 	"learned-api/domain/dtos"
 	"net/http"
+	"os"
+	"path/filepath"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type ClassroomController struct {
@@ -65,11 +68,25 @@ func (controller *ClassroomController) DeleteClassroom(c *gin.Context) {
 }
 
 func (controller *ClassroomController) AddPost(c *gin.Context) {
+	file, err := c.FormFile("file")
+	if err != nil {
+		c.String(http.StatusBadRequest, "Failed to upload file")
+		return
+	}
+	workingDir, _ := os.Getwd()
+	uniqueFileName := uuid.New().String() + filepath.Ext(file.Filename)
+	savePath := filepath.Join(workingDir, "uploads", uniqueFileName)
+	if err := c.SaveUploadedFile(file, savePath); err != nil {
+		c.String(http.StatusInternalServerError, "Failed to save file")
+		return
+	}
+
 	var post domain.Post
-	if err := c.ShouldBindJSON(&post); err != nil {
+	if err := c.ShouldBind(&post); err != nil {
 		c.JSON(http.StatusBadRequest, domain.Response{"error": err.Error()})
 		return
 	}
+	post.File = savePath
 
 	classroomID := c.Param("classroomID")
 	creatorID, exists := c.Keys["id"]
@@ -79,9 +96,9 @@ func (controller *ClassroomController) AddPost(c *gin.Context) {
 	}
 
 	id := creatorID.(string)
-	err := controller.usecase.AddPost(c, id, classroomID, post)
-	if err != nil {
-		c.JSON(GetHTTPErrorCode(err), domain.Response{"error": err.Error()})
+	errAdd := controller.usecase.AddPost(c, id, classroomID, post)
+	if errAdd != nil {
+		c.JSON(GetHTTPErrorCode(errAdd), domain.Response{"error": errAdd.Error()})
 		return
 	}
 
@@ -229,4 +246,16 @@ func (controller *ClassroomController) RemoveStudent(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, domain.Response{"message": "student removed from classroom successfully"})
+}
+
+func (controller *ClassroomController) EnhanceContent(c *gin.Context) {
+	var requestLoad dtos.EnhanceContentDTO
+	if err := c.ShouldBindJSON(&requestLoad); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	}
+	result, err := controller.usecase.EnhanceContent(requestLoad.CurrentState, requestLoad.Query)
+	if err != nil {
+		c.JSON(GetHTTPErrorCode(err), domain.Response{"error": err.Error()})
+	}
+	c.JSON(http.StatusOK, gin.H{"message": result})
 }

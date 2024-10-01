@@ -1,6 +1,8 @@
 package dtos
 
-import "time"
+import (
+	"time"
+)
 
 type UpdatePostDTO struct {
 	Deadline time.Time `json:"deadline"`
@@ -19,4 +21,9 @@ type GradeDTO struct {
 
 type AddStudentDTO struct {
 	Email string `json:"email"`
+}
+
+type EnhanceContentDTO struct {
+	CurrentState string `json:"current_state"`
+	Query        string `json:"query"`
 }

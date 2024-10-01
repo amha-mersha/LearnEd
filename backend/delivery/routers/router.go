@@ -1,11 +1,15 @@
 package routers
 
 import (
+	"context"
 	"fmt"
 	"learned-api/delivery/env"
 	"learned-api/domain"
+	ai_service "learned-api/infrastructure/ai"
 	jwt_service "learned-api/infrastructure/jwt"
 	"learned-api/repository"
+	"os"
+	"path/filepath"
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -25,7 +29,10 @@ func InitRouter(database *mongo.Database, port int, routePrefix string) {
 	NewAuthRouter(authRepository, jwtService, authRouter)
 
 	classroomRouter := router.Group("/api/" + routePrefix + "/classrooms")
-	NewClassroomRouter(classroomRepository, authRepository, jwtService, classroomRouter)
+	workingDir, _ := os.Getwd()
+	classroomRouter.Static("/uploads", filepath.Join(workingDir, "uploads"))
+	aiService := ai_service.NewAIService(context.TODO(), env.ENV.GEMINI_KEY)
+	NewClassroomRouter(classroomRepository, authRepository, jwtService, aiService, classroomRouter)
 
 	router.Run(fmt.Sprintf(":%v", port))
 }

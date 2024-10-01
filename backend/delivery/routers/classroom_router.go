@@ -9,8 +9,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func NewClassroomRouter(classroomRepository domain.ClassroomRepository, authRepository domain.AuthRepository, jwtService domain.JWTServiceInterface, router *gin.RouterGroup) {
-	classroomUsecase := usecases.NewClassroomUsecase(classroomRepository, authRepository)
+func NewClassroomRouter(classroomRepository domain.ClassroomRepository, authRepository domain.AuthRepository, jwtService domain.JWTServiceInterface, aiService domain.AIServiceInterface, router *gin.RouterGroup) {
+	classroomUsecase := usecases.NewClassroomUsecase(classroomRepository, authRepository, aiService)
 	classroomController := controllers.NewClassroomController(classroomUsecase)
 
 	router.POST("/", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleTeacher), classroomController.CreateClassroom)
@@ -26,4 +26,5 @@ func NewClassroomRouter(classroomRepository domain.ClassroomRepository, authRepo
 	router.DELETE("/:classroomID/posts/:postID/comments/:commentID", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleTeacher, domain.RoleStudent), classroomController.RemoveComment)
 
 	router.PUT("/:classroomID/grades/:studentID", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleTeacher), classroomController.PutGrade)
+	router.GET("/enhance_content", classroomController.EnhanceContent)
 }

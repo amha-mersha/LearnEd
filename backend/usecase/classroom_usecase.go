@@ -4,18 +4,22 @@ import (
 	"context"
 	"learned-api/domain"
 	"learned-api/domain/dtos"
+	"os"
 	"time"
 )
 
 type ClassroomUsecase struct {
 	classroomRepository domain.ClassroomRepository
+	resourceRepository  domain.ResourceRespository
 	authRepository      domain.AuthRepository
+	aiService           domain.AIServiceInterface
 }
 
-func NewClassroomUsecase(classroomRepository domain.ClassroomRepository, authRepository domain.AuthRepository) *ClassroomUsecase {
+func NewClassroomUsecase(classroomRepository domain.ClassroomRepository, authRepository domain.AuthRepository, aiService domain.AIServiceInterface) *ClassroomUsecase {
 	return &ClassroomUsecase{
 		classroomRepository: classroomRepository,
 		authRepository:      authRepository,
+		aiService:           aiService,
 	}
 }
 
@@ -92,6 +96,23 @@ func (usecase *ClassroomUsecase) AddPost(c context.Context, creatorID string, cl
 		return err
 	}
 
+	var generatedContent domain.GenerateContent
+	if post.File != "" {
+		generatedContent, err = usecase.aiService.GenerateContentFromFile(post)
+		if err != nil {
+			return err
+		}
+	} else {
+		generatedContent, err = usecase.aiService.GenerateContentFromText(post)
+		if err != nil {
+			return err
+		}
+	}
+	errAdd := usecase.resourceRepository.AddResource(c, generatedContent, post.ID.Hex())
+	if errAdd != nil {
+		return errAdd
+	}
+
 	return nil
 }
 
@@ -136,6 +157,19 @@ func (usecase *ClassroomUsecase) RemovePost(c context.Context, creatorID string,
 
 	if !allowed {
 		return domain.NewError("only teachers added to the classroom can remove posts", domain.ERR_FORBIDDEN)
+	}
+
+	post, err := usecase.classroomRepository.FindPost(c, classroomID, postID)
+	if err != nil {
+		return err
+	}
+
+	if errRemove := os.Remove(post.File); errRemove != nil {
+		return domain.NewError("Failed to remove file", domain.ERR_INTERNAL_SERVER)
+	}
+
+	if errRemove := usecase.resourceRepository.RemoveResourceByPostID(c, postID); errRemove != nil {
+		return errRemove
 	}
 
 	if err = usecase.classroomRepository.RemovePost(c, classroomID, postID); err != nil {
@@ -360,4 +394,12 @@ func (usecase *ClassroomUsecase) RemoveStudent(c context.Context, classroomID st
 
 	usecase.classroomRepository.RemoveGrade(c, classroomID, targetID)
 	return nil
+}
+
+func (usecase *ClassroomUsecase) EnhanceContent(currentState, query string) (string, domain.CodedError) {
+	if result, err := usecase.aiService.EnhanceContent(currentState, query); err != nil {
+		return "", err
+	} else {
+		return result, nil
+	}
 }
