@@ -227,7 +227,7 @@ func (usecase *StudyGroupUsecase) RemoveComment(c context.Context, userID string
 	return nil
 }
 
-func (usecase *StudyGroupUsecase) AddStudent(c context.Context, studentEmail string, studyGroupID string) domain.CodedError {
+func (usecase *StudyGroupUsecase) AddStudent(c context.Context, tokenID string, studentEmail string, studyGroupID string) domain.CodedError {
 	foundUser, err := usecase.authRepository.GetUserByEmail(c, studentEmail)
 	if err != nil {
 		return err
@@ -240,6 +240,18 @@ func (usecase *StudyGroupUsecase) AddStudent(c context.Context, studentEmail str
 	studyGroup, err := usecase.sgRepository.FindStudyGroup(c, studyGroupID)
 	if err != nil {
 		return err
+	}
+
+	allowed := false
+	for _, teacher := range studyGroup.Students {
+		if usecase.sgRepository.StringifyID(teacher) == tokenID {
+			allowed = true
+			break
+		}
+	}
+
+	if !allowed {
+		return domain.NewError("only teachers added to the classroom can add students", domain.ERR_FORBIDDEN)
 	}
 
 	targetID := usecase.sgRepository.StringifyID(foundUser.ID)
@@ -263,20 +275,32 @@ func (usecase *StudyGroupUsecase) AddStudent(c context.Context, studentEmail str
 	return nil
 }
 
-func (usecase *StudyGroupUsecase) RemoveStudent(c context.Context, studyGroupID string, studentID string) domain.CodedError {
+func (usecase *StudyGroupUsecase) RemoveStudent(c context.Context, tokenID string, studyGroupID string, studentID string) domain.CodedError {
 	foundUser, err := usecase.authRepository.GetUserByID(c, studentID)
 	if err != nil {
 		return err
 	}
 
-	clsroom, err := usecase.sgRepository.FindStudyGroup(c, studyGroupID)
+	studyGroup, err := usecase.sgRepository.FindStudyGroup(c, studyGroupID)
 	if err != nil {
 		return err
 	}
 
+	allowed := false
+	for _, teacher := range studyGroup.Students {
+		if usecase.sgRepository.StringifyID(teacher) == tokenID {
+			allowed = true
+			break
+		}
+	}
+
+	if !allowed {
+		return domain.NewError("only teachers added to the classroom can add students", domain.ERR_FORBIDDEN)
+	}
+
 	targetID := usecase.sgRepository.StringifyID(foundUser.ID)
 	found := false
-	for _, student := range clsroom.Students {
+	for _, student := range studyGroup.Students {
 		if usecase.sgRepository.StringifyID(student) == targetID {
 			found = true
 			break
