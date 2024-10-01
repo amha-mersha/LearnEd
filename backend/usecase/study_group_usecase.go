@@ -226,3 +226,39 @@ func (usecase *StudyGroupUsecase) RemoveComment(c context.Context, userID string
 
 	return nil
 }
+
+func (usecase *ClassroomUsecase) AddStudent(c context.Context, studentEmail string, studyGroupID string) domain.CodedError {
+	foundUser, err := usecase.authRepository.GetUserByEmail(c, studentEmail)
+	if err != nil {
+		return err
+	}
+
+	if foundUser.Type == domain.RoleTeacher {
+		return domain.NewError("can not add teachers as students", domain.ERR_BAD_REQUEST)
+	}
+
+	studyGroup, err := usecase.classroomRepository.FindClassroom(c, studyGroupID)
+	if err != nil {
+		return err
+	}
+
+	targetID := usecase.classroomRepository.StringifyID(foundUser.ID)
+	found := false
+	for _, student := range studyGroup.Students {
+		if usecase.classroomRepository.StringifyID(student) == targetID {
+			found = true
+			break
+		}
+	}
+
+	if found {
+		return domain.NewError("student has already been added to the classroom", domain.ERR_BAD_REQUEST)
+	}
+
+	err = usecase.classroomRepository.AddStudent(c, targetID, studyGroupID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
