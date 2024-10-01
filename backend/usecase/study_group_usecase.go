@@ -318,3 +318,21 @@ func (usecase *StudyGroupUsecase) RemoveStudent(c context.Context, tokenID strin
 
 	return nil
 }
+
+func (usecase *StudyGroupUsecase) GetStudyGroups(c context.Context, tokenID string) ([]domain.StudyGroup, domain.CodedError) {
+	foundUser, err := usecase.authRepository.GetUserByID(c, tokenID)
+	if err != nil {
+		return []domain.StudyGroup{}, err
+	}
+
+	studyGroups, err := usecase.sgRepository.GetStudyGroups(c, usecase.sgRepository.StringifyID(foundUser.ID))
+	if err != nil {
+		return []domain.StudyGroup{}, err
+	}
+
+	if len(studyGroups) == 0 {
+		return []domain.StudyGroup{}, nil
+	}
+
+	return studyGroups, nil
+}

@@ -329,31 +329,28 @@ func (repository *StudyGroupRepository) RemoveStudent(c context.Context, student
 	return nil
 }
 
-func (repository *ClassroomRepository) GetStudyGroups(c context.Context, userID string) ([]domain.Classroom, domain.CodedError) {
+func (repository *StudyGroupRepository) GetStudyGroups(c context.Context, userID string) ([]domain.StudyGroup, domain.CodedError) {
 	uID, pErr := repository.ParseID(userID)
 	if pErr != nil {
-		return []domain.Classroom{}, domain.NewError(pErr.Error(), domain.ERR_INTERNAL_SERVER)
+		return []domain.StudyGroup{}, domain.NewError(pErr.Error(), domain.ERR_INTERNAL_SERVER)
 	}
 
 	filter := bson.M{
-		"$or": []bson.M{
-			{"students": uID},
-			{"teachers": uID},
-		},
+		"students": uID,
 	}
 
-	var classrooms []domain.Classroom
+	var studyGroups []domain.StudyGroup
 	cursor, err := repository.collection.Find(c, filter)
 	if err != nil {
-		return []domain.Classroom{}, domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
+		return []domain.StudyGroup{}, domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
 	}
 
-	err = cursor.All(c, &classrooms)
+	err = cursor.All(c, &studyGroups)
 	if err != nil {
-		return []domain.Classroom{}, domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
+		return []domain.StudyGroup{}, domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
 	}
 
-	return classrooms, nil
+	return studyGroups, nil
 }
 
 func (repository *StudyGroupRepository) StringifyID(id primitive.ObjectID) string {
