@@ -163,6 +163,9 @@ type StudyGroupRepository interface {
 	AddPost(c context.Context, studyGroupID string, post Post) CodedError
 	UpdatePost(c context.Context, studyGroupID string, postID string, post dtos.UpdatePostDTO) CodedError
 	RemovePost(c context.Context, studyGroupID string, postID string) CodedError
+	AddComment(c context.Context, classroomID string, postID string, comment Comment) CodedError
+	FindPost(c context.Context, classroomID string, postID string) (Post, CodedError)
+	RemoveComment(c context.Context, classroomID string, postID string, commentID string) CodedError
 	StringifyID(id primitive.ObjectID) string
 	ParseID(id string) (primitive.ObjectID, CodedError)
 }
