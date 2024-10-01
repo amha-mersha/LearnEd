@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"learned-api/domain"
+	"learned-api/domain/dtos"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -77,6 +78,47 @@ func (repository *StudyGroupRepository) AddPost(c context.Context, studyGroupID 
 	_, err := repository.collection.UpdateOne(c, bson.D{{Key: "_id", Value: id}}, bson.D{{Key: "$push", Value: bson.D{{Key: "posts", Value: post}}}})
 	if err == mongo.ErrNoDocuments {
 		return domain.NewError("study group not found not found", domain.ERR_NOT_FOUND)
+	}
+
+	if err != nil {
+		return domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
+	}
+
+	return nil
+}
+
+func (repository *StudyGroupRepository) UpdatePost(c context.Context, studyGroupID string, postID string, updateData dtos.UpdatePostDTO) domain.CodedError {
+	updateFields := bson.M{}
+	if updateData.Deadline.Unix() > 0 {
+		updateFields["posts.$.deadline"] = updateData.Deadline
+	}
+
+	if updateData.Content != "" {
+		updateFields["posts.$.content"] = updateData.Content
+	}
+
+	id, pErr := repository.ParseID(studyGroupID)
+	if pErr != nil {
+		return pErr
+	}
+
+	pid, pErr := repository.ParseID(postID)
+	if pErr != nil {
+		return pErr
+	}
+
+	filter := bson.M{
+		"_id":       id,
+		"posts._id": pid,
+	}
+
+	update := bson.M{
+		"$set": updateFields,
+	}
+
+	_, err := repository.collection.UpdateOne(c, filter, update)
+	if err == mongo.ErrNoDocuments {
+		return domain.NewError("post not found", domain.ERR_NOT_FOUND)
 	}
 
 	if err != nil {
