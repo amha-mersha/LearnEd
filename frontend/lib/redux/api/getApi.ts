@@ -11,8 +11,16 @@ export const learnApi = createApi({
                 headers: {"Content-Type": "application/json"},
                 body: data
             })
-        })
+        }),
+        postGrades: builder.mutation({
+            query: ({ data, token }) => ({
+                url: `/bookmarks`,
+                method: 'PUT',
+                headers: {"Content-Type": "application/json", Authorization: `Bearer ${token}` },
+                body: data,
+            }),
+          }),
     }),
 })
 
-export const {useSignUpMutation} = learnApi;
+export const {useSignUpMutation, usePostGradesMutation} = learnApi;

@@ -1,29 +1,40 @@
 import CredentialsProvider from "next-auth/providers/credentials";
 
+interface credType{
+  email: string,
+  password: string
+}
+
 export const options = {
   providers: [
     CredentialsProvider({
-        name: "Credentials",
-        credentials: {
-        email: { label: 'email', type: 'text' },
-        password: { label: 'Password', type: 'password' },
+      name: "Credentials",
+      credentials: {
+        email: { label: "email", type: "text" },
+        password: { label: "Password", type: "password" },
       },
-      
+
       async authorize(credentials:any) {
-        console.log("first")
-        const response = await fetch('https://bank-aait-web-group-1.onrender.com/auth/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email: credentials.email,
-            password: credentials.password,
-          }),
-        });
+        console.log("first");
+        const response = await fetch( "http://localhost:8080/api/v1/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email: credentials?.email,
+              password: credentials?.password,
+            }),
+          }
+        );
 
         const data = await response.json();
 
-        if (data.success && data.data) {
-          return data
+        console.log(data);
+        if (data) {
+          return {
+            id: data.token,
+            accessToken: data.token,
+            role: data.role
+          };
         }
 
         return null;
@@ -31,7 +42,7 @@ export const options = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user }: { token: any, user: any }) {
+    async jwt({ token, user }: { token: any; user: any }) {
       if (user) {
         token.accessToken = user.accessToken;
         // token.profileStatus = user.profileStatus;
@@ -39,14 +50,15 @@ export const options = {
       }
       return token;
     },
-    async session({ session, token }: { session: any, token: any }) {
+    async session({ session, token }: { session: any; token: any }) {
       session.user.accessToken = token.accessToken;
-    //   session.user.profileStatus = token.profileStatus;
+      // session.user.profileStatus = token.profileStatus;
       session.user.role = token.role;
       return session;
     },
   },
   pages: {
-    signIn: '/auth/login',  
+    signIn: "/auth/login",
   },
+  secret: process.env.NEXTAUTH_SECRET
 };
