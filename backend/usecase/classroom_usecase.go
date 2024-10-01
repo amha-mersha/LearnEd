@@ -361,7 +361,7 @@ func (usecase *ClassroomUsecase) RemoveStudent(c context.Context, tokenID string
 	}
 
 	if !allowed {
-		return domain.NewError("only teachers added to the classroom can add students", domain.ERR_FORBIDDEN)
+		return domain.NewError("only teachers added to the classroom can remove students", domain.ERR_FORBIDDEN)
 	}
 
 	targetID := usecase.classroomRepository.StringifyID(foundUser.ID)
