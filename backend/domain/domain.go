@@ -147,6 +147,13 @@ type ClassroomRepository interface {
 }
 
 type StudyGroupUsecase interface {
+	CreateStudyGroup(c context.Context, creatorID string, studyGroup StudyGroup) CodedError
+	DeleteStudyGroup(c context.Context, teacherID string, studyGroupID string) CodedError
+	AddPost(c context.Context, creatorID string, studyGroupID string, post Post) CodedError
+	UpdatePost(c context.Context, creatorID string, studyGroupID string, postID string, post dtos.UpdatePostDTO) CodedError
+	RemovePost(c context.Context, creatorID string, studyGroupID string, postID string) CodedError
+	AddComment(c context.Context, creatorID string, studyGroupID string, postID string, comment Comment) CodedError
+	RemoveComment(c context.Context, creatorID string, studyGroupID string, postID string, commentID string) CodedError
 }
 
 type StudyGroupRepository interface {
