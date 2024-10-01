@@ -15,9 +15,10 @@ type ClassroomUsecase struct {
 	aiService           domain.AIServiceInterface
 }
 
-func NewClassroomUsecase(classroomRepository domain.ClassroomRepository, authRepository domain.AuthRepository, aiService domain.AIServiceInterface) *ClassroomUsecase {
+func NewClassroomUsecase(classroomRepository domain.ClassroomRepository, resourceRepository domain.ResourceRespository, authRepository domain.AuthRepository, aiService domain.AIServiceInterface) *ClassroomUsecase {
 	return &ClassroomUsecase{
 		classroomRepository: classroomRepository,
+		resourceRepository:  resourceRepository,
 		authRepository:      authRepository,
 		aiService:           aiService,
 	}
@@ -92,25 +93,28 @@ func (usecase *ClassroomUsecase) AddPost(c context.Context, creatorID string, cl
 	post.Comments = []domain.Comment{}
 	post.CreatedAt = time.Now().Round(0)
 	post.CreatorID = cID
-	if err = usecase.classroomRepository.AddPost(c, classroomID, post); err != nil {
+	postID, err := usecase.classroomRepository.AddPost(c, classroomID, post)
+	if err != nil {
 		return err
 	}
 
 	var generatedContent domain.GenerateContent
-	if post.File != "" {
-		generatedContent, err = usecase.aiService.GenerateContentFromFile(post)
-		if err != nil {
-			return err
+	if post.IsProcessed {
+		if post.File != "" {
+			generatedContent, err = usecase.aiService.GenerateContentFromFile(post)
+			if err != nil {
+				return err
+			}
+		} else {
+			generatedContent, err = usecase.aiService.GenerateContentFromText(post)
+			if err != nil {
+				return err
+			}
 		}
-	} else {
-		generatedContent, err = usecase.aiService.GenerateContentFromText(post)
-		if err != nil {
-			return err
+		errAdd := usecase.resourceRepository.AddResource(c, generatedContent, postID)
+		if errAdd != nil {
+			return errAdd
 		}
-	}
-	errAdd := usecase.resourceRepository.AddResource(c, generatedContent, post.ID.Hex())
-	if errAdd != nil {
-		return errAdd
 	}
 
 	return nil

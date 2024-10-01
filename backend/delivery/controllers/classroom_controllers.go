@@ -68,17 +68,21 @@ func (controller *ClassroomController) DeleteClassroom(c *gin.Context) {
 }
 
 func (controller *ClassroomController) AddPost(c *gin.Context) {
-	file, err := c.FormFile("file")
-	if err != nil {
-		c.String(http.StatusBadRequest, "Failed to upload file")
-		return
-	}
-	workingDir, _ := os.Getwd()
-	uniqueFileName := uuid.New().String() + filepath.Ext(file.Filename)
-	savePath := filepath.Join(workingDir, "uploads", uniqueFileName)
-	if err := c.SaveUploadedFile(file, savePath); err != nil {
-		c.String(http.StatusInternalServerError, "Failed to save file")
-		return
+	fields := c.PostForm("file")
+	var savePath string
+	if fields != "" {
+		file, err := c.FormFile("file")
+		if err != nil && err != http.ErrMissingFile {
+			c.String(http.StatusBadRequest, "Failed to upload file: "+err.Error())
+			return
+		}
+		workingDir, _ := os.Getwd()
+		uniqueFileName := uuid.New().String() + filepath.Ext(file.Filename)
+		savePath = filepath.Join(workingDir, "uploads", uniqueFileName)
+		if err := c.SaveUploadedFile(file, savePath); err != nil {
+			c.String(http.StatusInternalServerError, "Failed to save file")
+			return
+		}
 	}
 
 	var post domain.Post

@@ -104,33 +104,23 @@ func (s *AIService) GenerateContentFromFile(post domain.Post) (domain.GenerateCo
 	defer s.client.DeleteFile(s.context, file.Name)
 
 	generatedQuestions, err := s.model.GenerateContent(s.context, genai.Text(`
-        Based on the following content, generate 1-10 multiple-choice questions per page with 4 choices each. 
-        Also, provide an explanation for the correct answer. Return the result in JSON format.
-		Format: 
-		  [
-        {
-            "question": "Question 1 text",
-            "choices": [
-                "Choice A",
-                "Choice B",
-                "Choice C",
-                "Choice D"
-            ],
-            "correct_answer": "Index of the correct answer",
-            "explanation": "Explanation of why choice A is correct."
-        },
-        {
-            "question": "Question 2 text",
-            "choices": [
-                "Choice A",
-                "Choice B",
-                "Choice C",
-                "Choice D"
-            ],
-            "correct_answer": "Index of the correct answer",
-            "explanation": "Explanation of why choice B is correct."
-        }
-    ]
+Based on the following content, generate 1-10 multiple-choice questions per page, each with exactly 4 choices. Provide an explanation for each correct answer. Return the result in JSON format.
+
+The correct answer should be indicated by the numeric index (starting from 0) of the correct choice, not as a string. The format of the response must strictly follow the example below.
+
+**Response Format**:
+[
+  {
+    "question": "Question 1 text",
+    "choices": ["Choice A", "Choice B", "Choice C", "Choice D"],
+    "correct_answer": 0, // Numeric index of the correct answer
+    "explanation": "Explanation of why the correct choice is correct."
+  }
+]
+
+Make sure:
+1. The correct answer is represented by a number (0, 1, 2, or 3).
+2. The response is a valid JSON array with no additional characters outside of the array.
     `), genai.FileData{URI: file.URI})
 	if err != nil {
 		return domain.GenerateContent{}, domain.NewError(fmt.Sprintf("failed to generate questions through gemini: %s", err), domain.ERR_INTERNAL_SERVER)
@@ -174,7 +164,7 @@ func (s *AIService) GenerateContentFromFile(post domain.Post) (domain.GenerateCo
 	var summaryGen []domain.Summary
 	err = json.Unmarshal([]byte(cleanSummarys), &summaryGen)
 	if err != nil {
-		return domain.GenerateContent{}, domain.NewError(fmt.Sprintf("Failed to unmarshal questions response: %s", err), domain.ERR_INTERNAL_SERVER)
+		return domain.GenerateContent{}, domain.NewError(fmt.Sprintf("Failed to unmarshal questions response from file: %s", err), domain.ERR_INTERNAL_SERVER)
 	}
 
 	return domain.GenerateContent{Questions: questionsGen, Summarys: summaryGen}, nil
@@ -187,80 +177,75 @@ func (s *AIService) GenerateContentFromText(post domain.Post) (domain.GenerateCo
 		return domain.GenerateContent{}, domain.NewError("the post contains an empty content", domain.ERR_BAD_REQUEST)
 	}
 	wordCount := len(strings.Fields(post.Content))
+	if wordCount < 150 {
+		return domain.GenerateContent{}, domain.NewError("Insufficent context to process", domain.ERR_BAD_REQUEST)
+	}
+
+	// Generate Questions
 	generatedQuestions, err := s.model.GenerateContent(s.context, genai.Text(fmt.Sprintf(`
-        Based on the following content, generate %d multiple-choice questions with 4 choices each. 
-        Also, provide an explanation for the correct answer. Return the result in JSON format.
-		Content: %s
-		Format: 
-		  [
-        {
-            "question": "Question 1 text",
-            "choices": [
-                "Choice A",
-                "Choice B",
-                "Choice C",
-                "Choice D"
-            ],
-            "correct_answer": "Index of the correct answer",
-            "explanation": "Explanation of why choice A is correct."
-        },
-        {
-            "question": "Question 2 text",
-            "choices": [
-                "Choice A",
-                "Choice B",
-                "Choice C",
-                "Choice D"
-            ],
-            "correct_answer": "Index of the correct answer",
-            "explanation": "Explanation of why choice B is correct."
-        }
-    ]
+Based on the following content, generate %d multiple-choice questions, each with exactly 4 choices. Provide an explanation for each correct answer. Return the result in JSON format.
+
+The correct answer should be indicated by the numeric index (starting from 0) of the correct choice, not as a string. The format of the response must strictly follow the example below.
+
+Content:
+%s
+
+**Response Format**:
+[
+  {
+    "question": "Question 1 text",
+    "choices": ["Choice A", "Choice B", "Choice C", "Choice D"],
+    "correct_answer": 0, // Numeric index of the correct answer
+    "explanation": "Explanation of why the correct choice is correct."
+  }
+]
+
+Make sure:
+1. The correct answer is represented by a number (0, 1, 2, or 3).
+2. The response is a valid JSON array with no additional characters outside of the array.
     `, wordCount/150, cleanedText)))
 	if err != nil {
 		return domain.GenerateContent{}, domain.NewError(fmt.Sprintf("failed to generate questions from text through gemini: %s", err), domain.ERR_INTERNAL_SERVER)
 	}
-	if len(generatedQuestions.Candidates) == 0 {
-		return domain.GenerateContent{}, domain.NewError("No candidate found", domain.ERR_INTERNAL_SERVER)
+	if len(generatedQuestions.Candidates) == 0 || len(generatedQuestions.Candidates[0].Content.Parts) == 0 {
+		return domain.GenerateContent{}, domain.NewError("No candidate or candidate part found", domain.ERR_INTERNAL_SERVER)
 	}
-	if len(generatedQuestions.Candidates[0].Content.Parts) == 0 {
-		return domain.GenerateContent{}, domain.NewError("No candidate part found", domain.ERR_INTERNAL_SERVER)
-	}
+
+	// Clean and log raw questions response
+	log.Printf("Raw generated questions response: %s", generatedQuestions.Candidates[0].Content.Parts[0])
 	cleanQuestions := s.CleanText(generatedQuestions.Candidates[0].Content.Parts[0])
-	if cleanQuestions == "" {
-		return domain.GenerateContent{}, domain.NewError("Content extraction failed", domain.ERR_INTERNAL_SERVER)
-	}
+	log.Printf("Raw cleaned generated questions response: %s", cleanQuestions)
+
+	// Unmarshal questions
 	var questionsGen []domain.Question
-	err = json.Unmarshal([]byte(cleanQuestions), &questionsGen)
+	err = json.Unmarshal([]byte(s.cleanJSONQuestion(cleanQuestions)), &questionsGen)
 	if err != nil {
 		return domain.GenerateContent{}, domain.NewError(fmt.Sprintf("Failed to unmarshal questions response: %s", err), domain.ERR_INTERNAL_SERVER)
 	}
 
+	// Generate Summary
 	generatedSummary, err := s.model.GenerateContent(s.context, genai.Text(fmt.Sprintf(`
-	Based on the given content below , generate a summary and return JSON format.
-	Content: %s
-	Format: 
-	{
-	"summary": "summary of the given content as detailed as possible"
-	} `, cleanedText)))
+		Based on the given content below, generate a summary in JSON string format.
+		Content: %s
+		Response Format: [
+		{
+			"summary": "Summary of the given content as detailed as possible"
+		}]`, cleanedText)))
 	if err != nil {
-		return domain.GenerateContent{}, domain.NewError(fmt.Sprintf("failed to generate summary through gemini: %s", err), domain.ERR_INTERNAL_SERVER)
+		return domain.GenerateContent{}, domain.NewError(fmt.Sprintf("Failed to generate summary through gemini: %s", err), domain.ERR_INTERNAL_SERVER)
 	}
-	if len(generatedSummary.Candidates) == 0 {
-		return domain.GenerateContent{}, domain.NewError("No candidate found", domain.ERR_INTERNAL_SERVER)
+	if len(generatedSummary.Candidates) == 0 || len(generatedSummary.Candidates[0].Content.Parts) == 0 {
+		return domain.GenerateContent{}, domain.NewError("No candidate or candidate part found", domain.ERR_INTERNAL_SERVER)
 	}
-	if len(generatedSummary.Candidates[0].Content.Parts) == 0 {
-		return domain.GenerateContent{}, domain.NewError("No candidate part found", domain.ERR_INTERNAL_SERVER)
-	}
-	cleanSummarys := s.CleanText(generatedSummary.Candidates[0].Content.Parts[0])
-	if cleanSummarys == "" {
-		return domain.GenerateContent{}, domain.NewError("Content extraction failed", domain.ERR_INTERNAL_SERVER)
-	}
+
+	// Clean and log raw summary response
+	cleanSummary := s.CleanText(generatedSummary.Candidates[0].Content.Parts[0])
+	log.Printf("Raw generated summary response: %s", cleanSummary)
 
 	var summaryGen []domain.Summary
-	err = json.Unmarshal([]byte(cleanSummarys), &summaryGen)
+	err = json.Unmarshal([]byte(s.cleanJSONSummary(cleanSummary)), &summaryGen)
 	if err != nil {
-		return domain.GenerateContent{}, domain.NewError(fmt.Sprintf("Failed to unmarshal questions response: %s", err), domain.ERR_INTERNAL_SERVER)
+		return domain.GenerateContent{}, domain.NewError(fmt.Sprintf("Failed to unmarshal summary response: %s", err), domain.ERR_INTERNAL_SERVER)
 	}
 
 	return domain.GenerateContent{Questions: questionsGen, Summarys: summaryGen}, nil
@@ -293,4 +278,28 @@ func (s *AIService) ValidateFile(filePath string) domain.CodedError {
 		return domain.NewError(fmt.Sprintf("file type mismatch: expected %s but got %s", expectedMimeType, mimeType), domain.ERR_FORBIDDEN)
 	}
 	return nil
+}
+
+func (s *AIService) cleanJSONQuestion(response string) string {
+	leftPtr, rightPtr := 0, len(response)-1
+	for response[leftPtr] != '[' {
+		leftPtr++
+	}
+	for response[rightPtr] != ']' {
+		rightPtr--
+	}
+	log.Printf("cleaned questions : %s", response[leftPtr:rightPtr+1])
+	return response[leftPtr : rightPtr+1]
+}
+
+func (s *AIService) cleanJSONSummary(response string) string {
+	leftPtr, rightPtr := 0, len(response)-1
+	for response[leftPtr] != '[' {
+		leftPtr++
+	}
+	for response[rightPtr] != ']' {
+		rightPtr--
+	}
+	log.Printf("cleaned summary : %s", response[leftPtr:rightPtr+1])
+	return response[leftPtr : rightPtr+1]
 }

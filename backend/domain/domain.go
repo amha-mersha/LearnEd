@@ -12,6 +12,7 @@ import (
 const (
 	CollectionUsers      = "users"
 	CollectionClassrooms = "classrooms"
+	CollectionResources  = "resources"
 )
 
 const (
@@ -79,7 +80,7 @@ type Summary struct {
 type Question struct {
 	Question      string   `json:"question" bson:"question"`
 	Choices       []string `json:"choices" bson:"choices"`
-	CorrectAnswer string   `json:"correct_answer" bson:"correct_answer"`
+	CorrectAnswer int      `json:"correct_answer" bson:"correct_answer"`
 	Explanation   string   `json:"explanation" bson:"explanation"`
 }
 
@@ -138,7 +139,7 @@ type ClassroomRepository interface {
 	CreateClassroom(c context.Context, creatorID primitive.ObjectID, classroom Classroom) CodedError
 	DeleteClassroom(c context.Context, classroomID string) CodedError
 	FindClassroom(c context.Context, classroomID string) (Classroom, CodedError)
-	AddPost(c context.Context, classroomID string, post Post) CodedError
+	AddPost(c context.Context, classroomID string, post Post) (string, CodedError)
 	UpdatePost(c context.Context, classroomID string, postID string, post dtos.UpdatePostDTO) CodedError
 	RemovePost(c context.Context, classroomID string, postID string) CodedError
 	AddComment(c context.Context, classroomID string, postID string, comment Comment) CodedError
