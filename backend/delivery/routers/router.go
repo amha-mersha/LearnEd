@@ -38,7 +38,7 @@ func InitRouter(database *mongo.Database, port int, routePrefix string) {
 	classroomRouter := router.Group("/api/" + routePrefix + "/classrooms")
 	NewClassroomRouter(classroomRepository, authRepository, jwtService, classroomRouter)
 
-	sgRouter := router.Group("/api/" + routePrefix + "/study-group")
+	sgRouter := router.Group("/api/" + routePrefix + "/study-groups")
 	NewStudyGroupRouter(sgRepository, authRepository, jwtService, sgRouter)
 
 	router.Run(fmt.Sprintf(":%v", port))

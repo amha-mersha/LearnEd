@@ -184,7 +184,7 @@ func (usecase *StudyGroupUsecase) AddComment(c context.Context, creatorID string
 	}
 
 	if !allowed {
-		return domain.NewError("only students added to the study group can remove posts", domain.ERR_FORBIDDEN)
+		return domain.NewError("only students added to the study group can add comments", domain.ERR_FORBIDDEN)
 	}
 
 	if err = usecase.sgRepository.AddComment(c, studyGroupID, postID, comment); err != nil {
@@ -281,6 +281,10 @@ func (usecase *StudyGroupUsecase) RemoveStudent(c context.Context, tokenID strin
 		return err
 	}
 
+	if foundUser.Type == domain.RoleTeacher {
+		return domain.NewError("teachers do not have access to study groups", domain.ERR_FORBIDDEN)
+	}
+
 	studyGroup, err := usecase.sgRepository.FindStudyGroup(c, studyGroupID)
 	if err != nil {
 		return err
@@ -289,6 +293,10 @@ func (usecase *StudyGroupUsecase) RemoveStudent(c context.Context, tokenID strin
 	allowed := false
 	if usecase.sgRepository.StringifyID(studyGroup.Owner) == tokenID {
 		allowed = true
+	}
+
+	if usecase.sgRepository.StringifyID(studyGroup.Owner) == studentID {
+		return domain.NewError("the owner can not remove themselves from the classroom", domain.ERR_BAD_REQUEST)
 	}
 
 	if !allowed {
