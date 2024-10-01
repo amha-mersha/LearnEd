@@ -251,7 +251,7 @@ func (usecase *StudyGroupUsecase) AddStudent(c context.Context, tokenID string, 
 	}
 
 	if !allowed {
-		return domain.NewError("only teachers added to the classroom can add students", domain.ERR_FORBIDDEN)
+		return domain.NewError("only students added to the classroom can add students", domain.ERR_FORBIDDEN)
 	}
 
 	targetID := usecase.sgRepository.StringifyID(foundUser.ID)
@@ -287,15 +287,12 @@ func (usecase *StudyGroupUsecase) RemoveStudent(c context.Context, tokenID strin
 	}
 
 	allowed := false
-	for _, teacher := range studyGroup.Students {
-		if usecase.sgRepository.StringifyID(teacher) == tokenID {
-			allowed = true
-			break
-		}
+	if usecase.sgRepository.StringifyID(studyGroup.Owner) == tokenID {
+		allowed = true
 	}
 
 	if !allowed {
-		return domain.NewError("only teachers added to the classroom can add students", domain.ERR_FORBIDDEN)
+		return domain.NewError("only the owner of the classroom can remove students", domain.ERR_FORBIDDEN)
 	}
 
 	targetID := usecase.sgRepository.StringifyID(foundUser.ID)
