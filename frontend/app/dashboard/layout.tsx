@@ -15,7 +15,7 @@ export default function RootLayout({
     return (
     <Provider store={store}>
         <html lang="en">
-            <body className="flex relative">
+            <body className="flex relative bg-slate-100">
               <div className=' min-h-screen'>
                 <Sidebar />
               </div>

@@ -17,7 +17,7 @@ type JWTServiceInterface interface {
 	SignJWTWithPayload(username string, role string, tokenType string, tokenLifeSpan time.Duration) (string, CodedError)
 	ValidateAndParseToken(rawToken string) (*jwt.Token, error)
 	GetExpiryDate(token *jwt.Token) (time.Time, CodedError)
-	GetEmail(token *jwt.Token) (string, CodedError)
+	GetID(token *jwt.Token) (string, CodedError)
 	GetRole(token *jwt.Token) (string, CodedError)
 	GetTokenType(token *jwt.Token) (string, CodedError)
 }
