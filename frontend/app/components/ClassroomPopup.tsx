@@ -21,9 +21,11 @@ import { useCreateClassroomMutation } from "@/lib/redux/api/getApi";
 export default function CreateClassroomModal({
   isOpen,
   onClose,
+  refetch,
 }: {
   isOpen: boolean;
   onClose: () => void;
+  refetch: () => void;
 }) {
   const [classroomName, setClassroomName] = useState("");
   const [courseName, setCourseName] = useState("");
@@ -52,6 +54,7 @@ export default function CreateClassroomModal({
     try {
       await createClassroom({ data: payload, accessToken }).unwrap();  // Pass both data and accessToken
       console.log("Classroom created successfully");
+      refetch(); // Refetch the classrooms data
       onClose(); // Close the modal on success
     } catch (error) {
       console.error("Failed to create classroom:", error);
@@ -61,7 +64,7 @@ export default function CreateClassroomModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px] py-20 px-20">
+      <DialogContent className="sm:max-w-[425px] py-20 px-16">
         <DialogHeader className="">
           <DialogTitle className="text-center font-black">
             Create Classroom
@@ -127,6 +130,7 @@ export default function CreateClassroomModal({
           </Button>
           {isError && <p className="text-red-500">Failed to create classroom.</p>}
           {isSuccess && <p className="text-green-500">Classroom created successfully!</p>}
+          
         </form>
       </DialogContent>
     </Dialog>
