@@ -490,7 +490,7 @@ func (usecase *ClassroomUsecase) GetClassrooms(c context.Context, tokenID string
 		return []domain.Classroom{}, err
 	}
 
-	classrooms, err := usecase.classroomRepository.GetClassrooms(c, usecase.classroomRepository.StringifyID(foundUser.ID), foundUser.Type)
+	classrooms, err := usecase.classroomRepository.GetClassrooms(c, usecase.classroomRepository.StringifyID(foundUser.ID))
 	if err != nil {
 		return []domain.Classroom{}, err
 	}
