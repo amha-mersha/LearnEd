@@ -36,3 +36,20 @@ func (usecase *StudyGroupUsecase) CreateStudyGroup(c context.Context, creatorID 
 
 	return nil
 }
+
+func (usecase *StudyGroupUsecase) DeleteStudyGroup(c context.Context, teacherID string, studyGroupID string) domain.CodedError {
+	foundSG, err := usecase.sgRepository.FindStudyGroup(c, studyGroupID)
+	if err != nil {
+		return err
+	}
+
+	if usecase.sgRepository.StringifyID(foundSG.Owner) != teacherID {
+		return domain.NewError("only the original owner can delete the classroom", domain.ERR_FORBIDDEN)
+	}
+
+	if err = usecase.sgRepository.DeleteStudyGroup(c, studyGroupID); err != nil {
+		return err
+	}
+
+	return nil
+}
