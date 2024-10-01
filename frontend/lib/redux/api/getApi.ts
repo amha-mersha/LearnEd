@@ -14,7 +14,7 @@ export const learnApi = createApi({
     }),
     createClassroom: builder.mutation({
       query: ({ data, accessToken }) => ({
-        url: "classrooms",
+        url: "classrooms/",
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -25,7 +25,7 @@ export const learnApi = createApi({
     }),
     getClassrooms: builder.query({
       query: (accessToken) => ({
-        url: "classrooms",
+        url: "classrooms/",
         method: "GET",
         headers: {
           "Content-Type": "application/json",

@@ -18,10 +18,14 @@ interface Classroom {
 
 const Page = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { data: classrooms = [], isLoading, error } = useGetClassroomsQuery(
-    "your-access-token-here"
+  const {
+    data: classrooms = [],
+    isLoading,
+    error,
+  } = useGetClassroomsQuery(
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzQXQiOiIyMDI0LTEwLTAyVDAwOjA4OjE5LjI5MDA1OTYrMDM6MDAiLCJpZCI6IjY2ZmMzNWQwMmFjOWY2NTEyYzYwNTU3OSIsInJvbGUiOiJ0ZWFjaGVyIiwidG9rZW5UeXBlIjoiYWNjZXNzVG9rZW4ifQ.N5J5RWRuj72taDq7rHZdKUrqCwOmcMfCF-aLojMNgiw"
   ); // Fetch classrooms data
-  
+
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error fetching classrooms</p>;
 
