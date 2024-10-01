@@ -5,6 +5,7 @@ import (
 	"learned-api/domain"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -40,4 +41,28 @@ func (repository *ClassroomRepository) FindStudyGroup(c context.Context, studyGr
 	}
 
 	return studyGroup, nil
+}
+
+func (repository *ClassroomRepository) CreateStudyGroup(c context.Context, creatorID primitive.ObjectID, studyGroup domain.StudyGroup) domain.CodedError {
+	studyGroup.Students = []primitive.ObjectID{creatorID}
+	_, err := repository.collection.InsertOne(c, studyGroup)
+	if err != nil {
+		return domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
+	}
+
+	return nil
+}
+
+func (repository *StudyGroupRepository) DeleteStudyGroup(c context.Context, studyGroupID string) domain.CodedError {
+	id, pErr := repository.ParseID(studyGroupID)
+	if pErr != nil {
+		return pErr
+	}
+
+	_, err := repository.collection.DeleteOne(c, bson.D{{Key: "_id", Value: id}})
+	if err != nil {
+		return domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
+	}
+
+	return nil
 }
