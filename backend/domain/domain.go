@@ -154,8 +154,9 @@ type StudyGroupUsecase interface {
 	RemovePost(c context.Context, creatorID string, studyGroupID string, postID string) CodedError
 	AddComment(c context.Context, creatorID string, studyGroupID string, postID string, comment Comment) CodedError
 	RemoveComment(c context.Context, creatorID string, studyGroupID string, postID string, commentID string) CodedError
-	AddStudent(c context.Context, studentID string, classroomID string) CodedError
-	RemoveStudent(c context.Context, studentID string, classroomID string) CodedError
+	AddStudent(c context.Context, studentID string, studyGroupID string) CodedError
+	RemoveStudent(c context.Context, studentID string, studyGroupID string) CodedError
+	GetStudyGroups(c context.Context, tokenID string) ([]StudyGroup, CodedError)
 }
 
 type StudyGroupRepository interface {
@@ -165,9 +166,9 @@ type StudyGroupRepository interface {
 	AddPost(c context.Context, studyGroupID string, post Post) CodedError
 	UpdatePost(c context.Context, studyGroupID string, postID string, post dtos.UpdatePostDTO) CodedError
 	RemovePost(c context.Context, studyGroupID string, postID string) CodedError
-	AddComment(c context.Context, classroomID string, postID string, comment Comment) CodedError
-	FindPost(c context.Context, classroomID string, postID string) (Post, CodedError)
-	RemoveComment(c context.Context, classroomID string, postID string, commentID string) CodedError
+	AddComment(c context.Context, studyGroupID string, postID string, comment Comment) CodedError
+	FindPost(c context.Context, studyGroupID string, postID string) (Post, CodedError)
+	RemoveComment(c context.Context, studyGroupID string, postID string, commentID string) CodedError
 	StringifyID(id primitive.ObjectID) string
 	ParseID(id string) (primitive.ObjectID, CodedError)
 }
