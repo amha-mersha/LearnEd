@@ -33,6 +33,14 @@ export const learnApi = createApi({
         },
       }),
     }),
+    postGrades: builder.mutation({
+        query: ({ data, token }) => ({
+            url: `/bookmarks`,
+            method: 'PUT',
+            headers: {"Content-Type": "application/json", Authorization: `Bearer ${token}` },
+            body: data,
+        }),
+      }),
   }),
 });
 
@@ -40,4 +48,5 @@ export const {
   useSignUpMutation,
   useCreateClassroomMutation,
   useGetClassroomsQuery,
+  usePostGradesMutation
 } = learnApi;
