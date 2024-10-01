@@ -112,3 +112,22 @@ func (controller *StudyGroupController) UpdatePost(c *gin.Context) {
 
 	c.JSON(http.StatusOK, domain.Response{"message": "post updated successfully"})
 }
+
+func (controller *StudyGroupController) RemovePost(c *gin.Context) {
+	studyGroupID := c.Param("studyGroupID")
+	postID := c.Param("postID")
+	creatorID, exists := c.Keys["id"]
+	if !exists {
+		c.JSON(http.StatusForbidden, domain.Response{"message": "coudn't find the id field"})
+		return
+	}
+
+	id := creatorID.(string)
+	err := controller.usecase.RemovePost(c, id, studyGroupID, postID)
+	if err != nil {
+		c.JSON(GetHTTPErrorCode(err), domain.Response{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusNoContent, domain.Response{"message": "post removed successfully"})
+}
