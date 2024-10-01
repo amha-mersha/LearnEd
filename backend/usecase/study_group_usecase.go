@@ -184,7 +184,7 @@ func (usecase *StudyGroupUsecase) AddComment(c context.Context, creatorID string
 	}
 
 	if !allowed {
-		return domain.NewError("only teachers added to the study group can remove posts", domain.ERR_FORBIDDEN)
+		return domain.NewError("only students added to the study group can remove posts", domain.ERR_FORBIDDEN)
 	}
 
 	if err = usecase.sgRepository.AddComment(c, studyGroupID, postID, comment); err != nil {
@@ -227,7 +227,7 @@ func (usecase *StudyGroupUsecase) RemoveComment(c context.Context, userID string
 	return nil
 }
 
-func (usecase *ClassroomUsecase) AddStudent(c context.Context, studentEmail string, studyGroupID string) domain.CodedError {
+func (usecase *StudyGroupUsecase) AddStudent(c context.Context, studentEmail string, studyGroupID string) domain.CodedError {
 	foundUser, err := usecase.authRepository.GetUserByEmail(c, studentEmail)
 	if err != nil {
 		return err
@@ -237,25 +237,25 @@ func (usecase *ClassroomUsecase) AddStudent(c context.Context, studentEmail stri
 		return domain.NewError("can not add teachers as students", domain.ERR_BAD_REQUEST)
 	}
 
-	studyGroup, err := usecase.classroomRepository.FindClassroom(c, studyGroupID)
+	studyGroup, err := usecase.sgRepository.FindStudyGroup(c, studyGroupID)
 	if err != nil {
 		return err
 	}
 
-	targetID := usecase.classroomRepository.StringifyID(foundUser.ID)
+	targetID := usecase.sgRepository.StringifyID(foundUser.ID)
 	found := false
 	for _, student := range studyGroup.Students {
-		if usecase.classroomRepository.StringifyID(student) == targetID {
+		if usecase.sgRepository.StringifyID(student) == targetID {
 			found = true
 			break
 		}
 	}
 
 	if found {
-		return domain.NewError("student has already been added to the classroom", domain.ERR_BAD_REQUEST)
+		return domain.NewError("student has already been added to the study group", domain.ERR_BAD_REQUEST)
 	}
 
-	err = usecase.classroomRepository.AddStudent(c, targetID, studyGroupID)
+	err = usecase.sgRepository.AddStudent(c, targetID, studyGroupID)
 	if err != nil {
 		return err
 	}
@@ -263,21 +263,21 @@ func (usecase *ClassroomUsecase) AddStudent(c context.Context, studentEmail stri
 	return nil
 }
 
-func (usecase *ClassroomUsecase) RemoveStudent(c context.Context, studyGroupID string, studentID string) domain.CodedError {
+func (usecase *StudyGroupUsecase) RemoveStudent(c context.Context, studyGroupID string, studentID string) domain.CodedError {
 	foundUser, err := usecase.authRepository.GetUserByID(c, studentID)
 	if err != nil {
 		return err
 	}
 
-	clsroom, err := usecase.classroomRepository.FindClassroom(c, studyGroupID)
+	clsroom, err := usecase.sgRepository.FindStudyGroup(c, studyGroupID)
 	if err != nil {
 		return err
 	}
 
-	targetID := usecase.classroomRepository.StringifyID(foundUser.ID)
+	targetID := usecase.sgRepository.StringifyID(foundUser.ID)
 	found := false
 	for _, student := range clsroom.Students {
-		if usecase.classroomRepository.StringifyID(student) == targetID {
+		if usecase.sgRepository.StringifyID(student) == targetID {
 			found = true
 			break
 		}
@@ -287,11 +287,10 @@ func (usecase *ClassroomUsecase) RemoveStudent(c context.Context, studyGroupID s
 		return domain.NewError("student is not in the study group", domain.ERR_BAD_REQUEST)
 	}
 
-	err = usecase.classroomRepository.RemoveStudent(c, targetID, studyGroupID)
+	err = usecase.sgRepository.RemoveStudent(c, targetID, studyGroupID)
 	if err != nil {
 		return err
 	}
 
-	usecase.classroomRepository.RemoveGrade(c, studyGroupID, targetID)
 	return nil
 }
