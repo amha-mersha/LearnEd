@@ -13,5 +13,5 @@ func NewStudyGroupRouter(studygroupRep domain.StudyGroupRepository, authReposito
 	sgUsecase := usecases.NewStudyGroupUsecase(studygroupRep, authRepository)
 	sgController := controllers.NewStudyGroupController(sgUsecase)
 
-	router.POST("/", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleStudent), sgController.CreateClassroom)
+	router.POST("/", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleStudent), sgController.CreateStudyGroup)
 }
