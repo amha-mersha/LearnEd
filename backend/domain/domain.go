@@ -78,6 +78,7 @@ type GetPostDTO struct {
 }
 
 type Classroom struct {
+	ID            primitive.ObjectID   `json:"id" bson:"_id,omitempty"`
 	Name          string               `json:"name"`
 	CourseName    string               `json:"course_name"`
 	Season        string               `json:"season"`
