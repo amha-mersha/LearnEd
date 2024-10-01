@@ -408,7 +408,7 @@ func (repository *ClassroomRepository) RemoveStudent(c context.Context, studentI
 	return nil
 }
 
-func (repository *ClassroomRepository) GetClassrooms(c context.Context, userID string, userType string) ([]domain.Classroom, domain.CodedError) {
+func (repository *ClassroomRepository) GetClassrooms(c context.Context, userID string) ([]domain.Classroom, domain.CodedError) {
 	uID, pErr := repository.ParseID(userID)
 	if pErr != nil {
 		return []domain.Classroom{}, domain.NewError(pErr.Error(), domain.ERR_INTERNAL_SERVER)
