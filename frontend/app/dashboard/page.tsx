@@ -5,7 +5,6 @@ import Card from "../components/ClassroomCard";
 import Link from "next/link";
 import CreateClassroomModal from "../components/ClassroomPopup";
 import { Button } from "@/components/ui/button";
-import { signOut, useSession } from "next-auth/react";
 import { useGetClassroomsQuery } from "@/lib/redux/api/getApi";
 import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton
 import { useSelector } from "react-redux";
@@ -24,9 +23,7 @@ const Page = () => {
   const token = localStorage.getItem('token');
   // console.log("-------------------------", token);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { data: session } = useSession();
-  console.log(session)
-    const {
+  const {
     data: classrooms = [],
     isLoading,
     error,
