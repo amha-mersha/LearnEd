@@ -1,29 +1,42 @@
-"use client"
+"use client";
 import Link from "next/link";
 import Image from "next/image";
 import logo from "../../../public/Images/LearnEd.svg";
-import { useState } from "react";
-import { signIn } from "next-auth/react";
+import { MouseEvent, useState } from "react";
+import { getSession, signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import { settoken } from "@/lib/redux/slices/tokenSlice";
+import { setrole } from "@/lib/redux/slices/roleSlice";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter();
+  const dispatch = useDispatch()
+  // const { data: session } = useSession();
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     const data = { email: email, password: password };
-    const result = await signIn("credentials", {
+
+    let result = await signIn("credentials", {
       redirect: false,
       email: data.email,
       password: data.password,
     });
 
     if (result?.ok) {
-      console.log("worked");
-      console.log(data);
-      // router.push(`/`)
+      const updatedSession = await getSession();
+      console.log("updatedsession", updatedSession)
+      if (updatedSession) {
+        dispatch(settoken({payload: updatedSession.user.accessToken}))
+        dispatch(setrole({payload: updatedSession.user.role}))
+        router.push(`/`);
+      }
     } else {
       console.log(result);
-      alert("Invalid Information");
+      alert("Nope");
     }
   };
 
@@ -55,6 +68,7 @@ export default function SignIn() {
                   id="email"
                   className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="name@company.com"
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </div>
@@ -71,6 +85,7 @@ export default function SignIn() {
                   id="password"
                   minLength={8}
                   placeholder="••••••••"
+                  onChange={(e) => setPassword(e.target.value)}
                   className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required
                 />
@@ -102,9 +117,10 @@ export default function SignIn() {
                 </Link>
               </div>
               <button
-                type="submit"
                 className="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                onClick={handleSubmit}
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+                  handleSubmit(e)
+                }
               >
                 Sign in
               </button>

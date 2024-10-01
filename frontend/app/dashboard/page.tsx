@@ -1,4 +1,3 @@
-// page.tsx
 "use client";
 import React, { useState } from "react";
 import Sidebar from "../components/Sidebar/Sidebar";
@@ -85,7 +84,8 @@ const SkeletonCard = () => {
       <div className="flex justify-between w-full align-middle">
         <div>
           <Skeleton className="w-32 h-8" /> {/* Skeleton for class name */}
-          <Skeleton className="w-24 h-5 mt-2" /> {/* Skeleton for course name */}
+          <Skeleton className="w-24 h-5 mt-2" />{" "}
+          {/* Skeleton for course name */}
         </div>
         <Skeleton className="w-16 h-5 mt-2" /> {/* Skeleton for season */}
       </div>
