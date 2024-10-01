@@ -185,7 +185,14 @@ func (controller *StudyGroupController) AddStudent(c *gin.Context) {
 		return
 	}
 
-	err := controller.usecase.AddStudent(c, addStudentDto.Email, studyGroupID)
+	creatorID, exists := c.Keys["id"]
+	if !exists {
+		c.JSON(http.StatusForbidden, domain.Response{"message": "coudn't find the id field"})
+		return
+	}
+
+	id := creatorID.(string)
+	err := controller.usecase.AddStudent(c, id, addStudentDto.Email, studyGroupID)
 	if err != nil {
 		c.JSON(GetHTTPErrorCode(err), domain.Response{"error": err.Error()})
 		return
@@ -197,7 +204,15 @@ func (controller *StudyGroupController) AddStudent(c *gin.Context) {
 func (controller *StudyGroupController) RemoveStudent(c *gin.Context) {
 	studyGroupID := c.Param("studyGroupID")
 	studentID := c.Param("studentID")
-	err := controller.usecase.RemoveStudent(c, studyGroupID, studentID)
+
+	creatorID, exists := c.Keys["id"]
+	if !exists {
+		c.JSON(http.StatusForbidden, domain.Response{"message": "coudn't find the id field"})
+		return
+	}
+
+	id := creatorID.(string)
+	err := controller.usecase.RemoveStudent(c, id, studyGroupID, studentID)
 	if err != nil {
 		c.JSON(GetHTTPErrorCode(err), domain.Response{"error": err.Error()})
 		return
