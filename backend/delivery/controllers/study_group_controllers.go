@@ -131,3 +131,48 @@ func (controller *StudyGroupController) RemovePost(c *gin.Context) {
 
 	c.JSON(http.StatusNoContent, domain.Response{"message": "post removed successfully"})
 }
+
+func (controller *StudyGroupController) AddComment(c *gin.Context) {
+	var comment domain.Comment
+	if err := c.ShouldBindJSON(&comment); err != nil {
+		c.JSON(http.StatusBadRequest, domain.Response{"error": err.Error()})
+		return
+	}
+
+	studyGroupID := c.Param("studyGroupID")
+	postID := c.Param("postID")
+	creatorID, exists := c.Keys["id"]
+	if !exists {
+		c.JSON(http.StatusForbidden, domain.Response{"message": "coudn't find the id field"})
+		return
+	}
+
+	id := creatorID.(string)
+	err := controller.usecase.AddComment(c, id, studyGroupID, postID, comment)
+	if err != nil {
+		c.JSON(GetHTTPErrorCode(err), domain.Response{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, domain.Response{"message": "comment added successfully"})
+}
+
+func (controller *StudyGroupController) RemoveComment(c *gin.Context) {
+	studyGroupID := c.Param("studyGroupID")
+	postID := c.Param("postID")
+	commentID := c.Param("commentID")
+	creatorID, exists := c.Keys["id"]
+	if !exists {
+		c.JSON(http.StatusForbidden, domain.Response{"message": "coudn't find the id field"})
+		return
+	}
+
+	id := creatorID.(string)
+	err := controller.usecase.RemoveComment(c, id, studyGroupID, postID, commentID)
+	if err != nil {
+		c.JSON(GetHTTPErrorCode(err), domain.Response{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusNoContent, domain.Response{"message": "comment removed successfully"})
+}
