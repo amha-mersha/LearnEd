@@ -4,6 +4,7 @@ import (
 	"context"
 	"learned-api/domain"
 	"learned-api/domain/dtos"
+	"log"
 	"os"
 	"time"
 )
@@ -98,25 +99,30 @@ func (usecase *ClassroomUsecase) AddPost(c context.Context, creatorID string, cl
 		return err
 	}
 
-	var generatedContent domain.GenerateContent
 	if post.IsProcessed {
-		if post.File != "" {
-			generatedContent, err = usecase.aiService.GenerateContentFromFile(post)
-			if err != nil {
-				return err
-			}
-		} else {
-			generatedContent, err = usecase.aiService.GenerateContentFromText(post)
-			if err != nil {
-				return err
-			}
-		}
-		errAdd := usecase.resourceRepository.AddResource(c, generatedContent, postID)
-		if errAdd != nil {
-			return errAdd
-		}
-	}
+		go func() {
+			var generatedContent domain.GenerateContent
+			var genErr domain.CodedError
 
+				if post.File != "" {
+					generatedContent, genErr = usecase.aiService.GenerateContentFromFile(post)
+				} else {
+					generatedContent, genErr = usecase.aiService.GenerateContentFromText(post)
+				}
+
+			if genErr != nil {
+				log.Println(genErr.Error())
+				return
+			}
+
+			errAdd := usecase.resourceRepository.AddResource(c, generatedContent, postID)
+			if errAdd != nil {
+				log.Println(errAdd.Error())
+				return
+			}
+		}()
+
+	}
 	return nil
 }
 

@@ -1,0 +1,19 @@
+The error message "googleapi: Error 400: Image input modality is not enabled for models/gemini-pro" indicates that you're attempting to provide an image as input to the Gemini-Pro model, but this model doesn't currently support image input.
+
+Here are some potential solutions:
+
+Use a different Gemini model: If you need to process images, consider using a different Gemini model that supports image input, such as Gemini-Image.
+Adjust your code: If you're using a library or framework to interact with Gemini, ensure that you're providing the correct input format and model name. Refer to the documentation for specific instructions.
+Check API limitations: Verify that your API key or usage limits don't restrict image input for the Gemini-Pro model.
+Contact Gemini support: If none of the above solutions work, reach out to Gemini support for further assistance. They can provide more specific guidance based on your use case and setup.
+Remember to replace "gemini-pro" with the actual model name you're using in your code. By following these steps, you should be able to resolve the error and successfully process image input with the appropriate Gemini model.
+
+
+
+
+
+
+
+
+
+

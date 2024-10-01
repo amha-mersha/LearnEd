@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -68,14 +69,13 @@ func (controller *ClassroomController) DeleteClassroom(c *gin.Context) {
 }
 
 func (controller *ClassroomController) AddPost(c *gin.Context) {
-	fields := c.PostForm("file")
 	var savePath string
-	if fields != "" {
-		file, err := c.FormFile("file")
-		if err != nil && err != http.ErrMissingFile {
-			c.String(http.StatusBadRequest, "Failed to upload file: "+err.Error())
-			return
-		}
+	file, err := c.FormFile("file")
+	if err != nil && err != http.ErrMissingFile {
+		c.String(http.StatusBadRequest, "Failed to upload file: "+err.Error())
+		return
+	}
+	if file != nil {
 		workingDir, _ := os.Getwd()
 		uniqueFileName := uuid.New().String() + filepath.Ext(file.Filename)
 		savePath = filepath.Join(workingDir, "uploads", uniqueFileName)
@@ -84,14 +84,20 @@ func (controller *ClassroomController) AddPost(c *gin.Context) {
 			return
 		}
 	}
-
 	var post domain.Post
-	if err := c.ShouldBind(&post); err != nil {
-		c.JSON(http.StatusBadRequest, domain.Response{"error": err.Error()})
-		return
-	}
+	post.Content = c.PostForm("content")
+	post.IsAssignment = c.PostForm("is_assignment") == "true"
+	post.IsProcessed = c.PostForm("is_processed") == "true"
 	post.File = savePath
-
+	deadlineStr := c.PostForm("deadline")
+	if deadlineStr != "" {
+		parsedDeadline, err := time.Parse(time.RFC3339, deadlineStr)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, domain.Response{"error": "Invalid deadline format"})
+			return
+		}
+		post.Deadline = parsedDeadline
+	}
 	classroomID := c.Param("classroomID")
 	creatorID, exists := c.Keys["id"]
 	if !exists {
