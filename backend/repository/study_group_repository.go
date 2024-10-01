@@ -299,6 +299,36 @@ func (repository *StudyGroupRepository) AddStudent(c context.Context, studentID 
 	return nil
 }
 
+func (repository *StudyGroupRepository) RemoveStudent(c context.Context, studentID string, studyGroupID string) domain.CodedError {
+	sID, pErr := repository.ParseID(studentID)
+	if pErr != nil {
+		return pErr
+	}
+
+	cID, pErr := repository.ParseID(studyGroupID)
+	if pErr != nil {
+		return pErr
+	}
+
+	filter := bson.M{"_id": cID}
+	update := bson.M{
+		"$pull": bson.M{
+			"students": sID,
+		},
+	}
+
+	res, err := repository.collection.UpdateOne(c, filter, update)
+	if err != nil {
+		return domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
+	}
+
+	if res.ModifiedCount == 0 {
+		return domain.NewError("study group not found", domain.ERR_NOT_FOUND)
+	}
+
+	return nil
+}
+
 func (repository *StudyGroupRepository) StringifyID(id primitive.ObjectID) string {
 	return id.Hex()
 }
