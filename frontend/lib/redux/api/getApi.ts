@@ -18,7 +18,7 @@ export const learnApi = createApi({
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          'Authorization': `Bearer ${accessToken}`,
+          Authorization: `Bearer ${accessToken}`,
         },
         body: data,
       }),
@@ -29,18 +29,34 @@ export const learnApi = createApi({
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          'Authorization': `Bearer ${accessToken}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       }),
     }),
     postGrades: builder.mutation({
-        query: ({ data, token }) => ({
-            url: `/bookmarks`,
-            method: 'PUT',
-            headers: {"Content-Type": "application/json", Authorization: `Bearer ${token}` },
-            body: data,
-        }),
+      query: ({ data, token }) => (
+        console.log("dd", data, token),
+        {
+          url: `classrooms/66f32f5b448485ed1dca27fd/grades/66f3fe604adcefd5d8830a6c`,
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: data,
+        }
+      ),
+    }),
+    getAllStudents: builder.query({
+      query: (token) => ({
+        url: `classrooms/66f32f5b448485ed1dca27fd/grades`,
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       }),
+    }),
   }),
 });
 
@@ -48,5 +64,6 @@ export const {
   useSignUpMutation,
   useCreateClassroomMutation,
   useGetClassroomsQuery,
-  usePostGradesMutation
+  usePostGradesMutation,
+  useGetAllStudentsQuery,
 } = learnApi;
