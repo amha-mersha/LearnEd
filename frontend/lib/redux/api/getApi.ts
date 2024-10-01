@@ -18,7 +18,7 @@ export const learnApi = createApi({
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${accessToken}`,
+          'Authorization': `Bearer ${accessToken}`,
         },
         body: data,
       }),
@@ -29,7 +29,7 @@ export const learnApi = createApi({
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${accessToken}`,
+          'Authorization': `Bearer ${accessToken}`,
         },
       }),
     }),
