@@ -2,22 +2,16 @@ package routers
 
 import (
 	"learned-api/delivery/controllers"
-	"learned-api/delivery/env"
 	"learned-api/domain"
 	hashing_service "learned-api/infrastructure/hashing"
-	jwt_service "learned-api/infrastructure/jwt"
 	"learned-api/infrastructure/middleware"
 	validation_services "learned-api/infrastructure/validation"
-	"learned-api/repository"
 	usecases "learned-api/usecase"
 
 	"github.com/gin-gonic/gin"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func NewAuthRouter(collection *mongo.Collection, router *gin.RouterGroup) {
-	authRepository := repository.NewAuthRepository(collection)
-	jwtService := jwt_service.NewJWTService(env.ENV.JWT_SECRET)
+func NewAuthRouter(authRepository domain.AuthRepository, jwtService domain.JWTServiceInterface, router *gin.RouterGroup) {
 	authUsecase := usecases.NewAuthUsecase(
 		authRepository,
 		validation_services.NewAuthValidation(),
@@ -28,5 +22,5 @@ func NewAuthRouter(collection *mongo.Collection, router *gin.RouterGroup) {
 
 	router.POST("/signup", authController.Signup)
 	router.POST("/login", authController.Login)
-	router.POST("/change-password", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleStudent, domain.RoleStudent), authController.ChangePassword)
+	router.POST("/change-password", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleStudent, domain.RoleTeacher), authController.ChangePassword)
 }

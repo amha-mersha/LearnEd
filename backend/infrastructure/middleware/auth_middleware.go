@@ -63,7 +63,7 @@ func AuthMiddlewareWithRoles(jwtService domain.JWTServiceInterface, validRoles .
 			return
 		}
 
-		email, err := jwtService.GetEmail(token)
+		id, err := jwtService.GetID(token)
 		if err != nil {
 			SetMiddlewareError(c, http.StatusUnauthorized, err.Error())
 			return
@@ -82,7 +82,7 @@ func AuthMiddlewareWithRoles(jwtService domain.JWTServiceInterface, validRoles .
 			return
 		}
 
-		c.Set("email", email)
+		c.Set("id", id)
 		c.Next()
 	}
 }
