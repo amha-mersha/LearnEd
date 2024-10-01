@@ -12,6 +12,7 @@ import (
 const (
 	CollectionUsers      = "users"
 	CollectionClassrooms = "classrooms"
+	CollectionStudyGroup = "study_group"
 )
 
 const (
@@ -88,9 +89,11 @@ type Classroom struct {
 }
 
 type StudyGroup struct {
-	Name     string   `json:"name"`
-	Students []string `json:"students"`
-	Posts    []Post   `json:"posts"`
+	Name       string               `json:"name"`
+	CourseName string               `json:"course_name"`
+	Owner      primitive.ObjectID   `json:"owner"`
+	Students   []primitive.ObjectID `json:"students"`
+	Posts      []Post               `json:"posts"`
 }
 
 type AuthUsecase interface {
@@ -141,4 +144,28 @@ type ClassroomRepository interface {
 	AddStudent(c context.Context, studentID string, classroomID string) CodedError
 	RemoveStudent(c context.Context, studentID string, classroomID string) CodedError
 	GetClassrooms(c context.Context, userID string, userType string) ([]Classroom, CodedError)
+}
+
+type StudyGroupUsecase interface {
+	CreateStudyGroup(c context.Context, creatorID string, studyGroup StudyGroup) CodedError
+	DeleteStudyGroup(c context.Context, studentID string, studyGroupID string) CodedError
+	AddPost(c context.Context, creatorID string, studyGroupID string, post Post) CodedError
+	UpdatePost(c context.Context, creatorID string, studyGroupID string, postID string, post dtos.UpdatePostDTO) CodedError
+	RemovePost(c context.Context, creatorID string, studyGroupID string, postID string) CodedError
+	AddComment(c context.Context, creatorID string, studyGroupID string, postID string, comment Comment) CodedError
+	RemoveComment(c context.Context, creatorID string, studyGroupID string, postID string, commentID string) CodedError
+}
+
+type StudyGroupRepository interface {
+	CreateStudyGroup(c context.Context, creatorID primitive.ObjectID, studyGroup StudyGroup) CodedError
+	DeleteStudyGroup(c context.Context, studyGroupID string) CodedError
+	FindStudyGroup(c context.Context, studyGroupID string) (StudyGroup, CodedError)
+	AddPost(c context.Context, studyGroupID string, post Post) CodedError
+	UpdatePost(c context.Context, studyGroupID string, postID string, post dtos.UpdatePostDTO) CodedError
+	RemovePost(c context.Context, studyGroupID string, postID string) CodedError
+	AddComment(c context.Context, classroomID string, postID string, comment Comment) CodedError
+	FindPost(c context.Context, classroomID string, postID string) (Post, CodedError)
+	RemoveComment(c context.Context, classroomID string, postID string, commentID string) CodedError
+	StringifyID(id primitive.ObjectID) string
+	ParseID(id string) (primitive.ObjectID, CodedError)
 }
