@@ -119,8 +119,8 @@ type ClassroomUsecase interface {
 	AddComment(c context.Context, creatorID string, classroomID string, postID string, comment Comment) CodedError
 	RemoveComment(c context.Context, creatorID string, classroomID string, postID string, commentID string) CodedError
 	PutGrade(c context.Context, teacherID string, classroomID string, studentID string, gradeDto dtos.GradeDTO) CodedError
-	AddStudent(c context.Context, studentEmail string, classroomID string) CodedError
-	RemoveStudent(c context.Context, classroomID string, studentID string) CodedError
+	AddStudent(c context.Context, tokenID string, studentEmail string, classroomID string) CodedError
+	RemoveStudent(c context.Context, tokenID string, classroomID string, studentID string) CodedError
 	GetGrades(c context.Context, teacherID string, classroomID string) ([]StudentGrade, CodedError)
 	GetStudentGrade(c context.Context, tokenID string, studentID string, classroomID string) (StudentGrade, CodedError)
 	GetPosts(c context.Context, tokenID string, classroomID string) ([]GetPostDTO, CodedError)
