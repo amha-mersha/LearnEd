@@ -43,7 +43,8 @@ export default function SignIn() {
         dispatch(setrole({payload: updatedSession.user.role}))
 =======
       if (updatedSession) {
->>>>>>> 41d614c (added next-auth login)
+        dispatch(settoken({payload: updatedSession.user.accessToken}))
+        dispatch(setrole({payload: updatedSession.user.role}))
         router.push(`/`);
       }
     } else {

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 "use client";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -13,17 +12,8 @@ import {
 } from "@/components/ui/table";
 import { Parameter, Student, studentsData } from "@/utils/grades";
 import Grade_students from "@/app/components/Grade_students";
-=======
-"use client"
 
-import { useState } from 'react'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Edit, Save } from 'lucide-react'
-import { Parameter, Student, studentsData } from '@/utils/grades'
-import Grade_students from '@/app/components/Grade_students'
->>>>>>> 41d614c (added next-auth login)
+
 
 export default function GradingPage() {
   const studs = []
@@ -135,7 +125,6 @@ export default function GradingPage() {
   // }
 
   const toggleEdit = (studentId: number) => {
-<<<<<<< HEAD
     setStudents(
       students.map((student) =>
         student.id === studentId
@@ -145,13 +134,7 @@ export default function GradingPage() {
     );
   };
   console.log(students);
-=======
-    setStudents(students.map(student =>
-      student.id === studentId ? { ...student, isEditing: !student.isEditing } : student
-    ))
-  }
-  console.log(students)
->>>>>>> 41d614c (added next-auth login)
+
 
   return (
     <div className="w-[75vw] mx-auto p-4">
@@ -201,7 +184,6 @@ export default function GradingPage() {
           </TableRow>
         </TableHeader>
         <TableBody>
-<<<<<<< HEAD
           {students.map((student, ind) => (
             <Grade_students
               key={ind}
@@ -211,10 +193,8 @@ export default function GradingPage() {
               toggleEdit={toggleEdit}
               updateScore={updateScore}
             />
-=======
-          {students.map(student => (
-            <Grade_students student={student} parameters={parameters} calculateTotal={calculateTotal} toggleEdit={toggleEdit} updateScore={updateScore} />
->>>>>>> 41d614c (added next-auth login)
+
+
           ))}
         </TableBody>
       </Table>
