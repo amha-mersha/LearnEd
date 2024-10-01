@@ -34,6 +34,7 @@ const Page = () => {
 
   return (
     <div className=" bg-[#F6F6F6] min-h-screen  pr-36 pt-10">
+    <div className=" bg-[#F6F6F6] min-h-screen  pr-36 pt-10">
       <div className="ml-24 flex justify-between">
         <h1 className="text-3xl font-black">Classes</h1>
         <Button className="mr-16" onClick={() => setIsModalOpen(true)}>
