@@ -125,8 +125,8 @@ func (usecase *StudyGroupUsecase) RemovePost(c context.Context, creatorID string
 	}
 
 	allowed := false
-	for _, teacherID := range studyGroup.Students {
-		if usecase.sgRepository.StringifyID(teacherID) == creatorID {
+	for _, studentID := range studyGroup.Students {
+		if usecase.sgRepository.StringifyID(studentID) == creatorID {
 			allowed = true
 			break
 		}
@@ -137,6 +137,90 @@ func (usecase *StudyGroupUsecase) RemovePost(c context.Context, creatorID string
 	}
 
 	if err = usecase.sgRepository.RemovePost(c, studyGroupID, postID); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (usecase *StudyGroupUsecase) AddComment(c context.Context, creatorID string, studyGroupID string, postID string, comment domain.Comment) domain.CodedError {
+	if comment.Content == "" {
+		return domain.NewError("comment content cannot be empty", domain.ERR_BAD_REQUEST)
+	}
+
+	id, err := usecase.sgRepository.ParseID(creatorID)
+	if err != nil {
+		return err
+	}
+
+	foundUser, err := usecase.authRepository.GetUserByID(c, creatorID)
+	if err != nil {
+		return err
+	}
+
+	comment.CreatedAt = time.Now().Round(0)
+	comment.CreatorID = id
+	comment.CreatorName = foundUser.Name
+	studyGroup, err := usecase.sgRepository.FindStudyGroup(c, studyGroupID)
+	if err != nil {
+		return err
+	}
+
+	allowed := false
+	for _, studentID := range studyGroup.Students {
+		if usecase.sgRepository.StringifyID(studentID) == creatorID {
+			allowed = true
+			break
+		}
+	}
+
+	if !allowed {
+		for _, studentID := range studyGroup.Students {
+			if usecase.sgRepository.StringifyID(studentID) == creatorID {
+				allowed = true
+				break
+			}
+		}
+	}
+
+	if !allowed {
+		return domain.NewError("only teachers added to the study group can remove posts", domain.ERR_FORBIDDEN)
+	}
+
+	if err = usecase.sgRepository.AddComment(c, studyGroupID, postID, comment); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (usecase *StudyGroupUsecase) RemoveComment(c context.Context, userID string, studyGroupID string, postID string, commentID string) domain.CodedError {
+	_, err := usecase.sgRepository.FindStudyGroup(c, studyGroupID)
+	if err != nil {
+		return err
+	}
+
+	post, err := usecase.sgRepository.FindPost(c, studyGroupID, postID)
+	if err != nil {
+		return err
+	}
+
+	found := false
+	for _, comment := range post.Comments {
+		if usecase.sgRepository.StringifyID(comment.ID) == commentID {
+			if usecase.sgRepository.StringifyID(comment.CreatorID) != userID {
+				return domain.NewError("only the creator of the comment can remove it", domain.ERR_FORBIDDEN)
+			}
+			found = true
+			break
+		}
+	}
+
+	if !found {
+		return domain.NewError("comment not found", domain.ERR_NOT_FOUND)
+	}
+
+	if err = usecase.sgRepository.RemoveComment(c, studyGroupID, postID, commentID); err != nil {
 		return err
 	}
 
