@@ -6,6 +6,7 @@ import { useGetStudyGroupsQuery } from "@/lib/redux/api/getApi";
 import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton
 import { useSelector } from "react-redux";
 import StudyGroupCard from "@/app/components/StudyGroup/StudyGroupCard";
+import CreateStudyGroupModal from "@/app/components/StudyGroup/StudyGroupPopup";
 
 interface StudyGroup {
   id: string;
@@ -63,7 +64,13 @@ const StudyGroupPage = () => {
           ))
         )}
       </div>
+      <CreateStudyGroupModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        refetch={refetch}
+      />
     </div>
+    
   );
 };
 

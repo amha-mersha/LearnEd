@@ -98,5 +98,6 @@ export const {
   usePostGradesMutation,
   useGetAllStudentsQuery,
   useGetStudentGradesQuery,
-  useGetStudyGroupsQuery
+  useGetStudyGroupsQuery,
+  useCreateStudyGroupMutation,
 } = learnApi;
