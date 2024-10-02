@@ -14,7 +14,7 @@ import {
 import { Parameter, Student, studentsData } from "@/utils/grades";
 import Grade_students from "@/app/components/Grade_students";
 
-export default function GradingPage({searchParams}: {searchParams: any}) {
+export default function GradingPage({ searchParams }: { searchParams: any }) {
   let studs: any = [];
   const [newParameter, setNewParameter] = useState("");
   const [newPoints, setNewPoints] = useState("");
@@ -22,7 +22,7 @@ export default function GradingPage({searchParams}: {searchParams: any}) {
   const [incomingCopy, setIncomingCopy] = useState<any>([]);
   // const temp_id_classroom = "66fc5f1764ea1026d3b5813d";
 
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem("token");
 
   const { data, isLoading, isError, isSuccess } = useGetAllStudentsQuery({
     id: searchParams.class_id,
@@ -33,13 +33,12 @@ export default function GradingPage({searchParams}: {searchParams: any}) {
   let incoming = data;
 
   useEffect(() => {
-    const updatedIncoming = incoming?.map((stu:any) => ({
+    const updatedIncoming = incoming?.map((stu: any) => ({
       ...stu,
       isEditing: stu.isEditing ?? false,
     }));
     setIncomingCopy(updatedIncoming);
   }, [incoming]);
-
 
   useEffect(() => {
     if (incomingCopy) {
@@ -67,9 +66,8 @@ export default function GradingPage({searchParams}: {searchParams: any}) {
       studs.push(temp);
       temp = {};
     }
-    setStudents(studs)
+    setStudents(studs);
   }, [incomingCopy]);
-
 
   const addParameter = () => {
     if (
@@ -113,7 +111,6 @@ export default function GradingPage({searchParams}: {searchParams: any}) {
 
   const calculateMaxTotal = () =>
     parameters?.reduce((sum, param) => sum + param.points, 0);
-
 
   const toggleEdit = (studentId: number) => {
     setStudents(
@@ -174,7 +171,7 @@ export default function GradingPage({searchParams}: {searchParams: any}) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {students.map((student:any, ind:any) => (
+            {students.map((student: any, ind: any) => (
               <Grade_students
                 key={ind}
                 student={student}
@@ -182,6 +179,7 @@ export default function GradingPage({searchParams}: {searchParams: any}) {
                 calculateTotal={calculateTotal}
                 toggleEdit={toggleEdit}
                 updateScore={updateScore}
+                class_id={searchParams.class_id}
               />
             ))}
           </TableBody>

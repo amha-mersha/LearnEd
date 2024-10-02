@@ -36,7 +36,7 @@ export const learnApi = createApi({
     }),
     postGrades: builder.mutation({
       query: ({ class_id, student_id, token, data }) => (
-        console.log("dd", data, token),
+        console.log("dd", class_id, token, data, student_id),
         {
           url: `classrooms/${class_id}/grades/${student_id}`,
           method: "PUT",
@@ -167,6 +167,16 @@ export const learnApi = createApi({
         },
       }),
     }),
+    getQuiz: builder.query({
+      query: ({token, id}) => ({
+        url: `classrooms/posts/get_quiz/${id}`,
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+    })
   }),
 });
 
@@ -186,4 +196,5 @@ export const {
   useDeletePostMutation,
   useAddCommentMutation,
   useRemoveCommentMutation,
+  useGetQuizQuery,
 } = learnApi;
