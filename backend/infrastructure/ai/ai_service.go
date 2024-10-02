@@ -141,9 +141,6 @@ Make sure:
 	if cleanQuestions == "" {
 		return domain.GenerateContent{}, domain.NewError("Content extraction failed", domain.ERR_INTERNAL_SERVER)
 	}
-	// Clean and log raw questions response
-	log.Printf("Raw generated questions response: %s", generatedQuestions.Candidates[0].Content.Parts[0])
-	log.Printf("Raw cleaned generated questions response: %s", cleanQuestions)
 
 	var questionsGen []domain.Question
 	err = json.Unmarshal([]byte(s.cleanJSONQuestion(cleanQuestions)), &questionsGen)
@@ -171,10 +168,6 @@ Make sure:
 		return domain.GenerateContent{}, domain.NewError("Content extraction failed", domain.ERR_INTERNAL_SERVER)
 	}
 
-	// Clean and log raw questions response
-	log.Printf("Raw generated questions response: %s", generatedSummary.Candidates[0].Content.Parts[0])
-	log.Printf("Raw cleaned generated questions response: %s", cleanSummarys)
-
 	var summaryGen []domain.Summary
 	err = json.Unmarshal([]byte(s.cleanJSONSummary(cleanSummarys)), &summaryGen)
 	if err != nil {
@@ -184,7 +177,6 @@ Make sure:
 	return domain.GenerateContent{Questions: questionsGen, Summarys: summaryGen}, nil
 }
 
-// generate questions from an input text
 func (s *AIService) GenerateContentFromText(post domain.Post) (domain.GenerateContent, domain.CodedError) {
 	cleanedText := s.CleanText(post.Content)
 	if cleanedText == "" {
@@ -195,7 +187,6 @@ func (s *AIService) GenerateContentFromText(post domain.Post) (domain.GenerateCo
 		return domain.GenerateContent{}, domain.NewError("Insufficent context to process", domain.ERR_BAD_REQUEST)
 	}
 
-	// Generate Questions
 	generatedQuestions, err := s.model.GenerateContent(s.context, genai.Text(fmt.Sprintf(`
 Based on the following content, generate %d multiple-choice questions, each with exactly 4 choices. Provide an explanation for each correct answer. Return the result in JSON format.
 
@@ -225,19 +216,14 @@ Make sure:
 		return domain.GenerateContent{}, domain.NewError("No candidate or candidate part found", domain.ERR_INTERNAL_SERVER)
 	}
 
-	// Clean and log raw questions response
-	log.Printf("Raw generated questions response: %s", generatedQuestions.Candidates[0].Content.Parts[0])
 	cleanQuestions := s.CleanText(generatedQuestions.Candidates[0].Content.Parts[0])
-	log.Printf("Raw cleaned generated questions response: %s", cleanQuestions)
 
-	// Unmarshal questions
 	var questionsGen []domain.Question
 	err = json.Unmarshal([]byte(s.cleanJSONQuestion(cleanQuestions)), &questionsGen)
 	if err != nil {
 		return domain.GenerateContent{}, domain.NewError(fmt.Sprintf("Failed to unmarshal questions response: %s", err), domain.ERR_INTERNAL_SERVER)
 	}
 
-	// Generate Summary
 	generatedSummary, err := s.model.GenerateContent(s.context, genai.Text(fmt.Sprintf(`
 		Based on the given content below, generate a summary in JSON string format.
 		Content: %s
@@ -254,7 +240,6 @@ Make sure:
 
 	// Clean and log raw summary response
 	cleanSummary := s.CleanText(generatedSummary.Candidates[0].Content.Parts[0])
-	log.Printf("Raw generated summary response: %s", cleanSummary)
 
 	var summaryGen []domain.Summary
 	err = json.Unmarshal([]byte(s.cleanJSONSummary(cleanSummary)), &summaryGen)
@@ -329,7 +314,6 @@ func (s *AIService) CalculatePage(filepath string) (int, domain.CodedError) {
 	if err != nil {
 		return 0, domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
 	}
-
 	reader, err := pdf.NewReader(file, fileInfo.Size())
 	if err != nil {
 		return 0, domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
