@@ -5,23 +5,17 @@ import logo from "../../../public/Images/LearnEd.svg";
 import { MouseEvent, useState } from "react";
 import { getSession, signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-<<<<<<< HEAD
 import { useDispatch, useSelector } from "react-redux";
 import { settoken } from "@/lib/redux/slices/tokenSlice";
 import { setrole } from "@/lib/redux/slices/roleSlice";
-=======
->>>>>>> 41d614c (added next-auth login)
+
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-<<<<<<< HEAD
   const dispatch = useDispatch()
   // const { data: session } = useSession();
-=======
-  const { data: session } = useSession();
->>>>>>> 41d614c (added next-auth login)
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -35,14 +29,9 @@ export default function SignIn() {
 
     if (result?.ok) {
       const updatedSession = await getSession();
-<<<<<<< HEAD
       console.log("updatedsession", updatedSession)
       if (updatedSession) {
         localStorage.setItem("token", updatedSession.user.accessToken);
-        dispatch(settoken({payload: updatedSession.user.accessToken}))
-        dispatch(setrole({payload: updatedSession.user.role}))
-=======
-      if (updatedSession) {
         dispatch(settoken({payload: updatedSession.user.accessToken}))
         dispatch(setrole({payload: updatedSession.user.role}))
         router.push(`/`);

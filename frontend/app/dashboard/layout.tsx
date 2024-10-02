@@ -18,9 +18,6 @@ export default function RootLayout({
       <Provider store={store}>
         <html lang="en">
           <body className="">
-            <div className="w-full">
-              <Navbar />
-            </div>
             <div className="flex relative bg-slate-100">
               <div className=" min-h-screen">
                 <Sidebar />
