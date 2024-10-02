@@ -3,9 +3,16 @@ import Posts from "@/app/components/post/Posts";
 import StudentInvite from "@/app/components/StudentInvite";
 import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
+import { useParams } from 'next/navigation';
+import StudyStudentInvite from "@/app/components/StudyGroup/StudyStudentInvite";
 
-const page = () => {
+const Page = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const params = useParams();
+  const { posts: id } = params;
+
+  // Ensure `id` is a string, handle the case where `id` might be an array or undefined
+  const studyGroupId = Array.isArray(id) ? id[0] : id || '';
 
   return (
     <div className="bg-[#F6F6F6] pt-10 min-h-screen ">
@@ -15,7 +22,8 @@ const page = () => {
         </Button>
       </div>
       <Posts />
-      <StudentInvite
+      <StudyStudentInvite
+        studyGroupId={studyGroupId}  // Now `studyGroupId` is always a string
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />
@@ -23,4 +31,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
