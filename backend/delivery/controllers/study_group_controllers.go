@@ -176,3 +176,64 @@ func (controller *StudyGroupController) RemoveComment(c *gin.Context) {
 
 	c.JSON(http.StatusNoContent, domain.Response{"message": "comment removed successfully"})
 }
+
+func (controller *StudyGroupController) AddStudent(c *gin.Context) {
+	var addStudentDto dtos.AddStudentDTO
+	studyGroupID := c.Param("studyGroupID")
+	if err := c.ShouldBindJSON(&addStudentDto); err != nil {
+		c.JSON(http.StatusBadRequest, domain.Response{"error": err.Error()})
+		return
+	}
+
+	creatorID, exists := c.Keys["id"]
+	if !exists {
+		c.JSON(http.StatusForbidden, domain.Response{"message": "coudn't find the id field"})
+		return
+	}
+
+	id := creatorID.(string)
+	err := controller.usecase.AddStudent(c, id, addStudentDto.Email, studyGroupID)
+	if err != nil {
+		c.JSON(GetHTTPErrorCode(err), domain.Response{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, domain.Response{"message": "student added to study group successfully"})
+}
+
+func (controller *StudyGroupController) RemoveStudent(c *gin.Context) {
+	studyGroupID := c.Param("studyGroupID")
+	studentID := c.Param("studentID")
+
+	creatorID, exists := c.Keys["id"]
+	if !exists {
+		c.JSON(http.StatusForbidden, domain.Response{"message": "coudn't find the id field"})
+		return
+	}
+
+	id := creatorID.(string)
+	err := controller.usecase.RemoveStudent(c, id, studyGroupID, studentID)
+	if err != nil {
+		c.JSON(GetHTTPErrorCode(err), domain.Response{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, domain.Response{"message": "student removed from study group successfully"})
+}
+
+func (controller *StudyGroupController) GetStudyGroup(c *gin.Context) {
+	creatorID, exists := c.Keys["id"]
+	if !exists {
+		c.JSON(http.StatusForbidden, domain.Response{"message": "coudn't find the id field"})
+		return
+	}
+
+	id := creatorID.(string)
+	studyGroups, err := controller.usecase.GetStudyGroups(c, id)
+	if err != nil {
+		c.JSON(GetHTTPErrorCode(err), domain.Response{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, studyGroups)
+}

@@ -252,19 +252,105 @@ func (repository *StudyGroupRepository) RemoveComment(c context.Context, studyGr
 	return nil
 }
 
-func (repository *StudyGroupRepository) FindPost(c context.Context, classroomID string, postID string) (domain.Post, domain.CodedError) {
-	classroom, err := repository.FindStudyGroup(c, classroomID)
+func (repository *StudyGroupRepository) FindPost(c context.Context, studyGroupID string, postID string) (domain.Post, domain.CodedError) {
+	studyGroup, err := repository.FindStudyGroup(c, studyGroupID)
 	if err != nil {
 		return domain.Post{}, err
 	}
 
-	for _, post := range classroom.Posts {
+	for _, post := range studyGroup.Posts {
 		if repository.StringifyID(post.ID) == postID {
 			return post, nil
 		}
 	}
 
 	return domain.Post{}, domain.NewError("post not found", domain.ERR_NOT_FOUND)
+}
+
+func (repository *StudyGroupRepository) AddStudent(c context.Context, studentID string, studyGroupID string) domain.CodedError {
+	sID, pErr := repository.ParseID(studentID)
+	if pErr != nil {
+		return pErr
+	}
+
+	cID, pErr := repository.ParseID(studyGroupID)
+	if pErr != nil {
+		return pErr
+	}
+
+	filter := bson.M{"_id": cID}
+	update := bson.D{
+		{
+			Key: "$push",
+			Value: bson.D{
+				{Key: "students", Value: sID}},
+		},
+	}
+
+	res, err := repository.collection.UpdateOne(c, filter, update)
+	if err != nil {
+		return domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
+	}
+
+	if res.ModifiedCount == 0 {
+		return domain.NewError("study group not found", domain.ERR_NOT_FOUND)
+	}
+
+	return nil
+}
+
+func (repository *StudyGroupRepository) RemoveStudent(c context.Context, studentID string, studyGroupID string) domain.CodedError {
+	sID, pErr := repository.ParseID(studentID)
+	if pErr != nil {
+		return pErr
+	}
+
+	cID, pErr := repository.ParseID(studyGroupID)
+	if pErr != nil {
+		return pErr
+	}
+
+	filter := bson.M{"_id": cID}
+	update := bson.M{
+		"$pull": bson.M{
+			"students": sID,
+		},
+	}
+
+	res, err := repository.collection.UpdateOne(c, filter, update)
+	if err != nil {
+		return domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
+	}
+
+	if res.ModifiedCount == 0 {
+		return domain.NewError("study group not found", domain.ERR_NOT_FOUND)
+	}
+
+	return nil
+}
+
+func (repository *StudyGroupRepository) GetStudyGroups(c context.Context, userID string) ([]domain.StudyGroup, domain.CodedError) {
+	uID, pErr := repository.ParseID(userID)
+	if pErr != nil {
+		return []domain.StudyGroup{}, domain.NewError(pErr.Error(), domain.ERR_INTERNAL_SERVER)
+	}
+
+	filter := bson.M{
+		"students": uID,
+	}
+
+	var studyGroups []domain.StudyGroup
+	cursor, err := repository.collection.Find(c, filter)
+	if err != nil {
+		return []domain.StudyGroup{}, domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
+	}
+
+	err = cursor.All(c, &studyGroups)
+	if err != nil {
+		return []domain.StudyGroup{}, domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
+	}
+
+	return studyGroups, nil
 }
 
 func (repository *StudyGroupRepository) StringifyID(id primitive.ObjectID) string {

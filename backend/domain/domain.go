@@ -51,8 +51,23 @@ type StudentGrade struct {
 	Records   []StudentRecord    `json:"records"`
 }
 
+type GetGradesDTO struct {
+	Data        StudentGrade `json:"data"`
+	StudentName string       `json:"name"`
+}
+
+type GradeReport struct {
+	Grades        StudentGrade       `json:"grades"`
+	ClassroomID   primitive.ObjectID `json:"classroom_id"`
+	ClassroomName string             `json:"classroom_name"`
+}
+
+type GetGradeReportDTO struct {
+	Data []GradeReport `json:"data"`
+}
+
 type Comment struct {
-	ID          primitive.ObjectID `json:"id" bson:"_id"`
+	ID          primitive.ObjectID `json:"id" bson:"_id,omitempty"`
 	CreatorID   primitive.ObjectID `json:"creator_id"`
 	CreatorName string             `json:"creator_name"`
 	Content     string             `json:"content"`
@@ -60,7 +75,7 @@ type Comment struct {
 }
 
 type Post struct {
-	ID           primitive.ObjectID `json:"id" bson:"_id"`
+	ID           primitive.ObjectID `json:"id" bson:"_id,omitempty"`
 	CreatorID    primitive.ObjectID `json:"creator_id" bson:"creator_id"`
 	Content      string             `json:"content"`
 	File         string             `json:"file"`
@@ -73,11 +88,12 @@ type Post struct {
 }
 
 type GetPostDTO struct {
-	CreatorName string
-	Data        Post
+	CreatorName string `json:"creator_name"`
+	Data        Post   `json:"data"`
 }
 
 type Classroom struct {
+	ID            primitive.ObjectID   `json:"id" bson:"_id,omitempty"`
 	Name          string               `json:"name"`
 	CourseName    string               `json:"course_name"`
 	Season        string               `json:"season"`
@@ -89,6 +105,7 @@ type Classroom struct {
 }
 
 type StudyGroup struct {
+	ID         primitive.ObjectID   `json:"id" bson:"_id,omitempty"`
 	Name       string               `json:"name"`
 	CourseName string               `json:"course_name"`
 	Owner      primitive.ObjectID   `json:"owner"`
@@ -119,12 +136,13 @@ type ClassroomUsecase interface {
 	AddComment(c context.Context, creatorID string, classroomID string, postID string, comment Comment) CodedError
 	RemoveComment(c context.Context, creatorID string, classroomID string, postID string, commentID string) CodedError
 	PutGrade(c context.Context, teacherID string, classroomID string, studentID string, gradeDto dtos.GradeDTO) CodedError
-	AddStudent(c context.Context, studentEmail string, classroomID string) CodedError
-	RemoveStudent(c context.Context, classroomID string, studentID string) CodedError
-	GetGrades(c context.Context, teacherID string, classroomID string) ([]StudentGrade, CodedError)
+	AddStudent(c context.Context, tokenID string, studentEmail string, classroomID string) CodedError
+	RemoveStudent(c context.Context, tokenID string, classroomID string, studentID string) CodedError
+	GetGrades(c context.Context, teacherID string, classroomID string) ([]GetGradesDTO, CodedError)
 	GetStudentGrade(c context.Context, tokenID string, studentID string, classroomID string) (StudentGrade, CodedError)
 	GetPosts(c context.Context, tokenID string, classroomID string) ([]GetPostDTO, CodedError)
 	GetClassrooms(c context.Context, tokenID string) ([]Classroom, CodedError)
+	GetGradeReport(c context.Context, tokenID string, studentID string) (GetGradeReportDTO, CodedError)
 }
 
 type ClassroomRepository interface {
@@ -143,7 +161,7 @@ type ClassroomRepository interface {
 	RemoveGrade(c context.Context, classroomID string, studentID string) CodedError
 	AddStudent(c context.Context, studentID string, classroomID string) CodedError
 	RemoveStudent(c context.Context, studentID string, classroomID string) CodedError
-	GetClassrooms(c context.Context, userID string, userType string) ([]Classroom, CodedError)
+	GetClassrooms(c context.Context, userID string) ([]Classroom, CodedError)
 }
 
 type StudyGroupUsecase interface {
@@ -154,6 +172,9 @@ type StudyGroupUsecase interface {
 	RemovePost(c context.Context, creatorID string, studyGroupID string, postID string) CodedError
 	AddComment(c context.Context, creatorID string, studyGroupID string, postID string, comment Comment) CodedError
 	RemoveComment(c context.Context, creatorID string, studyGroupID string, postID string, commentID string) CodedError
+	AddStudent(c context.Context, tokenID string, studentEmail string, studyGroupID string) CodedError
+	RemoveStudent(c context.Context, tokenID string, studyGroupID string, studentID string) CodedError
+	GetStudyGroups(c context.Context, tokenID string) ([]StudyGroup, CodedError)
 }
 
 type StudyGroupRepository interface {
@@ -163,9 +184,12 @@ type StudyGroupRepository interface {
 	AddPost(c context.Context, studyGroupID string, post Post) CodedError
 	UpdatePost(c context.Context, studyGroupID string, postID string, post dtos.UpdatePostDTO) CodedError
 	RemovePost(c context.Context, studyGroupID string, postID string) CodedError
-	AddComment(c context.Context, classroomID string, postID string, comment Comment) CodedError
-	FindPost(c context.Context, classroomID string, postID string) (Post, CodedError)
-	RemoveComment(c context.Context, classroomID string, postID string, commentID string) CodedError
+	AddComment(c context.Context, studyGroupID string, postID string, comment Comment) CodedError
+	FindPost(c context.Context, studyGroupID string, postID string) (Post, CodedError)
+	RemoveComment(c context.Context, studyGroupID string, postID string, commentID string) CodedError
+	AddStudent(c context.Context, studentID string, classroomID string) CodedError
+	RemoveStudent(c context.Context, studentID string, classroomID string) CodedError
+	GetStudyGroups(c context.Context, userID string) ([]StudyGroup, CodedError)
 	StringifyID(id primitive.ObjectID) string
 	ParseID(id string) (primitive.ObjectID, CodedError)
 }

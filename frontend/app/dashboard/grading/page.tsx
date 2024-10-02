@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Edit, Save } from 'lucide-react'
 import { Parameter, Student, studentsData } from '@/utils/grades'
+import Grade_students from '@/app/components/Grade_students'
 
 export default function GradingPage() {
   const [parameters, setParameters] = useState<Parameter[]>([
@@ -59,6 +60,7 @@ export default function GradingPage() {
       student.id === studentId ? { ...student, isEditing: !student.isEditing } : student
     ))
   }
+  console.log(students)
 
   return (
     <div className="w-[75vw] mx-auto p-4">
@@ -103,46 +105,17 @@ export default function GradingPage() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {students.map(student => (
-            <TableRow key={student.id}>
-              <TableCell>{student.name}</TableCell>
-              {parameters.map(param => (
-                <TableCell key={param.name}>
-                  {student.isEditing ? (
-                    <Input 
-                      type="number"
-                      value={student.scores[param.name] || 0}
-                      onChange={(e) => updateScore(student.id, param.name, Number(e.target.value))}
-                      className="w-20"
-                      aria-label={`${student.name}'s ${param.name} score`}
-                      min={0}
-                      max={param.points}
-                    />
-                  ) : (
-                    <span>{student.scores[param.name] || 0}</span>
-                  )}
-                </TableCell>
-              ))}
-              <TableCell>{calculateTotal(student.scores)}</TableCell>
-              <TableCell>
-                <Button
-                  onClick={() => toggleEdit(student.id)}
-                  size="sm"
-                  variant={student.isEditing ? "outline" : "default"}
-                >
-                  {student.isEditing ? <Save className="w-4 h-4" /> : <Edit className="w-4 h-4" />}
-                </Button>
-              </TableCell>
-            </TableRow>
+          {students.map((student, ind) => (
+            <Grade_students key={ind} student={student} parameters={parameters} calculateTotal={calculateTotal} toggleEdit={toggleEdit} updateScore={updateScore} />
           ))}
         </TableBody>
       </Table>
 
-      <div className="mt-4 flex justify-end">
+      {/* <div className="mt-4 flex justify-end">
         <Button onClick={handleSubmit} className="px-6 py-2">
           Submit Grades
         </Button>
-      </div>
+      </div> */}
     </div>
   )
 }

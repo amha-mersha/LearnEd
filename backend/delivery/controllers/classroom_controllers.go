@@ -210,7 +210,14 @@ func (controller *ClassroomController) AddStudent(c *gin.Context) {
 		return
 	}
 
-	err := controller.usecase.AddStudent(c, addStudentDto.Email, classroomID)
+	creatorID, exists := c.Keys["id"]
+	if !exists {
+		c.JSON(http.StatusForbidden, domain.Response{"message": "coudn't find the id field"})
+		return
+	}
+
+	id := creatorID.(string)
+	err := controller.usecase.AddStudent(c, id, addStudentDto.Email, classroomID)
 	if err != nil {
 		c.JSON(GetHTTPErrorCode(err), domain.Response{"error": err.Error()})
 		return
@@ -222,7 +229,14 @@ func (controller *ClassroomController) AddStudent(c *gin.Context) {
 func (controller *ClassroomController) RemoveStudent(c *gin.Context) {
 	classroomID := c.Param("classroomID")
 	studentID := c.Param("studentID")
-	err := controller.usecase.RemoveStudent(c, classroomID, studentID)
+	creatorID, exists := c.Keys["id"]
+	if !exists {
+		c.JSON(http.StatusForbidden, domain.Response{"message": "coudn't find the id field"})
+		return
+	}
+
+	id := creatorID.(string)
+	err := controller.usecase.RemoveStudent(c, id, classroomID, studentID)
 	if err != nil {
 		c.JSON(GetHTTPErrorCode(err), domain.Response{"error": err.Error()})
 		return
@@ -301,4 +315,22 @@ func (controller *ClassroomController) GetClassrooms(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, classrooms)
+}
+
+func (controlller *ClassroomController) GetGradeReport(c *gin.Context) {
+	studentID := c.Param("studentID")
+	creatorID, exists := c.Keys["id"]
+	if !exists {
+		c.JSON(http.StatusForbidden, domain.Response{"message": "coudn't find the id field"})
+		return
+	}
+
+	id := creatorID.(string)
+	gradeReport, err := controlller.usecase.GetGradeReport(c, id, studentID)
+	if err != nil {
+		c.JSON(GetHTTPErrorCode(err), domain.Response{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gradeReport)
 }

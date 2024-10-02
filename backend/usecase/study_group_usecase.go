@@ -184,7 +184,7 @@ func (usecase *StudyGroupUsecase) AddComment(c context.Context, creatorID string
 	}
 
 	if !allowed {
-		return domain.NewError("only teachers added to the study group can remove posts", domain.ERR_FORBIDDEN)
+		return domain.NewError("only students added to the study group can add comments", domain.ERR_FORBIDDEN)
 	}
 
 	if err = usecase.sgRepository.AddComment(c, studyGroupID, postID, comment); err != nil {
@@ -225,4 +225,119 @@ func (usecase *StudyGroupUsecase) RemoveComment(c context.Context, userID string
 	}
 
 	return nil
+}
+
+func (usecase *StudyGroupUsecase) AddStudent(c context.Context, tokenID string, studentEmail string, studyGroupID string) domain.CodedError {
+	foundUser, err := usecase.authRepository.GetUserByEmail(c, studentEmail)
+	if err != nil {
+		return err
+	}
+
+	if foundUser.Type == domain.RoleTeacher {
+		return domain.NewError("can not add teachers as students", domain.ERR_BAD_REQUEST)
+	}
+
+	studyGroup, err := usecase.sgRepository.FindStudyGroup(c, studyGroupID)
+	if err != nil {
+		return err
+	}
+
+	allowed := false
+	for _, teacher := range studyGroup.Students {
+		if usecase.sgRepository.StringifyID(teacher) == tokenID {
+			allowed = true
+			break
+		}
+	}
+
+	if !allowed {
+		return domain.NewError("only students added to the classroom can add students", domain.ERR_FORBIDDEN)
+	}
+
+	targetID := usecase.sgRepository.StringifyID(foundUser.ID)
+	found := false
+	for _, student := range studyGroup.Students {
+		if usecase.sgRepository.StringifyID(student) == targetID {
+			found = true
+			break
+		}
+	}
+
+	if found {
+		return domain.NewError("student has already been added to the study group", domain.ERR_BAD_REQUEST)
+	}
+
+	err = usecase.sgRepository.AddStudent(c, targetID, studyGroupID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (usecase *StudyGroupUsecase) RemoveStudent(c context.Context, tokenID string, studyGroupID string, studentID string) domain.CodedError {
+	foundUser, err := usecase.authRepository.GetUserByID(c, studentID)
+	if err != nil {
+		return err
+	}
+
+	if foundUser.Type == domain.RoleTeacher {
+		return domain.NewError("teachers do not have access to study groups", domain.ERR_FORBIDDEN)
+	}
+
+	studyGroup, err := usecase.sgRepository.FindStudyGroup(c, studyGroupID)
+	if err != nil {
+		return err
+	}
+
+	allowed := false
+	if usecase.sgRepository.StringifyID(studyGroup.Owner) == tokenID {
+		allowed = true
+	}
+
+	if usecase.sgRepository.StringifyID(studyGroup.Owner) == studentID {
+		return domain.NewError("the owner can not remove themselves from the classroom", domain.ERR_BAD_REQUEST)
+	}
+
+	if !allowed {
+		return domain.NewError("only the owner of the classroom can remove students", domain.ERR_FORBIDDEN)
+	}
+
+	targetID := usecase.sgRepository.StringifyID(foundUser.ID)
+	found := false
+	for _, student := range studyGroup.Students {
+		if usecase.sgRepository.StringifyID(student) == targetID {
+			found = true
+			break
+		}
+	}
+
+	if !found {
+		return domain.NewError("student is not in the study group", domain.ERR_BAD_REQUEST)
+	}
+
+	err = usecase.sgRepository.RemoveStudent(c, targetID, studyGroupID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (usecase *StudyGroupUsecase) GetStudyGroups(c context.Context, tokenID string) ([]domain.StudyGroup, domain.CodedError) {
+	foundUser, err := usecase.authRepository.GetUserByID(c, tokenID)
+	if err != nil {
+		return []domain.StudyGroup{}, err
+	}
+
+	studyGroups, err := usecase.sgRepository.GetStudyGroups(c, usecase.sgRepository.StringifyID(foundUser.ID))
+	if err != nil {
+		return []domain.StudyGroup{}, err
+	}
+
+	if len(studyGroups) == 0 {
+		return []domain.StudyGroup{}, nil
+	}
+
+	return studyGroups, nil
 }

@@ -3,16 +3,18 @@ import React, { useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal, FileText } from "lucide-react";
-import { postType } from "@/types/postType";
+import { PostType } from "@/types/postType";
 import Comment from "./Comment";
+import { useAddCommentMutation } from "@/lib/redux/api/getApi";
 
 interface Props {
-  info: postType;
+  info: PostType;
 }
 
 const Post = ({ info }: Props) => {
   const [more, setMore] = useState(false);
-
+  const [comment, setComment] = useState("");
+  
   return (
     <div className="bg-white rounded-lg shadow-md p-4 space-y-4">
       <div className="flex items-center justify-between">
@@ -49,22 +51,32 @@ const Post = ({ info }: Props) => {
           </h1>
         </div>
       )}
-
       {more && (
         <div className="mt-4 ml-16">
-          <Textarea placeholder="Add comment" className="w-full" />
+          <Textarea
+            placeholder="Add comment"
+            className="w-full"
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+          />
           <div className="flex justify-end mt-2 space-x-2">
             <Button
               className=" rounded-full text-xs px-3 py-0"
               variant="outline"
+              onClick={() => setComment('')}
             >
               Cancel
             </Button>
-            <Button className=" rounded-full text-xs px-3 py-0">Comment</Button>
+            {/* --------------------- add comment ----------------------*/}
+            <Button className=" rounded-full text-xs px-3 py-0" onClick={
+              () => {
+                const [addComment] = useAddCommentMutation();
+                addComment({ postId: info.id, content: comment });
+              } 
+            }>Comment</Button>
           </div>
         </div>
       )}
-
       {more &&
         info.comments.map((item, ind) => <Comment key={ind} info={item} />)}
 
