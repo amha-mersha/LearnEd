@@ -11,6 +11,7 @@ require (
 	go.mongodb.org/mongo-driver v1.17.0
 	golang.org/x/crypto v0.27.0
 	google.golang.org/api v0.198.0
+	rsc.io/pdf v0.1.1
 )
 
 require (

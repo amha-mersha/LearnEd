@@ -14,6 +14,7 @@ import (
 
 	"github.com/google/generative-ai-go/genai"
 	option "google.golang.org/api/option"
+	"rsc.io/pdf"
 )
 
 type AIService struct {
@@ -102,9 +103,14 @@ func (s *AIService) GenerateContentFromFile(post domain.Post) (domain.GenerateCo
 		return domain.GenerateContent{}, domain.NewError(fmt.Sprintf("GenerateContentFromFile: failed to upload file to gemini: %s", err), domain.ERR_INTERNAL_SERVER)
 	}
 	defer s.client.DeleteFile(s.context, file.Name)
+	var pagecount int
+	pagecount, errCount := s.CalculatePage(post.File)
+	if errCount != nil {
+		return domain.GenerateContent{}, errCount
+	}
 
-	generatedQuestions, err := s.model.GenerateContent(s.context, genai.Text(`
-Based on the following content, generate 1-10 multiple-choice questions per page, each with exactly 4 choices. Provide an explanation for each correct answer. Return the result in JSON format.
+	generatedQuestions, err := s.model.GenerateContent(s.context, genai.Text(fmt.Sprintf(`
+Based on the following content, generate %d multiple-choice with an average of 2-5 questions per page, each with exactly 4 choices. Provide an explanation for each correct answer. Return the result in JSON format.
 
 The correct answer should be indicated by the numeric index (starting from 0) of the correct choice, not as a string. The format of the response must strictly follow the example below.
 
@@ -121,7 +127,7 @@ The correct answer should be indicated by the numeric index (starting from 0) of
 Make sure:
 1. The correct answer is represented by a number (0, 1, 2, or 3).
 2. The response is a valid JSON array with no additional characters outside of the array.
-    `), genai.FileData{URI: file.URI, MIMEType: "application/pdf"})
+    `, pagecount*3)), genai.FileData{URI: file.URI, MIMEType: "application/pdf"})
 	if err != nil {
 		return domain.GenerateContent{}, domain.NewError(fmt.Sprintf("GenerateContentFromFile: failed to generate questions through gemini: %s", err), domain.ERR_INTERNAL_SERVER)
 	}
@@ -310,4 +316,24 @@ func (s *AIService) cleanJSONSummary(response string) string {
 	}
 	log.Printf("CLEAN SUMMARY JSON: cleaned summary : %s", response[leftPtr:rightPtr+1])
 	return response[leftPtr : rightPtr+1]
+}
+
+func (s *AIService) CalculatePage(filepath string) (int, domain.CodedError) {
+	file, err := os.Open(filepath)
+	if err != nil {
+		return 0, domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
+	}
+	defer file.Close()
+
+	fileInfo, err := file.Stat()
+	if err != nil {
+		return 0, domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
+	}
+
+	reader, err := pdf.NewReader(file, fileInfo.Size())
+	if err != nil {
+		return 0, domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
+	}
+	log.Println(reader.NumPage())
+	return reader.NumPage(), nil
 }
