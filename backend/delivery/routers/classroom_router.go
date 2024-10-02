@@ -9,8 +9,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func NewClassroomRouter(classroomRepository domain.ClassroomRepository, resourceRepository domain.ResourceRespository, authRepository domain.AuthRepository, jwtService domain.JWTServiceInterface, aiService domain.AIServiceInterface, router *gin.RouterGroup) {
-	classroomUsecase := usecases.NewClassroomUsecase(classroomRepository, resourceRepository, authRepository, aiService)
+func NewClassroomRouter(classroomRepository domain.ClassroomRepository, authRepository domain.AuthRepository, jwtService domain.JWTServiceInterface, router *gin.RouterGroup) {
+	classroomUsecase := usecases.NewClassroomUsecase(classroomRepository, authRepository)
 	classroomController := controllers.NewClassroomController(classroomUsecase)
 
 	router.POST("/", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleTeacher), classroomController.CreateClassroom)
@@ -22,7 +22,7 @@ func NewClassroomRouter(classroomRepository domain.ClassroomRepository, resource
 	router.PATCH("/:classroomID/posts/:postID", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleTeacher), classroomController.UpdatePost)
 	router.DELETE("/:classroomID/posts/:postID", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleTeacher), classroomController.RemovePost)
 
-	router.POST("/:classroomID/posts/:postID", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleTeacher, domain.RoleStudent), classroomController.AddComment)
+	router.POST("/:classroomID/posts/:postID/comments", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleTeacher, domain.RoleStudent), classroomController.AddComment)
 	router.DELETE("/:classroomID/posts/:postID/comments/:commentID", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleTeacher, domain.RoleStudent), classroomController.RemoveComment)
 
 	router.PUT("/:classroomID/grades/:studentID", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleTeacher), classroomController.PutGrade)
@@ -31,7 +31,6 @@ func NewClassroomRouter(classroomRepository domain.ClassroomRepository, resource
 	router.GET("/grades/:studentID", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleStudent), classroomController.GetGradeReport)
 	router.GET("/:classroomID/posts", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleStudent, domain.RoleTeacher), classroomController.GetPosts)
 	router.GET("/", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleStudent, domain.RoleTeacher), classroomController.GetClassrooms)
-
 	router.POST("/enhance_content", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleTeacher), classroomController.EnhanceContent)
 	router.GET("/posts/get_quiz/:postID", classroomController.GetQuiz)
 	router.GET("/posts/get_summary/:postID", classroomController.GetSummary)

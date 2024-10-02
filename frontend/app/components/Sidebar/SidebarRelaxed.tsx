@@ -13,7 +13,7 @@ const SidebarRelaxed = () => {
   const dispatch = useDispatch();
 
   return (
-    <div className=" w-1/5 bg-white left-0 top-0 fixed">
+    <div className=" w-1/5 bg-white left-0 h-screen top-0 fixed">
       <div className="flex cursor-pointer justify-start pl-10 pt-2 ">
         <Image
           className="border w-6 h-6 mr-2 mt-6 flex"

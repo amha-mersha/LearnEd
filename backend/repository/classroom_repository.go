@@ -69,23 +69,23 @@ func (repository *ClassroomRepository) DeleteClassroom(c context.Context, classr
 	return nil
 }
 
-func (repository *ClassroomRepository) AddPost(c context.Context, classroomID string, post domain.Post) (string, domain.CodedError) {
+func (repository *ClassroomRepository) AddPost(c context.Context, classroomID string, post domain.Post) domain.CodedError {
 	post.ID = primitive.NewObjectID()
 	id, pErr := repository.ParseID(classroomID)
 	if pErr != nil {
-		return "", pErr
+		return pErr
 	}
 
 	_, err := repository.collection.UpdateOne(c, bson.D{{Key: "_id", Value: id}}, bson.D{{Key: "$push", Value: bson.D{{Key: "posts", Value: post}}}})
 	if err == mongo.ErrNoDocuments {
-		return "", domain.NewError("classroom not found", domain.ERR_NOT_FOUND)
+		return domain.NewError("classroom not found", domain.ERR_NOT_FOUND)
 	}
 
 	if err != nil {
-		return "", domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
+		return domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
 	}
 
-	return post.ID.Hex(), nil
+	return nil
 }
 
 func (repository *ClassroomRepository) UpdatePost(c context.Context, classroomID string, postID string, updateData dtos.UpdatePostDTO) domain.CodedError {

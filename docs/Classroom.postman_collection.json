@@ -1,0 +1,530 @@
+{
+	"info": {
+		"_postman_id": "e9ff6795-3f15-46fc-8cfb-7302b1fdfa7c",
+		"name": "Classroom",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37761595"
+	},
+	"item": [
+		{
+			"name": "Create Classroom",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzQXQiOiIyMDI0LTA5LTI1VDE2OjQ4OjI2LjcxMDc3MDkrMDM6MDAiLCJpZCI6IjY2ZjJlYmRiMDViNzc0ZjczN2E3NzExNCIsInJvbGUiOiJ0ZWFjaGVyIiwidG9rZW5UeXBlIjoiYWNjZXNzVG9rZW4ifQ.WykAT3wHjHDVWgBYxaxD0ZXSVC61eMayU7h1w0LQK-U",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"name\",\r\n    \"course_name\": \"course name\",\r\n    \"season\": \"Fall 2019\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/classrooms",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"classrooms"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Classroom",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzQXQiOiIyMDI0LTA5LTI0VDIzOjQ3OjMxLjcyMTIyNTIrMDM6MDAiLCJpZCI6IjY2ZjJlYmRiMDViNzc0ZjczN2E3NzExNCIsInJvbGUiOiJ0ZWFjaGVyIiwidG9rZW5UeXBlIjoiYWNjZXNzVG9rZW4ifQ.z4Zx40D-zo_41EzdujGzdTMKG8cBeT2LQc8TSuyu4Ko",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/classrooms/66f3219aaf7da5493a847939",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"classrooms",
+						"66f3219aaf7da5493a847939"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Post",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzQXQiOiIyMDI0LTA5LTI1VDE2OjQ4OjI2LjcxMDc3MDkrMDM6MDAiLCJpZCI6IjY2ZjJlYmRiMDViNzc0ZjczN2E3NzExNCIsInJvbGUiOiJ0ZWFjaGVyIiwidG9rZW5UeXBlIjoiYWNjZXNzVG9rZW4ifQ.WykAT3wHjHDVWgBYxaxD0ZXSVC61eMayU7h1w0LQK-U",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"content\": \"content...\",\r\n    \"is_processed\": false,\r\n    \"is_assignment\": false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/classrooms/66f3e79033008592ea4f1c41/posts",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"classrooms",
+						"66f3e79033008592ea4f1c41",
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Post",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzQXQiOiIyMDI0LTA5LTI1VDAxOjQyOjU3Ljk0MTI2MjgrMDM6MDAiLCJpZCI6IjY2ZjJlYmRiMDViNzc0ZjczN2E3NzExNCIsInJvbGUiOiJ0ZWFjaGVyIiwidG9rZW5UeXBlIjoiYWNjZXNzVG9rZW4ifQ.8hqyYUl7X0LnBLCR9ko5U3pjeyteQIfECsVh6K21N3U",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"content\": \"123updated content...\",\r\n    \"deadline\": \"2024-01-01T00:00:00.000+00:00\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/classrooms/66f32f5b448485ed1dca27fd/posts/66f3313fe6f94ebceae58e73",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"classrooms",
+						"66f32f5b448485ed1dca27fd",
+						"posts",
+						"66f3313fe6f94ebceae58e73"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Post",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzQXQiOiIyMDI0LTA5LTI1VDAxOjQyOjU3Ljk0MTI2MjgrMDM6MDAiLCJpZCI6IjY2ZjJlYmRiMDViNzc0ZjczN2E3NzExNCIsInJvbGUiOiJ0ZWFjaGVyIiwidG9rZW5UeXBlIjoiYWNjZXNzVG9rZW4ifQ.8hqyYUl7X0LnBLCR9ko5U3pjeyteQIfECsVh6K21N3U",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/classrooms/66f32f5b448485ed1dca27fd/posts/66f33cff979f5fb39a4303bf",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"classrooms",
+						"66f32f5b448485ed1dca27fd",
+						"posts",
+						"66f33cff979f5fb39a4303bf"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Comment",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzQXQiOiIyMDI0LTA5LTI1VDEzOjI2OjA2LjIwMzc4MTkrMDM6MDAiLCJpZCI6IjY2ZjJlYmRiMDViNzc0ZjczN2E3NzExNCIsInJvbGUiOiJ0ZWFjaGVyIiwidG9rZW5UeXBlIjoiYWNjZXNzVG9rZW4ifQ.eV241RN-sRsO_RYC8NF5kPYcoc98bVXBkYHoxHC8u-w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"content\": \"toxic comment\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/classrooms/66f32f5b448485ed1dca27fd/posts/66f3b66c6b01efa798d814a5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"classrooms",
+						"66f32f5b448485ed1dca27fd",
+						"posts",
+						"66f3b66c6b01efa798d814a5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Comment",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzQXQiOiIyMDI0LTA5LTI1VDEzOjI2OjA2LjIwMzc4MTkrMDM6MDAiLCJpZCI6IjY2ZjJlYmRiMDViNzc0ZjczN2E3NzExNCIsInJvbGUiOiJ0ZWFjaGVyIiwidG9rZW5UeXBlIjoiYWNjZXNzVG9rZW4ifQ.eV241RN-sRsO_RYC8NF5kPYcoc98bVXBkYHoxHC8u-w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/classrooms/66f32f5b448485ed1dca27fd/posts/66f3b66c6b01efa798d814a5/comments/66f3dcd93eb10f54dd8cf559",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"classrooms",
+						"66f32f5b448485ed1dca27fd",
+						"posts",
+						"66f3b66c6b01efa798d814a5",
+						"comments",
+						"66f3dcd93eb10f54dd8cf559"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put Grade",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzQXQiOiIyMDI0LTA5LTMwVDEzOjQxOjU4LjAyNzEzNzYrMDM6MDAiLCJpZCI6IjY2ZjJlYmRiMDViNzc0ZjczN2E3NzExNCIsInJvbGUiOiJ0ZWFjaGVyIiwidG9rZW5UeXBlIjoiYWNjZXNzVG9rZW4ifQ.XrcO93KVnnb_1G1wtujGrl9oznMRSaE_h_L90ArkJuc",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"grades\": [\r\n        {\r\n            \"record_name\": \"Mid Exam\",\r\n            \"grade\": 24,\r\n            \"max_grade\": 30\r\n        },\r\n        {\r\n            \"record_name\": \"Final Exam\",\r\n            \"grade\": 43,\r\n            \"max_grade\": 70\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/classrooms/66f32f5b448485ed1dca27fd/grades/66f3fe604adcefd5d8830a6c",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"classrooms",
+						"66f32f5b448485ed1dca27fd",
+						"grades",
+						"66f3fe604adcefd5d8830a6c"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Student",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzQXQiOiIyMDI0LTA5LTMwVDEzOjQxOjU4LjAyNzEzNzYrMDM6MDAiLCJpZCI6IjY2ZjJlYmRiMDViNzc0ZjczN2E3NzExNCIsInJvbGUiOiJ0ZWFjaGVyIiwidG9rZW5UeXBlIjoiYWNjZXNzVG9rZW4ifQ.XrcO93KVnnb_1G1wtujGrl9oznMRSaE_h_L90ArkJuc",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"student2@gmail.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/classrooms/66f32f5b448485ed1dca27fd/students",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"classrooms",
+						"66f32f5b448485ed1dca27fd",
+						"students"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Student",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzQXQiOiIyMDI0LTA5LTMwVDE1OjAwOjQ2LjE1NDEzMjIrMDM6MDAiLCJpZCI6IjY2ZjJlYmRiMDViNzc0ZjczN2E3NzExNCIsInJvbGUiOiJ0ZWFjaGVyIiwidG9rZW5UeXBlIjoiYWNjZXNzVG9rZW4ifQ.zrsurMGAMJmXlylKYHRHMhLA_vFjOqrhk6GdiqUhz6c",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/classrooms/66f32f5b448485ed1dca27fd/students/66f3fe5c4adcefd5d8830a6b",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"classrooms",
+						"66f32f5b448485ed1dca27fd",
+						"students",
+						"66f3fe5c4adcefd5d8830a6b"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Grades (for teachers)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzQXQiOiIyMDI0LTA5LTMwVDIzOjI0OjUwLjI0MDY2MyswMzowMCIsImlkIjoiNjZmMzIxOGJhZjdkYTU0OTNhODQ3OTM4Iiwicm9sZSI6InRlYWNoZXIiLCJ0b2tlblR5cGUiOiJhY2Nlc3NUb2tlbiJ9.kvgDtuLNZXxz1XeqTopZ-wRcyigcpaNOC6P3oYpFPT0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/classrooms/66f32f5b448485ed1dca27fd/grades",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"classrooms",
+						"66f32f5b448485ed1dca27fd",
+						"grades"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Grade",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzQXQiOiIyMDI0LTA5LTMwVDIzOjI1OjUyLjIyODk3MzUrMDM6MDAiLCJpZCI6IjY2ZjNmZTYwNGFkY2VmZDVkODgzMGE2YyIsInJvbGUiOiJzdHVkZW50IiwidG9rZW5UeXBlIjoiYWNjZXNzVG9rZW4ifQ.1GVD-PC211ydAFh9L0a9DdP0hHs1jYgt8aPer36H-dY",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/classrooms/66f32f5b448485ed1dca27fd/grades/66f3fe604adcefd5d8830a6c",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"classrooms",
+						"66f32f5b448485ed1dca27fd",
+						"grades",
+						"66f3fe604adcefd5d8830a6c"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Post (with names)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzQXQiOiIyMDI0LTA5LTMwVDIzOjU3OjM3LjQzNjIzNTYrMDM6MDAiLCJpZCI6IjY2ZjMyMThiYWY3ZGE1NDkzYTg0NzkzOCIsInJvbGUiOiJ0ZWFjaGVyIiwidG9rZW5UeXBlIjoiYWNjZXNzVG9rZW4ifQ.idlrANNAOgvpnGkza8lwRz1z2wA_5GLwRooJiHrf9M8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/classrooms/66f32f5b448485ed1dca27fd/posts",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"classrooms",
+						"66f32f5b448485ed1dca27fd",
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Classroom",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzQXQiOiIyMDI0LTEwLTAxVDAzOjEwOjUyLjUzNjI0NjMrMDM6MDAiLCJpZCI6IjY2ZjNmZTY0NGFkY2VmZDVkODgzMGE2ZCIsInJvbGUiOiJzdHVkZW50IiwidG9rZW5UeXBlIjoiYWNjZXNzVG9rZW4ifQ.0mM_aMCnxYgZWh3dbJM2uY90oXVzJ4GJgyyEtJjfLqs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/classrooms",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"classrooms"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

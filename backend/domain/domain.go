@@ -31,7 +31,6 @@ type EnvironmentVariables struct {
 	PORT        int
 	ROUTEPREFIX string
 	JWT_SECRET  string
-	GEMINI_KEY  string
 }
 
 type User struct {
@@ -69,7 +68,7 @@ type GetGradeReportDTO struct {
 }
 
 type Comment struct {
-	ID          primitive.ObjectID `json:"id" bson:"_id"`
+	ID          primitive.ObjectID `json:"id" bson:"_id,omitempty"`
 	CreatorID   primitive.ObjectID `json:"creator_id"`
 	CreatorName string             `json:"creator_name"`
 	Content     string             `json:"content"`
@@ -77,7 +76,7 @@ type Comment struct {
 }
 
 type Post struct {
-	ID           primitive.ObjectID `json:"id" bson:"_id"`
+	ID           primitive.ObjectID `json:"id" bson:"_id,omitempty"`
 	CreatorID    primitive.ObjectID `json:"creator_id" bson:"creator_id"`
 	Content      string             `json:"content"`
 	File         string             `json:"file"`
@@ -89,15 +88,9 @@ type Post struct {
 	// TODO: Add fields for the processed data
 }
 
-type Summary struct {
-	Summary string `json:"summary" bson:"summary"`
-}
-
-type Question struct {
-	Question      string   `json:"question" bson:"question"`
-	Choices       []string `json:"choices" bson:"choices"`
-	CorrectAnswer int      `json:"correct_answer" bson:"correct_answer"`
-	Explanation   string   `json:"explanation" bson:"explanation"`
+type GetPostDTO struct {
+	CreatorName string `json:"creator_name"`
+	Data        Post   `json:"data"`
 }
 
 type FlashCard struct {
@@ -178,7 +171,7 @@ type ClassroomRepository interface {
 	CreateClassroom(c context.Context, creatorID primitive.ObjectID, classroom Classroom) CodedError
 	DeleteClassroom(c context.Context, classroomID string) CodedError
 	FindClassroom(c context.Context, classroomID string) (Classroom, CodedError)
-	AddPost(c context.Context, classroomID string, post Post) (string, CodedError)
+	AddPost(c context.Context, classroomID string, post Post) CodedError
 	UpdatePost(c context.Context, classroomID string, postID string, post dtos.UpdatePostDTO) CodedError
 	RemovePost(c context.Context, classroomID string, postID string) CodedError
 	AddComment(c context.Context, classroomID string, postID string, comment Comment) CodedError
@@ -228,5 +221,4 @@ type ResourceRespository interface {
 	RemoveResource(c context.Context, resourceID string) CodedError
 	RemoveResourceByPostID(c context.Context, postID string) CodedError
 	ParseID(id string) (primitive.ObjectID, CodedError)
-	GetResourceByPostID(c context.Context, postID string) (GenerateContent, CodedError)
 }
