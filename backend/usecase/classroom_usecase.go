@@ -171,12 +171,16 @@ func (usecase *ClassroomUsecase) RemovePost(c context.Context, creatorID string,
 		return err
 	}
 
-	if errRemove := os.Remove(post.File); errRemove != nil {
-		return domain.NewError("Failed to remove file", domain.ERR_INTERNAL_SERVER)
-	}
+	if post.IsProcessed {
+		if post.File != "" {
+			if errRemove := os.Remove(post.File); errRemove != nil {
+				return domain.NewError("Failed to remove file", domain.ERR_INTERNAL_SERVER)
+			}
+		}
 
-	if errRemove := usecase.resourceRepository.RemoveResourceByPostID(c, postID); errRemove != nil {
-		return errRemove
+		if errRemove := usecase.resourceRepository.RemoveResourceByPostID(c, postID); errRemove != nil {
+			return errRemove
+		}
 	}
 
 	if err = usecase.classroomRepository.RemovePost(c, classroomID, postID); err != nil {
