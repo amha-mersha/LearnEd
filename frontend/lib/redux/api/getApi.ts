@@ -12,6 +12,7 @@ export const learnApi = createApi({
         body: data,
       }),
     }),
+
     createClassroom: builder.mutation({
       query: ({ data, accessToken }) => ({
         url: "classrooms/",
@@ -34,10 +35,10 @@ export const learnApi = createApi({
       }),
     }),
     postGrades: builder.mutation({
-      query: ({ data, token }) => (
+      query: ({ class_id, student_id, token, data }) => (
         console.log("dd", data, token),
         {
-          url: `classrooms/66f32f5b448485ed1dca27fd/grades/66f3fe604adcefd5d8830a6c`,
+          url: `classrooms/${class_id}/grades/${student_id}`,
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -48,8 +49,8 @@ export const learnApi = createApi({
       ),
     }),
     getAllStudents: builder.query({
-      query: (token) => ({
-        url: `classrooms/66f32f5b448485ed1dca27fd/grades`,
+      query: ({id, token}) => ({
+        url: `classrooms/${id}/grades`,
         method: "GET",
         headers: {
           "Content-Type": "application/json",

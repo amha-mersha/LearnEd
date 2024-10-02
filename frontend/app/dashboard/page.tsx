@@ -19,9 +19,8 @@ interface Classroom {
 }
 
 const Page = () => {
-  // let token = useSelector((state: any) => state.token.accessToken);
   const token = localStorage.getItem('token');
-  // console.log("-------------------------", token);
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const {
     data: classrooms = [],
@@ -33,12 +32,13 @@ const Page = () => {
   ); // Fetch classrooms data
 
   return (
-    <div className="bg-[#F6F6F6] min-h-screen pr-36 pt-16">
+    <div className=" bg-[#F6F6F6] min-h-screen  pr-36 pt-10">
       <div className="ml-24 flex justify-between">
         <h1 className="text-3xl font-black">Classes</h1>
         <Button className="mr-16" onClick={() => setIsModalOpen(true)}>
           Create Class
         </Button>
+
       </div>
       <div className="justify-center w-full flex flex-wrap">
         {isLoading ? (

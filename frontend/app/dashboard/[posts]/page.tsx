@@ -2,10 +2,13 @@
 import Posts from "@/app/components/post/Posts";
 import StudentInvite from "@/app/components/StudentInvite";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 import React, { useState } from "react";
 
 const page = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const params = useParams();
 
   return (
     <div className="bg-[#F6F6F6] pt-10 min-h-screen ">
@@ -13,6 +16,15 @@ const page = () => {
         <Button className="mr-40" onClick={() => setIsModalOpen(true)}>
           Invite Students
         </Button>
+        <Link
+          className="mr-40"
+          href={{
+            pathname: `/dashboard/grading`,
+            query: { class_id: params.posts },
+          }}
+        >
+          <Button className="mr-40">Upload grades</Button>
+        </Link>
       </div>
       <Posts />
       <StudentInvite
