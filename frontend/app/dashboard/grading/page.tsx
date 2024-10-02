@@ -14,19 +14,19 @@ import {
 import { Parameter, Student, studentsData } from "@/utils/grades";
 import Grade_students from "@/app/components/Grade_students";
 
-export default function GradingPage() {
+export default function GradingPage({searchParams}: {searchParams: any}) {
   let studs: any = [];
   const [newParameter, setNewParameter] = useState("");
   const [newPoints, setNewPoints] = useState("");
   const [students, setStudents] = useState<Student[]>(studs);
   const [incomingCopy, setIncomingCopy] = useState<any>([]);
-  const temp_id_classroom = "66fc5f1764ea1026d3b5813d";
-  const temp_token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzQXQiOiIyMDI0LTEwLTAzVDA2OjE2OjA0Ljk2ODA1NjQrMDM6MDAiLCJpZCI6IjY2ZmM1ZWNhNjRlYTEwMjZkM2I1ODEzYyIsInJvbGUiOiJ0ZWFjaGVyIiwidG9rZW5UeXBlIjoiYWNjZXNzVG9rZW4ifQ.-3KCqqCqzBtUvfhSUEbsOoAZKX9GYcT8k9riuw9gA2s";
+  // const temp_id_classroom = "66fc5f1764ea1026d3b5813d";
+
+  const token = localStorage.getItem('token');
 
   const { data, isLoading, isError, isSuccess } = useGetAllStudentsQuery({
-    id: temp_id_classroom,
-    token: temp_token,
+    id: searchParams.class_id,
+    token: token,
   });
   const [parameters, setParameters] = useState<Parameter[]>([]);
 

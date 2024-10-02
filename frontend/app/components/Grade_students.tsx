@@ -43,8 +43,9 @@ const Grade_students = ({
     const score: any = [];
     const class_id = "66fc5f1764ea1026d3b5813d";
     const student_id = "66fba6d880e72f71b4a21f9b";
-    const temp_token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzQXQiOiIyMDI0LTEwLTAzVDA2OjE2OjA0Ljk2ODA1NjQrMDM6MDAiLCJpZCI6IjY2ZmM1ZWNhNjRlYTEwMjZkM2I1ODEzYyIsInJvbGUiOiJ0ZWFjaGVyIiwidG9rZW5UeXBlIjoiYWNjZXNzVG9rZW4ifQ.-3KCqqCqzBtUvfhSUEbsOoAZKX9GYcT8k9riuw9gA2s";
+    // const temp_token =
+    //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzQXQiOiIyMDI0LTEwLTAzVDA2OjE2OjA0Ljk2ODA1NjQrMDM6MDAiLCJpZCI6IjY2ZmM1ZWNhNjRlYTEwMjZkM2I1ODEzYyIsInJvbGUiOiJ0ZWFjaGVyIiwidG9rZW5UeXBlIjoiYWNjZXNzVG9rZW4ifQ.-3KCqqCqzBtUvfhSUEbsOoAZKX9GYcT8k9riuw9gA2s";
+    const token = localStorage.getItem('token');
     for (let param in student.scores) {
       for (let an_param in parameters) {
         if (param === parameters[an_param].name) {
@@ -59,7 +60,7 @@ const Grade_students = ({
     const res = { grades: score };
     const result = await postGrades({
       data: res,
-      token: temp_token,
+      token: token,
       class_id: class_id,
       student_id: student_id,
     });

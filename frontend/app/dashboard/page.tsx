@@ -19,9 +19,8 @@ interface Classroom {
 }
 
 const Page = () => {
-  // let token = useSelector((state: any) => state.token.accessToken);
   const token = localStorage.getItem('token');
-  // console.log("-------------------------", token);
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const {
     data: classrooms = [],
