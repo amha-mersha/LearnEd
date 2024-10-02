@@ -1,40 +1,37 @@
-import { useState } from 'react'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+// StudyStudentInvite.tsx
+import { useState } from 'react';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useInviteToStudyGroupMutation } from '@/lib/redux/api/getApi';
 
-export default function StudyStudentInvite({ isOpen, onClose, studyGroupId }: { isOpen: boolean; onClose: () => void; studyGroupId: string }) {
-  const [studentEmail, setStudentEmail] = useState('')
-  const [inviteToStudyGroup, { isLoading, isError, isSuccess }] =
-  useInviteToStudyGroupMutation();
-  const accessToken =
-    localStorage.getItem('token');
+export default function StudyStudentInvite({ isOpen, onClose, studyGroupId, onSuccess }: { isOpen: boolean; onClose: () => void; studyGroupId: string; onSuccess: () => void }) {
+  const [studentEmail, setStudentEmail] = useState('');
+  const [inviteToStudyGroup, { isLoading, isError, isSuccess }] = useInviteToStudyGroupMutation();
+  const accessToken = localStorage.getItem('token');
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    // Handle form submission logic here
-    console.log("Student invited:", {studentEmail});
+    e.preventDefault();
 
     const payload = {
         email: studentEmail
     };
 
-    try{
+    try {
         await inviteToStudyGroup({studyGroupId, data: payload, accessToken }).unwrap();
         console.log("Successfully invited student");
         onClose(); 
-    } catch (error){
+        onSuccess(); // Trigger success action in parent component
+    } catch (error) {
         console.error("Failed to invite student:", error);
     }
-    
-  }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px] py-10 px-20">
-        <DialogHeader className=''>
-          <DialogTitle className=" text-center font-black">Invite Students</DialogTitle>
+      <DialogContent className="sm:max-w-[500px] py-24 px-20">
+        <DialogHeader>
+          <DialogTitle className="text-center font-black">Invite Students</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-10 mt-2">
           <div className="space-y-2">
@@ -46,14 +43,12 @@ export default function StudyStudentInvite({ isOpen, onClose, studyGroupId }: { 
               required
             />
           </div>
-         
           <Button type="submit" className="w-full">
             Invite
           </Button>
           {isError && <p className="text-red-500">Failed to invite student.</p>}
-          {isSuccess && <p className="text-green-500">Student invited successfully!</p>}
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
