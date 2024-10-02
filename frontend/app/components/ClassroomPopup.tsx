@@ -34,7 +34,7 @@ export default function CreateClassroomModal({
   const [createClassroom, { isLoading, isError, isSuccess }] =
     useCreateClassroomMutation();
   const accessToken =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzQXQiOiIyMDI0LTEwLTAyVDAwOjA4OjE5LjI5MDA1OTYrMDM6MDAiLCJpZCI6IjY2ZmMzNWQwMmFjOWY2NTEyYzYwNTU3OSIsInJvbGUiOiJ0ZWFjaGVyIiwidG9rZW5UeXBlIjoiYWNjZXNzVG9rZW4ifQ.N5J5RWRuj72taDq7rHZdKUrqCwOmcMfCF-aLojMNgiw";
+    localStorage.getItem('token');
 
   const handleSubmit =async (e: React.FormEvent)=> {
     e.preventDefault();
