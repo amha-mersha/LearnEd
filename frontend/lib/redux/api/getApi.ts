@@ -57,7 +57,18 @@ export const learnApi = createApi({
         },
       }),
     }),
-  }),
+    getStudentGrades: builder.query({
+      query: ({studentId, accessToken}) => ({
+        url: `classrooms/grades/${studentId}`,
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }),
+    }),
+    })
+  
 });
 
 export const {
@@ -66,4 +77,5 @@ export const {
   useGetClassroomsQuery,
   usePostGradesMutation,
   useGetAllStudentsQuery,
+  useGetStudentGradesQuery
 } = learnApi;
