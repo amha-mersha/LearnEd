@@ -58,7 +58,7 @@ export const learnApi = createApi({
       }),
     }),
     getStudentGrades: builder.query({
-      query: ({studentId, accessToken}) => ({
+      query: ({ studentId, accessToken }) => ({
         url: `classrooms/grades/${studentId}`,
         method: "GET",
         headers: {
@@ -67,8 +67,17 @@ export const learnApi = createApi({
         },
       }),
     }),
-    })
-  
+    getStudyGroups: builder.query({
+      query: (accessToken) => ({
+        url: `study-groups/`,
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }),
+    }),
+  }),
 });
 
 export const {
@@ -77,5 +86,6 @@ export const {
   useGetClassroomsQuery,
   usePostGradesMutation,
   useGetAllStudentsQuery,
-  useGetStudentGradesQuery
+  useGetStudentGradesQuery,
+  useGetStudyGroupsQuery
 } = learnApi;
