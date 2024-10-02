@@ -51,6 +51,11 @@ type StudentGrade struct {
 	Records   []StudentRecord    `json:"records"`
 }
 
+type GetGradesDTO struct {
+	Data        StudentGrade `json:"data"`
+	StudentName string       `json:"name"`
+}
+
 type Comment struct {
 	ID          primitive.ObjectID `json:"id" bson:"_id,omitempty"`
 	CreatorID   primitive.ObjectID `json:"creator_id"`
@@ -73,8 +78,8 @@ type Post struct {
 }
 
 type GetPostDTO struct {
-	CreatorName string
-	Data        Post
+	CreatorName string `json:"creator_name"`
+	Data        Post   `json:"data"`
 }
 
 type Classroom struct {
@@ -123,7 +128,7 @@ type ClassroomUsecase interface {
 	PutGrade(c context.Context, teacherID string, classroomID string, studentID string, gradeDto dtos.GradeDTO) CodedError
 	AddStudent(c context.Context, tokenID string, studentEmail string, classroomID string) CodedError
 	RemoveStudent(c context.Context, tokenID string, classroomID string, studentID string) CodedError
-	GetGrades(c context.Context, teacherID string, classroomID string) ([]StudentGrade, CodedError)
+	GetGrades(c context.Context, teacherID string, classroomID string) ([]GetGradesDTO, CodedError)
 	GetStudentGrade(c context.Context, tokenID string, studentID string, classroomID string) (StudentGrade, CodedError)
 	GetPosts(c context.Context, tokenID string, classroomID string) ([]GetPostDTO, CodedError)
 	GetClassrooms(c context.Context, tokenID string) ([]Classroom, CodedError)
