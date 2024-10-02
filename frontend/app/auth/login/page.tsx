@@ -30,6 +30,7 @@ export default function SignIn() {
       const updatedSession = await getSession();
       console.log("updatedsession", updatedSession)
       if (updatedSession) {
+        localStorage.setItem("token", updatedSession.user.accessToken);
         dispatch(settoken({payload: updatedSession.user.accessToken}))
         dispatch(setrole({payload: updatedSession.user.role}))
         router.push(`/`);
