@@ -7,6 +7,7 @@ import CreateClassroomModal from "../components/ClassroomPopup";
 import { Button } from "@/components/ui/button";
 import { useGetClassroomsQuery } from "@/lib/redux/api/getApi";
 import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton
+import { useSelector } from "react-redux";
 
 interface Classroom {
   id: string;
@@ -18,6 +19,9 @@ interface Classroom {
 }
 
 const Page = () => {
+  // let token = useSelector((state: any) => state.token.accessToken);
+  const token = localStorage.getItem('token');
+  // console.log("-------------------------", token);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const {
     data: classrooms = [],
@@ -25,7 +29,7 @@ const Page = () => {
     error,
     refetch,
   } = useGetClassroomsQuery(
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzQXQiOiIyMDI0LTEwLTAyVDAwOjA4OjE5LjI5MDA1OTYrMDM6MDAiLCJpZCI6IjY2ZmMzNWQwMmFjOWY2NTEyYzYwNTU3OSIsInJvbGUiOiJ0ZWFjaGVyIiwidG9rZW5UeXBlIjoiYWNjZXNzVG9rZW4ifQ.N5J5RWRuj72taDq7rHZdKUrqCwOmcMfCF-aLojMNgiw"
+    token
   ); // Fetch classrooms data
 
   return (
