@@ -138,6 +138,23 @@ func (usecase *ClassroomUsecase) RemovePost(c context.Context, creatorID string,
 		return domain.NewError("only teachers added to the classroom can remove posts", domain.ERR_FORBIDDEN)
 	}
 
+	post, err := usecase.classroomRepository.FindPost(c, classroomID, postID)
+	if err != nil {
+		return err
+	}
+
+	if post.IsProcessed {
+		if post.File != "" {
+			if errRemove := os.Remove(post.File); errRemove != nil {
+				return domain.NewError("Failed to remove file", domain.ERR_INTERNAL_SERVER)
+			}
+		}
+
+		if errRemove := usecase.resourceRepository.RemoveResourceByPostID(c, postID); errRemove != nil {
+			return errRemove
+		}
+	}
+
 	if err = usecase.classroomRepository.RemovePost(c, classroomID, postID); err != nil {
 		return err
 	}
@@ -447,6 +464,163 @@ func (usecase *ClassroomUsecase) GetGrades(c context.Context, teacherID string, 
 			},
 			StudentName: foundUser.Name,
 		})
+	}
+
+	return grades, nil
+}
+
+func (usecase *ClassroomUsecase) GetStudentGrade(c context.Context, tokenID string, studentID string, classroomID string) (domain.StudentGrade, domain.CodedError) {
+	foundUser, err := usecase.authRepository.GetUserByID(c, tokenID)
+	if err != nil {
+		return domain.StudentGrade{}, err
+	}
+
+	clsroom, err := usecase.classroomRepository.FindClassroom(c, classroomID)
+	if err != nil {
+		return domain.StudentGrade{}, err
+	}
+
+	if foundUser.Type == domain.RoleStudent && tokenID != studentID {
+		return domain.StudentGrade{}, domain.NewError("students can only get grades for their own accounts", domain.ERR_FORBIDDEN)
+	}
+
+	if foundUser.Type == domain.RoleTeacher {
+		allowed := false
+		for _, tID := range clsroom.Teachers {
+			if usecase.classroomRepository.StringifyID(tID) == tokenID {
+				allowed = true
+				break
+			}
+		}
+
+		if !allowed {
+			return domain.StudentGrade{}, domain.NewError("only teachers added to the classroom can get grades", domain.ERR_FORBIDDEN)
+		}
+	}
+
+	for _, grade := range clsroom.StudentGrades {
+		if usecase.classroomRepository.StringifyID(grade.StudentID) == studentID {
+			return grade, nil
+		}
+	}
+
+	return domain.StudentGrade{}, domain.NewError("grades for the student not found", domain.ERR_NOT_FOUND)
+}
+
+func (usecase *ClassroomUsecase) GetPosts(c context.Context, tokenID string, classroomID string) ([]domain.GetPostDTO, domain.CodedError) {
+	foundUser, err := usecase.authRepository.GetUserByID(c, tokenID)
+	if err != nil {
+		return []domain.GetPostDTO{}, err
+	}
+
+	clsroom, err := usecase.classroomRepository.FindClassroom(c, classroomID)
+	if err != nil {
+		return []domain.GetPostDTO{}, err
+	}
+
+	if foundUser.Type == domain.RoleTeacher {
+		allowed := false
+		for _, tID := range clsroom.Teachers {
+			if usecase.classroomRepository.StringifyID(tID) == tokenID {
+				allowed = true
+				break
+			}
+		}
+
+		if !allowed {
+			return []domain.GetPostDTO{}, domain.NewError("only teachers added to the classroom can get posts", domain.ERR_FORBIDDEN)
+		}
+	}
+
+	if foundUser.Type == domain.RoleStudent {
+		allowed := false
+		for _, sID := range clsroom.Students {
+			if usecase.classroomRepository.StringifyID(sID) == tokenID {
+				allowed = true
+				break
+			}
+		}
+
+		if !allowed {
+			return []domain.GetPostDTO{}, domain.NewError("only students added to the classroom can get posts", domain.ERR_FORBIDDEN)
+		}
+	}
+
+	res := []domain.GetPostDTO{}
+	for _, post := range clsroom.Posts {
+		postDto := domain.GetPostDTO{
+			Data: post,
+		}
+
+		user, err := usecase.authRepository.GetUserByID(c, usecase.classroomRepository.StringifyID(post.CreatorID))
+		if err != nil {
+			postDto.CreatorName = usecase.classroomRepository.StringifyID(post.CreatorID)
+		} else {
+			postDto.CreatorName = user.Name
+		}
+
+		res = append(res, postDto)
+	}
+
+	return res, nil
+}
+
+func (usecase *ClassroomUsecase) GetClassrooms(c context.Context, tokenID string) ([]domain.Classroom, domain.CodedError) {
+	foundUser, err := usecase.authRepository.GetUserByID(c, tokenID)
+	if err != nil {
+		return []domain.Classroom{}, err
+	}
+
+	classrooms, err := usecase.classroomRepository.GetClassrooms(c, usecase.classroomRepository.StringifyID(foundUser.ID))
+	if err != nil {
+		return []domain.Classroom{}, err
+	}
+
+	if len(classrooms) == 0 {
+		return []domain.Classroom{}, nil
+	}
+
+	return classrooms, nil
+}
+
+func (usecase *ClassroomUsecase) GetGradeReport(c context.Context, tokenID string, studentID string) (domain.GetGradeReportDTO, domain.CodedError) {
+	if tokenID != studentID {
+		return domain.GetGradeReportDTO{}, domain.NewError("students can only obtain their own grade reports", domain.ERR_FORBIDDEN)
+	}
+
+	classrooms, err := usecase.classroomRepository.GetClassrooms(c, studentID)
+	if err != nil {
+		return domain.GetGradeReportDTO{}, err
+	}
+
+	gradeReport := domain.GetGradeReportDTO{
+		Data: []domain.GradeReport{},
+	}
+
+	for _, classroom := range classrooms {
+		gr := domain.GradeReport{
+			ClassroomID:   classroom.ID,
+			ClassroomName: classroom.Name,
+		}
+
+		for _, grade := range classroom.StudentGrades {
+			if usecase.classroomRepository.StringifyID(grade.StudentID) == studentID {
+				gr.Grades = grade
+				break
+			}
+		}
+
+		gradeReport.Data = append(gradeReport.Data, gr)
+	}
+
+	return gradeReport, nil
+}
+
+func (usecase *ClassroomUsecase) EnhanceContent(currentState, query string) (string, domain.CodedError) {
+	if result, err := usecase.aiService.EnhanceContent(currentState, query); err != nil {
+		return "", err
+	} else {
+		return result, nil
 	}
 
 	return grades, nil

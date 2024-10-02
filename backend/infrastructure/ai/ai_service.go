@@ -275,7 +275,6 @@ func (s *AIService) cleanJSONQuestion(response string) string {
 	for response[rightPtr] != ']' {
 		rightPtr--
 	}
-	log.Printf("CLEAN QUESTION JSON: cleaned questions : %s", response[leftPtr:rightPtr+1])
 	return response[leftPtr : rightPtr+1]
 }
 
@@ -287,7 +286,6 @@ func (s *AIService) cleanJSONSummary(response string) string {
 	for rightPtr >= 0 && response[rightPtr] != ']' {
 		rightPtr--
 	}
-	log.Printf("CLEAN SUMMARY JSON: cleaned summary : %s", response[leftPtr:rightPtr+1])
 	return response[leftPtr : rightPtr+1]
 }
 
@@ -306,6 +304,5 @@ func (s *AIService) CalculatePage(filepath string) (int, domain.CodedError) {
 	if err != nil {
 		return 0, domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
 	}
-	log.Println(reader.NumPage())
 	return reader.NumPage(), nil
 }

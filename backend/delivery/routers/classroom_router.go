@@ -26,10 +26,13 @@ func NewClassroomRouter(classroomRepository domain.ClassroomRepository, authRepo
 	router.DELETE("/:classroomID/posts/:postID/comments/:commentID", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleTeacher, domain.RoleStudent), classroomController.RemoveComment)
 
 	router.PUT("/:classroomID/grades/:studentID", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleTeacher), classroomController.PutGrade)
-
 	router.GET("/:classroomID/grades", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleTeacher), classroomController.GetGrades)
 	router.GET("/:classroomID/grades/:studentID", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleStudent, domain.RoleTeacher), classroomController.GetStudentGrade)
 	router.GET("/grades/:studentID", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleStudent), classroomController.GetGradeReport)
 	router.GET("/:classroomID/posts", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleStudent, domain.RoleTeacher), classroomController.GetPosts)
 	router.GET("/", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleStudent, domain.RoleTeacher), classroomController.GetClassrooms)
+	router.POST("/enhance_content", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleTeacher), classroomController.EnhanceContent)
+	router.GET("/posts/get_quiz/:postID", classroomController.GetQuiz)
+	router.GET("/posts/get_summary/:postID", classroomController.GetSummary)
+	router.GET("/posts/get_flashcard/:postID", classroomController.GetFlashCard)
 }

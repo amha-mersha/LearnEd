@@ -13,6 +13,7 @@ const (
 	CollectionUsers      = "users"
 	CollectionClassrooms = "classrooms"
 	CollectionStudyGroup = "study_group"
+	CollectionResources  = "resources"
 )
 
 const (
@@ -92,6 +93,23 @@ type GetPostDTO struct {
 	Data        Post   `json:"data"`
 }
 
+type FlashCard struct {
+	Question    string `json:"question" bson:"question"`
+	Explanation string `json:"explanation" bson:"explanation"`
+}
+
+type GenerateContent struct {
+	ID        primitive.ObjectID `json:"id" bson:"_id"`
+	PostID    primitive.ObjectID `json:"post_id" bson:"post_id"`
+	Questions []Question         `json:"questions"`
+	Summarys  []Summary          `json:"summarys" bson:"summarys"`
+}
+
+type GetPostDTO struct {
+	CreatorName string `json:"creator_name"`
+	Data        Post   `json:"data"`
+}
+
 type Classroom struct {
 	ID            primitive.ObjectID   `json:"id" bson:"_id,omitempty"`
 	Name          string               `json:"name"`
@@ -143,6 +161,10 @@ type ClassroomUsecase interface {
 	GetPosts(c context.Context, tokenID string, classroomID string) ([]GetPostDTO, CodedError)
 	GetClassrooms(c context.Context, tokenID string) ([]Classroom, CodedError)
 	GetGradeReport(c context.Context, tokenID string, studentID string) (GetGradeReportDTO, CodedError)
+	EnhanceContent(currentState, query string) (string, CodedError)
+	GetQuiz(c context.Context, postID string) ([]Question, CodedError)
+	GetSummary(c context.Context, postID string) (Summary, CodedError)
+	GetFlashCard(c context.Context, postID string) ([]FlashCard, CodedError)
 }
 
 type ClassroomRepository interface {
@@ -191,5 +213,12 @@ type StudyGroupRepository interface {
 	RemoveStudent(c context.Context, studentID string, classroomID string) CodedError
 	GetStudyGroups(c context.Context, userID string) ([]StudyGroup, CodedError)
 	StringifyID(id primitive.ObjectID) string
+	ParseID(id string) (primitive.ObjectID, CodedError)
+}
+
+type ResourceRespository interface {
+	AddResource(c context.Context, content GenerateContent, postID string) CodedError
+	RemoveResource(c context.Context, resourceID string) CodedError
+	RemoveResourceByPostID(c context.Context, postID string) CodedError
 	ParseID(id string) (primitive.ObjectID, CodedError)
 }
