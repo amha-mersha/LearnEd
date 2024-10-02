@@ -9,6 +9,8 @@ import React, { useState } from "react";
 const page = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const params = useParams();
+  console.log('pp', params.posts)
+  console.log('tt', localStorage.getItem("token"))
 
   return (
     <div className="bg-[#F6F6F6] pt-10 min-h-screen ">
@@ -26,7 +28,7 @@ const page = () => {
           <Button className="mr-40">Upload grades</Button>
         </Link>
       </div>
-      <Posts />
+      <Posts class_id={params.posts} />
       <StudentInvite
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
