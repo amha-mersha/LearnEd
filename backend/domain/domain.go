@@ -59,7 +59,7 @@ type GetGradesDTO struct {
 type GradeReport struct {
 	Grades        StudentGrade       `json:"grades"`
 	ClassroomID   primitive.ObjectID `json:"classroom_id"`
-	ClassroomName primitive.ObjectID `json:"classroom_name"`
+	ClassroomName string             `json:"classroom_name"`
 }
 
 type GetGradeReportDTO struct {
