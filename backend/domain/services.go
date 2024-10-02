@@ -26,13 +26,6 @@ type AIModelInterface interface {
 	GenerateContent(context.Context, ...genai.Part) (*genai.GenerateContentResponse, error)
 }
 
-type AIServiceInterface interface {
-	EnhanceContent(currentState, query string) (string, CodedError)
-	GenerateContentFromText(post Post) (GenerateContent, CodedError)
-	GenerateContentFromFile(post Post) (GenerateContent, CodedError)
-	ValidateFile(filePath string) CodedError
-}
-
 type AuthValidation interface {
 	ValidateName(name string) CodedError
 	ValidateEmail(email string) CodedError

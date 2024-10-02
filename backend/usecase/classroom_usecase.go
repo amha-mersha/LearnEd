@@ -4,24 +4,18 @@ import (
 	"context"
 	"learned-api/domain"
 	"learned-api/domain/dtos"
-	"log"
-	"os"
 	"time"
 )
 
 type ClassroomUsecase struct {
 	classroomRepository domain.ClassroomRepository
-	resourceRepository  domain.ResourceRespository
 	authRepository      domain.AuthRepository
-	aiService           domain.AIServiceInterface
 }
 
-func NewClassroomUsecase(classroomRepository domain.ClassroomRepository, resourceRepository domain.ResourceRespository, authRepository domain.AuthRepository, aiService domain.AIServiceInterface) *ClassroomUsecase {
+func NewClassroomUsecase(classroomRepository domain.ClassroomRepository, authRepository domain.AuthRepository) *ClassroomUsecase {
 	return &ClassroomUsecase{
 		classroomRepository: classroomRepository,
-		resourceRepository:  resourceRepository,
 		authRepository:      authRepository,
-		aiService:           aiService,
 	}
 }
 
@@ -94,35 +88,10 @@ func (usecase *ClassroomUsecase) AddPost(c context.Context, creatorID string, cl
 	post.Comments = []domain.Comment{}
 	post.CreatedAt = time.Now().Round(0)
 	post.CreatorID = cID
-	postID, err := usecase.classroomRepository.AddPost(c, classroomID, post)
-	if err != nil {
+	if err = usecase.classroomRepository.AddPost(c, classroomID, post); err != nil {
 		return err
 	}
 
-	if post.IsProcessed {
-		go func() {
-			var generatedContent domain.GenerateContent
-			var genErr domain.CodedError
-
-			if post.File != "" {
-				generatedContent, genErr = usecase.aiService.GenerateContentFromFile(post)
-			} else {
-				generatedContent, genErr = usecase.aiService.GenerateContentFromText(post)
-			}
-
-			if genErr != nil {
-				log.Println(genErr.Error())
-				return
-			}
-
-			errAdd := usecase.resourceRepository.AddResource(c, generatedContent, postID)
-			if errAdd != nil {
-				log.Println(errAdd.Error())
-				return
-			}
-		}()
-
-	}
 	return nil
 }
 
@@ -167,19 +136,6 @@ func (usecase *ClassroomUsecase) RemovePost(c context.Context, creatorID string,
 
 	if !allowed {
 		return domain.NewError("only teachers added to the classroom can remove posts", domain.ERR_FORBIDDEN)
-	}
-
-	post, err := usecase.classroomRepository.FindPost(c, classroomID, postID)
-	if err != nil {
-		return err
-	}
-
-	if errRemove := os.Remove(post.File); errRemove != nil {
-		return domain.NewError("Failed to remove file", domain.ERR_INTERNAL_SERVER)
-	}
-
-	if errRemove := usecase.resourceRepository.RemoveResourceByPostID(c, postID); errRemove != nil {
-		return errRemove
 	}
 
 	if err = usecase.classroomRepository.RemovePost(c, classroomID, postID); err != nil {
@@ -641,53 +597,4 @@ func (usecase *ClassroomUsecase) GetGradeReport(c context.Context, tokenID strin
 	}
 
 	return gradeReport, nil
-}
-
-func (usecase *ClassroomUsecase) EnhanceContent(currentState, query string) (string, domain.CodedError) {
-	if result, err := usecase.aiService.EnhanceContent(currentState, query); err != nil {
-		return "", err
-	} else {
-		return result, nil
-	}
-}
-
-func (usecase *ClassroomUsecase) GetQuiz(c context.Context, postID string) ([]domain.Question, domain.CodedError) {
-	resource, err := usecase.resourceRepository.GetResourceByPostID(c, postID)
-	if err != nil {
-		return []domain.Question{}, err
-	}
-	return resource.Questions, nil
-}
-
-func (usecase *ClassroomUsecase) GetSummary(c context.Context, postID string) (domain.Summary, domain.CodedError) {
-	resource, err := usecase.resourceRepository.GetResourceByPostID(c, postID)
-	if err != nil {
-		return domain.Summary{}, err
-	}
-	if len(resource.Summarys) < 1 {
-		return domain.Summary{}, domain.NewError("No summary in the resources", domain.ERR_INTERNAL_SERVER)
-	}
-	return resource.Summarys[0], nil
-}
-
-func (usecase *ClassroomUsecase) GetFlashCard(c context.Context, postID string) ([]domain.FlashCard, domain.CodedError) {
-	resource, err := usecase.resourceRepository.GetResourceByPostID(c, postID)
-	if err != nil {
-		return []domain.FlashCard{}, err
-	}
-
-	var flashcards []domain.FlashCard
-	for _, question := range resource.Questions {
-		flashcard := usecase.ToFlashCard(question)
-		flashcards = append(flashcards, flashcard)
-	}
-
-	return flashcards, nil
-}
-
-func (usecase *ClassroomUsecase) ToFlashCard(q domain.Question) domain.FlashCard {
-	return domain.FlashCard{
-		Question:    q.Question,
-		Explanation: q.Explanation,
-	}
 }
