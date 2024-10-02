@@ -58,7 +58,6 @@ const Grade_students = ({
       const res = {"grades": score}
       const result = await postGrades({data: res, token: token})
       const { data } = result;
-      console.log(data)
     }
   };
 

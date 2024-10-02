@@ -5,6 +5,7 @@ import Card from "../components/ClassroomCard";
 import Link from "next/link";
 import CreateClassroomModal from "../components/ClassroomPopup";
 import { Button } from "@/components/ui/button";
+import { signOut, useSession } from "next-auth/react";
 import { useGetClassroomsQuery } from "@/lib/redux/api/getApi";
 import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton
 import { useSelector } from "react-redux";
@@ -23,7 +24,9 @@ const Page = () => {
   const token = localStorage.getItem('token');
   // console.log("-------------------------", token);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const {
+  const { data: session } = useSession();
+  console.log(session)
+    const {
     data: classrooms = [],
     isLoading,
     error,
@@ -33,7 +36,7 @@ const Page = () => {
   ); // Fetch classrooms data
 
   return (
-    <div className="bg-[#F6F6F6] min-h-screen pr-36 pt-16">
+    <div className=" bg-[#F6F6F6] min-h-screen  pr-36 pt-10">
       <div className="ml-24 flex justify-between">
         <h1 className="text-3xl font-black">Classes</h1>
         <Button className="mr-16" onClick={() => setIsModalOpen(true)}>

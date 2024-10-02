@@ -1,80 +1,151 @@
-"use client"
-
-import { useState } from 'react'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Edit, Save } from 'lucide-react'
-import { Parameter, Student, studentsData } from '@/utils/grades'
-import Grade_students from '@/app/components/Grade_students'
+"use client";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Parameter, Student, studentsData } from "@/utils/grades";
+import Grade_students from "@/app/components/Grade_students";
 
 export default function GradingPage() {
-  const [parameters, setParameters] = useState<Parameter[]>([
-    { name: "Mid Exam", points: 50 },
-    { name: "Final Exam", points: 50 }
-  ])
-  const [newParameter, setNewParameter] = useState("")
-  const [newPoints, setNewPoints] = useState("")
-  const [students, setStudents] = useState<Student[]>(studentsData)
+  const studs = []
+  const incoming = [
+    {
+      id: 1,
+      name: "William Donds",
+      records: [
+        { record_name: "Mid Exam", grade: 45, max_grade: 30 },
+        { record_name: "Final Exam", grade: 45, max_grade: 30 },
+      ],
+    },
+    {
+      id: 2,
+      name: "Alan Becker",
+      records: [
+        { record_name: "Mid Exam", grade: 45, max_grade: 30 },
+        { record_name: "Final Exam", grade: 45, max_grade: 30 },
+      ],
+    },
+  ];
 
-  const addParameter = () => {
-    if (newParameter && newPoints && !parameters.some(p => p.name === newParameter)) {
-      const points = parseInt(newPoints)
-      setParameters([...parameters, { name: newParameter, points }])
-      setNewParameter("")
-      setNewPoints("")
-      setStudents(students.map(student => ({
-        ...student,
-        scores: { ...student.scores, [newParameter]: 0 }
-      })))
+  for (let stu in incoming) {
+    if (!("isEditing" in incoming[stu])) {
+      (incoming[stu] as any).isEditing = false;
     }
   }
 
+  const [parameters, setParameters] = useState<Parameter[]>([]);
+
+  useEffect(() => {
+    const initialParameters = incoming[0].records.map(record => ({
+      name: record.record_name,
+      points: record.max_grade,
+    }));
+    setParameters(initialParameters);
+  }, [])
+
+  let temp: any = {}
+  for (let tp in incoming){
+    temp["id"] = incoming[tp].id
+    temp["name"] = incoming[tp].name
+    let scrs: any = {}
+    for (let lp in incoming[tp].records){
+      scrs[incoming[tp].records[lp].record_name] = incoming[tp].records[lp].grade
+    }
+    temp["scores"] = scrs
+    studs.push(temp)
+    temp = {}
+  }  
+  console.log("909090", studs)
+  console.log("55555", incoming)
+
+
+
+
+
+  const [newParameter, setNewParameter] = useState("");
+  const [newPoints, setNewPoints] = useState("");
+  const [students, setStudents] = useState<Student[]>(studs);
+  const temp_id_classroom = "66fc5f1764ea1026d3b5813d";
+  const temp_token_classroom =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzQXQiOiIyMDI0LTEwLTAyVDExOjMxOjQ3LjcyMzE2MDgrMDM6MDAiLCJpZCI6IjY2ZmM1ZWNhNjRlYTEwMjZkM2I1ODEzYyIsInJvbGUiOiJ0ZWFjaGVyIiwidG9rZW5UeXBlIjoiYWNjZXNzVG9rZW4ifQ.O9YeAUAIwixNgxA4Ayxv2YLJpFQVC0fyUyOtgnnfOXw";
+
+  const addParameter = () => {
+    if (
+      newParameter &&
+      newPoints &&
+      !parameters.some((p) => p.name === newParameter)
+    ) {
+      const points = parseInt(newPoints);
+      setParameters([...parameters, { name: newParameter, points }]);
+      setNewParameter("");
+      setNewPoints("");
+      setStudents(
+        students.map((student) => ({
+          ...student,
+          scores: { ...student.scores, [newParameter]: 0 },
+        }))
+      );
+    }
+  };
+
   const updateScore = (studentId: number, param: string, score: number) => {
-    const maxPoints = parameters.find(p => p.name === param)?.points || 0
-    const clampedScore = Math.min(Math.max(score, 0), maxPoints)
-    setStudents(students.map(student => 
-      student.id === studentId 
-        ? { ...student, scores: { ...student.scores, [param]: clampedScore } }
-        : student
-    ))
-  }
+    const maxPoints = parameters.find((p) => p.name === param)?.points || 0;
+    const clampedScore = Math.min(Math.max(score, 0), maxPoints);
+    setStudents(
+      students.map((student) =>
+        student.id === studentId
+          ? { ...student, scores: { ...student.scores, [param]: clampedScore } }
+          : student
+      )
+    );
+  };
 
-  const calculateTotal = (scores: { [key: string]: number }) => 
+  const calculateTotal = (scores: { [key: string]: number }) =>
     Object.entries(scores).reduce((sum, [param, score]) => {
-      const maxPoints = parameters.find(p => p.name === param)?.points || 0
-      return sum + Math.min(score, maxPoints)
-    }, 0)
+      const maxPoints = parameters.find((p) => p.name === param)?.points || 0;
+      return sum + Math.min(score, maxPoints);
+    }, 0);
 
-  const calculateMaxTotal = () => 
-    parameters.reduce((sum, param) => sum + param.points, 0)
+  const calculateMaxTotal = () =>
+    parameters.reduce((sum, param) => sum + param.points, 0);
 
-  const handleSubmit = () => {
-    // Send grades to the server
-    console.log('Submitting grades:', students)
-    alert('Grades submitted successfully!')
-  }
+  // const handleSubmit = () => {
+  //   // Send grades to the server
+  //   console.log('Submitting grades:', students)
+  //   alert('Grades submitted successfully!')
+  // }
 
   const toggleEdit = (studentId: number) => {
-    setStudents(students.map(student =>
-      student.id === studentId ? { ...student, isEditing: !student.isEditing } : student
-    ))
-  }
-  console.log(students)
+    setStudents(
+      students.map((student) =>
+        student.id === studentId
+          ? { ...student, isEditing: !student.isEditing }
+          : student
+      )
+    );
+  };
+  console.log(students);
 
   return (
     <div className="w-[75vw] mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Grading Parameters</h1>
-      
+
       <div className="flex gap-2 mb-4">
-        <Input 
-          placeholder="New Parameter e.g. Project, Quiz" 
+        <Input
+          placeholder="New Parameter e.g. Project, Quiz"
           value={newParameter}
           onChange={(e) => setNewParameter(e.target.value)}
           className="flex-grow"
           aria-label="New grading parameter"
         />
-        <Input 
+        <Input
           type="number"
           placeholder="Points"
           value={newPoints}
@@ -86,8 +157,11 @@ export default function GradingPage() {
       </div>
 
       <div className="flex gap-2 mb-4">
-        {parameters.map(param => (
-          <span key={param.name} className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+        {parameters.map((param) => (
+          <span
+            key={param.name}
+            className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full"
+          >
             {param.name}: {param.points}
           </span>
         ))}
@@ -97,8 +171,10 @@ export default function GradingPage() {
         <TableHeader>
           <TableRow>
             <TableHead>Name</TableHead>
-            {parameters.map(param => (
-              <TableHead key={param.name}>{param.name}({param.points})</TableHead>
+            {parameters.map((param) => (
+              <TableHead key={param.name}>
+                {param.name}({param.points})
+              </TableHead>
             ))}
             <TableHead>Total({calculateMaxTotal()})</TableHead>
             <TableHead>Actions</TableHead>
@@ -106,7 +182,14 @@ export default function GradingPage() {
         </TableHeader>
         <TableBody>
           {students.map((student, ind) => (
-            <Grade_students key={ind} student={student} parameters={parameters} calculateTotal={calculateTotal} toggleEdit={toggleEdit} updateScore={updateScore} />
+            <Grade_students
+              key={ind}
+              student={student}
+              parameters={parameters}
+              calculateTotal={calculateTotal}
+              toggleEdit={toggleEdit}
+              updateScore={updateScore}
+            />
           ))}
         </TableBody>
       </Table>
@@ -117,5 +200,5 @@ export default function GradingPage() {
         </Button>
       </div> */}
     </div>
-  )
+  );
 }
