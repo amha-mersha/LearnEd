@@ -9,12 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@radix-ui/react-avatar": "^1.1.0",
     "@radix-ui/react-collapsible": "^1.1.0",
-
-    "@radix-ui/react-avatar": "^1.1.0",
-
-    "@radix-ui/react-dialog": "^1.1.1",
-    "@radix-ui/react-avatar": "^1.1.0",
     "@radix-ui/react-dialog": "^1.1.1",
     "@radix-ui/react-icons": "^1.3.0",
     "@radix-ui/react-label": "^2.1.0",
@@ -26,10 +22,12 @@
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-switch": "^1.1.0",
     "@reduxjs/toolkit": "^2.2.7",
+    "axios": "^1.7.7",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
     "frontend": "file:",
+    "jwt-decode": "^4.0.0",
     "lucide-react": "^0.445.0",
     "next": "^14.2.13",
     "next-auth": "^4.24.8",
