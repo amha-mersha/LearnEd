@@ -565,3 +565,36 @@ func (usecase *ClassroomUsecase) GetClassrooms(c context.Context, tokenID string
 
 	return classrooms, nil
 }
+
+func (usecase *ClassroomUsecase) GetGradeReport(c context.Context, tokenID string, studentID string) (domain.GetGradeReportDTO, domain.CodedError) {
+	if tokenID != studentID {
+		return domain.GetGradeReportDTO{}, domain.NewError("students can only obtain their own grade reports", domain.ERR_FORBIDDEN)
+	}
+
+	classrooms, err := usecase.classroomRepository.GetClassrooms(c, studentID)
+	if err != nil {
+		return domain.GetGradeReportDTO{}, err
+	}
+
+	gradeReport := domain.GetGradeReportDTO{
+		Data: []domain.GradeReport{},
+	}
+
+	for _, classroom := range classrooms {
+		gr := domain.GradeReport{
+			ClassroomID:   classroom.ID,
+			ClassroomName: classroom.Name,
+		}
+
+		for _, grade := range classroom.StudentGrades {
+			if usecase.classroomRepository.StringifyID(grade.StudentID) == studentID {
+				gr.Grades = grade
+				break
+			}
+		}
+
+		gradeReport.Data = append(gradeReport.Data, gr)
+	}
+
+	return gradeReport, nil
+}

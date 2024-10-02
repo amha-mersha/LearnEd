@@ -56,6 +56,16 @@ type GetGradesDTO struct {
 	StudentName string       `json:"name"`
 }
 
+type GradeReport struct {
+	Grades        StudentGrade       `json:"grades"`
+	ClassroomID   primitive.ObjectID `json:"classroom_id"`
+	ClassroomName string             `json:"classroom_name"`
+}
+
+type GetGradeReportDTO struct {
+	Data []GradeReport `json:"data"`
+}
+
 type Comment struct {
 	ID          primitive.ObjectID `json:"id" bson:"_id,omitempty"`
 	CreatorID   primitive.ObjectID `json:"creator_id"`
@@ -132,6 +142,7 @@ type ClassroomUsecase interface {
 	GetStudentGrade(c context.Context, tokenID string, studentID string, classroomID string) (StudentGrade, CodedError)
 	GetPosts(c context.Context, tokenID string, classroomID string) ([]GetPostDTO, CodedError)
 	GetClassrooms(c context.Context, tokenID string) ([]Classroom, CodedError)
+	GetGradeReport(c context.Context, tokenID string, studentID string) (GetGradeReportDTO, CodedError)
 }
 
 type ClassroomRepository interface {
