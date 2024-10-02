@@ -45,9 +45,10 @@ func InitRouter(database *mongo.Database, port int, routePrefix string) {
 	workingDir, _ := os.Getwd()
 	classroomRouter.Static("/uploads", filepath.Join(workingDir, "uploads"))
 	aiService := ai_service.NewAIService(context.TODO(), env.ENV.GEMINI_KEY)
-	
+	NewClassroomRouter(classroomRepository, resourceRepository, authRepository, jwtService, aiService, classroomRouter)
+
 	sgRouter := router.Group("/api/" + routePrefix + "/study-groups")
-	NewStudyGroupRouter(sgRepository, authRepository, jwtService, sgRouter)NewClassroomRouter(classroomRepository, resourceRepository, authRepository, jwtService, aiService, classroomRouter)
+	NewStudyGroupRouter(sgRepository, authRepository, jwtService, sgRouter)
 
 	router.Run(fmt.Sprintf(":%v", port))
 }
