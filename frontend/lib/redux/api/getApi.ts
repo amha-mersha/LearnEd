@@ -98,6 +98,17 @@ export const learnApi = createApi({
         },
         body: data,
       })
+    }),
+    inviteToClassrooms: builder.mutation({
+      query: ({classroomId, data, accessToken }) => ({
+        url: `classrooms/${classroomId}/students`,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: data,
+      })
     })
   }),
 });
@@ -111,5 +122,6 @@ export const {
   useGetStudentGradesQuery,
   useGetStudyGroupsQuery,
   useCreateStudyGroupMutation,
-  useInviteToStudyGroupMutation
+  useInviteToStudyGroupMutation,
+  useInviteToClassroomsMutation,
 } = learnApi;
