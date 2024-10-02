@@ -9,8 +9,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func NewClassroomRouter(classroomRepository domain.ClassroomRepository, authRepository domain.AuthRepository, jwtService domain.JWTServiceInterface, router *gin.RouterGroup) {
-	classroomUsecase := usecases.NewClassroomUsecase(classroomRepository, authRepository)
+func NewClassroomRouter(classroomRepository domain.ClassroomRepository, resourceRepository domain.ResourceRespository, authRepository domain.AuthRepository, jwtService domain.JWTServiceInterface, aiService domain.AIServiceInterface, router *gin.RouterGroup) {
+	classroomUsecase := usecases.NewClassroomUsecase(classroomRepository, resourceRepository, authRepository, aiService)
 	classroomController := controllers.NewClassroomController(classroomUsecase)
 
 	router.POST("/", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleTeacher), classroomController.CreateClassroom)
@@ -32,4 +32,8 @@ func NewClassroomRouter(classroomRepository domain.ClassroomRepository, authRepo
 	router.GET("/grades/:studentID", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleStudent), classroomController.GetGradeReport)
 	router.GET("/:classroomID/posts", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleStudent, domain.RoleTeacher), classroomController.GetPosts)
 	router.GET("/", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleStudent, domain.RoleTeacher), classroomController.GetClassrooms)
+	router.POST("/enhance_content", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleTeacher), classroomController.EnhanceContent)
+	router.GET("/posts/get_quiz/:postID",  classroomController.GetQuiz)
+	router.GET("/posts/get_summary/:postID",  classroomController.GetSummary)
+	router.GET("/posts/get_flashcard/:postID",  classroomController.GetFlashCard)
 }

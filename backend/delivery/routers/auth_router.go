@@ -4,6 +4,7 @@ import (
 	"learned-api/delivery/controllers"
 	"learned-api/domain"
 	hashing_service "learned-api/infrastructure/hashing"
+	"learned-api/infrastructure/middleware"
 	validation_services "learned-api/infrastructure/validation"
 	usecases "learned-api/usecase"
 
@@ -22,4 +23,3 @@ func NewAuthRouter(authRepository domain.AuthRepository, jwtService domain.JWTSe
 	router.POST("/signup", authController.Signup)
 	router.POST("/login", authController.Login)
 	router.POST("/change-password", authController.ChangePassword)
-}
