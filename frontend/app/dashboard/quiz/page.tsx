@@ -1,5 +1,5 @@
 "use client"
-import { Question, questions } from "@/utils/questions"
+import { Question, dummy } from "@/utils/questions"
 import { useState } from "react"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
@@ -12,7 +12,18 @@ import {
 } from "@/components/ui/collapsible"
 import { ChevronDown, ChevronUp } from "lucide-react"
 
-export default function Component() {
+export default function Component({ searchParams }: { searchParams: any }) {
+  const token = localStorage.getItem("token")
+  const post_id = searchParams.post_id
+  const questions = dummy.message
+  // try{
+  //   const {data, isError, isSuccess} = useGetQuizQuery({token, post_id})
+  //   const questions = data.message
+  // }catch(e){
+  //   console.error("err", e)
+  // }
+
+
   const [userAnswers, setUserAnswers] = useState<{ [key: number]: string }>({})
   const [submitted, setSubmitted] = useState(false)
   const [openExplanations, setOpenExplanations] = useState<{ [key: number]: boolean }>({})
@@ -29,12 +40,12 @@ export default function Component() {
     setOpenExplanations((prev) => ({ ...prev, [questionId]: !prev[questionId] }))
   }
 
-  const isCorrect = (question: Question) => userAnswers[question.id] === question.correctAnswer
+  const isCorrect = (question: any, ind: number) => userAnswers[ind] === question.choices[question.correct_answer]
 
   const getScore = () => {
     let score = 0
-    questions.forEach((question) => {
-      if (isCorrect(question)) {
+    questions.forEach((question, ind) => {
+      if (isCorrect(question, ind)) {
         score += 1
       }
     })
@@ -61,45 +72,45 @@ export default function Component() {
         }
       `}</style>
         <h1 className="text-2xl font-bold mb-6">Quiz</h1>
-        {questions.map((question) => (
+        {questions.map((question, ind) => (
           <div
-            key={question.id}
+            key={ind}
             className={`p-6 rounded-lg shadow-md ${submitted
-                ? isCorrect(question)
+                ? isCorrect(question, ind)
                   ? "bg-green-100 dark:bg-green-900"
                   : "bg-red-100 dark:bg-red-900"
                 : "bg-white dark:bg-gray-800"
               }`}
           >
-            <h2 className="text-lg font-semibold mb-4">{question.text}</h2>
+            <h2 className="text-lg font-semibold mb-4">{question.question}</h2>
             <RadioGroup
-              onValueChange={(value: string) => handleAnswerChange(question.id, value)}
-              value={userAnswers[question.id]}
+              onValueChange={(value: string) => handleAnswerChange(ind, value)}
+              value={userAnswers[ind]}
               disabled={submitted}
             >
-              {question.options.map((option) => (
+              {question.choices.map((option) => (
                 <div key={option} className="flex items-center space-x-2 mb-2">
-                  <RadioGroupItem value={option} id={`${question.id}-${option}`} />
-                  <Label htmlFor={`${question.id}-${option}`}>{option}</Label>
+                  <RadioGroupItem value={option} id={`${ind}-${option}`} />
+                  <Label htmlFor={`${ind}-${option}`}>{option}</Label>
                 </div>
               ))}
             </RadioGroup>
             {submitted && (
               <div className="mt-4">
-                <p className={`font-semibold ${isCorrect(question) ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}>
-                  {isCorrect(question) ? "Correct!" : `Incorrect. The correct answer is: ${question.correctAnswer}`}
+                <p className={`font-semibold ${isCorrect(question, ind) ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}>
+                  {isCorrect(question, ind) ? "Correct!" : `Incorrect. The correct answer is: ${question.correct_answer}`}
                 </p>
                 <Collapsible>
                   <CollapsibleTrigger
-                    onClick={() => toggleExplanation(question.id)}
+                    onClick={() => toggleExplanation(ind)}
                     className="flex items-center text-sm text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 mt-2"
                   >
-                    {openExplanations[question.id] ? (
+                    {openExplanations[ind] ? (
                       <ChevronUp className="w-4 h-4 mr-1" />
                     ) : (
                       <ChevronDown className="w-4 h-4 mr-1" />
                     )}
-                    {openExplanations[question.id] ? "Hide" : "Show"} Explanation
+                    {openExplanations[ind] ? "Hide" : "Show"} Explanation
                   </CollapsibleTrigger>
                   <CollapsibleContent className="mt-2 text-sm">
                     {question.explanation}
