@@ -31,6 +31,7 @@ type EnvironmentVariables struct {
 	PORT        int
 	ROUTEPREFIX string
 	JWT_SECRET  string
+	GEMINI_KEY  string
 }
 
 type User struct {
@@ -67,6 +68,16 @@ type GetGradeReportDTO struct {
 	Data []GradeReport `json:"data"`
 }
 
+type Summary struct {
+	Summary string `json:"summary" bson:"summary"`
+}
+
+type Question struct {
+	Question      string   `json:"question" bson:"question"`
+	Choices       []string `json:"choices" bson:"choices"`
+	CorrectAnswer int      `json:"correct_answer" bson:"correct_answer"`
+	Explanation   string   `json:"explanation" bson:"explanation"`
+}
 type Comment struct {
 	ID          primitive.ObjectID `json:"id" bson:"_id,omitempty"`
 	CreatorID   primitive.ObjectID `json:"creator_id"`
@@ -103,11 +114,6 @@ type GenerateContent struct {
 	PostID    primitive.ObjectID `json:"post_id" bson:"post_id"`
 	Questions []Question         `json:"questions"`
 	Summarys  []Summary          `json:"summarys" bson:"summarys"`
-}
-
-type GetPostDTO struct {
-	CreatorName string `json:"creator_name"`
-	Data        Post   `json:"data"`
 }
 
 type Classroom struct {
@@ -171,7 +177,7 @@ type ClassroomRepository interface {
 	CreateClassroom(c context.Context, creatorID primitive.ObjectID, classroom Classroom) CodedError
 	DeleteClassroom(c context.Context, classroomID string) CodedError
 	FindClassroom(c context.Context, classroomID string) (Classroom, CodedError)
-	AddPost(c context.Context, classroomID string, post Post) CodedError
+	AddPost(c context.Context, classroomID string, post Post) (string, CodedError)
 	UpdatePost(c context.Context, classroomID string, postID string, post dtos.UpdatePostDTO) CodedError
 	RemovePost(c context.Context, classroomID string, postID string) CodedError
 	AddComment(c context.Context, classroomID string, postID string, comment Comment) CodedError
@@ -221,4 +227,5 @@ type ResourceRespository interface {
 	RemoveResource(c context.Context, resourceID string) CodedError
 	RemoveResourceByPostID(c context.Context, postID string) CodedError
 	ParseID(id string) (primitive.ObjectID, CodedError)
+	GetResourceByPostID(c context.Context, postID string) (GenerateContent, CodedError)
 }

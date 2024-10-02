@@ -4,8 +4,12 @@ import (
 	"learned-api/domain"
 	"learned-api/domain/dtos"
 	"net/http"
+	"os"
+	"path/filepath"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type ClassroomController struct {
@@ -65,12 +69,35 @@ func (controller *ClassroomController) DeleteClassroom(c *gin.Context) {
 }
 
 func (controller *ClassroomController) AddPost(c *gin.Context) {
-	var post domain.Post
-	if err := c.ShouldBindJSON(&post); err != nil {
-		c.JSON(http.StatusBadRequest, domain.Response{"error": err.Error()})
+	var savePath string
+	file, err := c.FormFile("file")
+	if err != nil && err != http.ErrMissingFile {
+		c.String(http.StatusBadRequest, "Failed to upload file: "+err.Error())
 		return
 	}
-
+	if file != nil {
+		workingDir, _ := os.Getwd()
+		uniqueFileName := uuid.New().String() + filepath.Ext(file.Filename)
+		savePath = filepath.Join(workingDir, "uploads", uniqueFileName)
+		if err := c.SaveUploadedFile(file, savePath); err != nil {
+			c.String(http.StatusInternalServerError, "Failed to save file")
+			return
+		}
+	}
+	var post domain.Post
+	post.Content = c.PostForm("content")
+	post.IsAssignment = c.PostForm("is_assignment") == "true"
+	post.IsProcessed = c.PostForm("is_processed") == "true"
+	post.File = savePath
+	deadlineStr := c.PostForm("deadline")
+	if deadlineStr != "" {
+		parsedDeadline, err := time.Parse(time.RFC3339, deadlineStr)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, domain.Response{"error": "Invalid deadline format"})
+			return
+		}
+		post.Deadline = parsedDeadline
+	}
 	classroomID := c.Param("classroomID")
 	creatorID, exists := c.Keys["id"]
 	if !exists {
@@ -79,9 +106,9 @@ func (controller *ClassroomController) AddPost(c *gin.Context) {
 	}
 
 	id := creatorID.(string)
-	err := controller.usecase.AddPost(c, id, classroomID, post)
-	if err != nil {
-		c.JSON(GetHTTPErrorCode(err), domain.Response{"error": err.Error()})
+	errAdd := controller.usecase.AddPost(c, id, classroomID, post)
+	if errAdd != nil {
+		c.JSON(GetHTTPErrorCode(errAdd), domain.Response{"error": errAdd.Error()})
 		return
 	}
 
@@ -340,85 +367,39 @@ func (controller *ClassroomController) EnhanceContent(c *gin.Context) {
 	if err := c.ShouldBindJSON(&requestLoad); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
-
-	id := creatorID.(string)
-	grades, err := controller.usecase.GetGrades(c, id, classroomID)
+	result, err := controller.usecase.EnhanceContent(requestLoad.CurrentState, requestLoad.Query)
 	if err != nil {
 		c.JSON(GetHTTPErrorCode(err), domain.Response{"error": err.Error()})
-		return
 	}
-
-	c.JSON(http.StatusOK, grades)
+	c.JSON(http.StatusOK, gin.H{"message": result})
 }
 
-func (controller *ClassroomController) GetStudentGrade(c *gin.Context) {
-	classroomID := c.Param("classroomID")
-	studentID := c.Param("studentID")
-	creatorID, exists := c.Keys["id"]
-	if !exists {
-		c.JSON(http.StatusForbidden, domain.Response{"message": "coudn't find the id field"})
-		return
-	}
-
-	id := creatorID.(string)
-	grade, err := controller.usecase.GetStudentGrade(c, id, studentID, classroomID)
-	if err != nil {
+func (controller *ClassroomController) GetQuiz(c *gin.Context) {
+	postID := c.Param("postID")
+	if response, err := controller.usecase.GetQuiz(c, postID); err != nil {
 		c.JSON(GetHTTPErrorCode(err), domain.Response{"error": err.Error()})
 		return
+	} else {
+		c.JSON(http.StatusOK, gin.H{"message": response})
 	}
-
-	c.JSON(http.StatusOK, grade)
 }
 
-func (controller *ClassroomController) GetPosts(c *gin.Context) {
-	classroomID := c.Param("classroomID")
-	creatorID, exists := c.Keys["id"]
-	if !exists {
-		c.JSON(http.StatusForbidden, domain.Response{"message": "coudn't find the id field"})
-		return
-	}
-
-	id := creatorID.(string)
-	posts, err := controller.usecase.GetPosts(c, id, classroomID)
-	if err != nil {
+func (controller *ClassroomController) GetSummary(c *gin.Context) {
+	postID := c.Param("postID")
+	if response, err := controller.usecase.GetSummary(c, postID); err != nil {
 		c.JSON(GetHTTPErrorCode(err), domain.Response{"error": err.Error()})
 		return
+	} else {
+		c.JSON(http.StatusOK, gin.H{"message": response})
 	}
-
-	c.JSON(http.StatusOK, posts)
 }
 
-func (controller *ClassroomController) GetClassrooms(c *gin.Context) {
-	creatorID, exists := c.Keys["id"]
-	if !exists {
-		c.JSON(http.StatusForbidden, domain.Response{"message": "coudn't find the id field"})
-		return
-	}
-
-	id := creatorID.(string)
-	classrooms, err := controller.usecase.GetClassrooms(c, id)
-	if err != nil {
+func (controller *ClassroomController) GetFlashCard(c *gin.Context) {
+	postID := c.Param("postID")
+	if response, err := controller.usecase.GetFlashCard(c, postID); err != nil {
 		c.JSON(GetHTTPErrorCode(err), domain.Response{"error": err.Error()})
 		return
+	} else {
+		c.JSON(http.StatusOK, gin.H{"message": response})
 	}
-
-	c.JSON(http.StatusOK, classrooms)
-}
-
-func (controlller *ClassroomController) GetGradeReport(c *gin.Context) {
-	studentID := c.Param("studentID")
-	creatorID, exists := c.Keys["id"]
-	if !exists {
-		c.JSON(http.StatusForbidden, domain.Response{"message": "coudn't find the id field"})
-		return
-	}
-
-	id := creatorID.(string)
-	gradeReport, err := controlller.usecase.GetGradeReport(c, id, studentID)
-	if err != nil {
-		c.JSON(GetHTTPErrorCode(err), domain.Response{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusOK, gradeReport)
 }

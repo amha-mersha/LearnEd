@@ -9,8 +9,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func NewClassroomRouter(classroomRepository domain.ClassroomRepository, authRepository domain.AuthRepository, jwtService domain.JWTServiceInterface, router *gin.RouterGroup) {
-	classroomUsecase := usecases.NewClassroomUsecase(classroomRepository, authRepository)
+func NewClassroomRouter(classroomRepository domain.ClassroomRepository, resourceRepository domain.ResourceRespository, authRepository domain.AuthRepository, jwtService domain.JWTServiceInterface, aiService domain.AIServiceInterface, router *gin.RouterGroup) {
+	classroomUsecase := usecases.NewClassroomUsecase(classroomRepository, resourceRepository, authRepository, aiService)
 	classroomController := controllers.NewClassroomController(classroomUsecase)
 
 	router.POST("/", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleTeacher), classroomController.CreateClassroom)
