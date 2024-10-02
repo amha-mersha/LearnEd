@@ -26,5 +26,8 @@ func NewClassroomRouter(classroomRepository domain.ClassroomRepository, resource
 	router.DELETE("/:classroomID/posts/:postID/comments/:commentID", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleTeacher, domain.RoleStudent), classroomController.RemoveComment)
 
 	router.PUT("/:classroomID/grades/:studentID", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleTeacher), classroomController.PutGrade)
-	router.GET("/enhance_content", classroomController.EnhanceContent)
+	router.POST("/enhance_content", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleTeacher), classroomController.EnhanceContent)
+	router.GET("/posts/get_quiz/:postID",  classroomController.GetQuiz)
+	router.GET("/posts/get_summary/:postID",  classroomController.GetSummary)
+	router.GET("/posts/get_flashcard/:postID",  classroomController.GetFlashCard)
 }

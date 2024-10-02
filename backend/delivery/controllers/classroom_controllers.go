@@ -269,3 +269,33 @@ func (controller *ClassroomController) EnhanceContent(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"message": result})
 }
+
+func (controller *ClassroomController) GetQuiz(c *gin.Context) {
+	postID := c.Param("postID")
+	if response, err := controller.usecase.GetQuiz(c, postID); err != nil {
+		c.JSON(GetHTTPErrorCode(err), domain.Response{"error": err.Error()})
+		return
+	} else {
+		c.JSON(http.StatusOK, gin.H{"message": response})
+	}
+}
+
+func (controller *ClassroomController)  GetSummary(c *gin.Context) {
+	postID := c.Param("postID")
+	if response, err := controller.usecase.GetSummary(c, postID); err != nil{
+		c.JSON(GetHTTPErrorCode(err), domain.Response{"error" : err.Error()})
+		return 
+	} else{
+		c.JSON(http.StatusOK, gin.H{"message": response})
+	}
+}
+
+func (controller *ClassroomController) GetFlashCard( c *gin.Context) {
+	postID := c.Param("postID")
+	if response, err := controller.usecase.GetFlashCard(c, postID); err != nil{
+		c.JSON(GetHTTPErrorCode(err), domain.Response{"error": err.Error()})
+		return 
+	}else{
+		c.JSON(http.StatusOK, gin.H{"message": response})
+	}
+}

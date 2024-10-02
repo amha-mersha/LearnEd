@@ -104,11 +104,11 @@ func (usecase *ClassroomUsecase) AddPost(c context.Context, creatorID string, cl
 			var generatedContent domain.GenerateContent
 			var genErr domain.CodedError
 
-				if post.File != "" {
-					generatedContent, genErr = usecase.aiService.GenerateContentFromFile(post)
-				} else {
-					generatedContent, genErr = usecase.aiService.GenerateContentFromText(post)
-				}
+			if post.File != "" {
+				generatedContent, genErr = usecase.aiService.GenerateContentFromFile(post)
+			} else {
+				generatedContent, genErr = usecase.aiService.GenerateContentFromText(post)
+			}
 
 			if genErr != nil {
 				log.Println(genErr.Error())
@@ -411,5 +411,46 @@ func (usecase *ClassroomUsecase) EnhanceContent(currentState, query string) (str
 		return "", err
 	} else {
 		return result, nil
+	}
+}
+
+func (usecase *ClassroomUsecase) GetQuiz(c context.Context, postID string) ([]domain.Question, domain.CodedError) {
+	resource, err := usecase.resourceRepository.GetResourceByPostID(c, postID)
+	if err != nil {
+		return []domain.Question{}, err
+	}
+	return resource.Questions, nil
+}
+
+func (usecase *ClassroomUsecase) GetSummary(c context.Context, postID string) (domain.Summary, domain.CodedError) {
+	resource, err := usecase.resourceRepository.GetResourceByPostID(c, postID)
+	if err != nil {
+		return domain.Summary{}, err
+	}
+	if len(resource.Summarys) < 1 {
+		return domain.Summary{}, domain.NewError("No summary in the resources", domain.ERR_INTERNAL_SERVER)
+	}
+	return resource.Summarys[0], nil
+}
+
+func (usecase *ClassroomUsecase) GetFlashCard(c context.Context, postID string) ([]domain.FlashCard, domain.CodedError) {
+	resource, err := usecase.resourceRepository.GetResourceByPostID(c, postID)
+	if err != nil {
+		return []domain.FlashCard{}, err
+	}
+
+	var flashcards []domain.FlashCard
+	for _, question := range resource.Questions {
+		flashcard := usecase.ToFlashCard(question)
+		flashcards = append(flashcards, flashcard)
+	}
+
+	return flashcards, nil
+}
+
+func (usecase *ClassroomUsecase) ToFlashCard(q domain.Question) domain.FlashCard {
+	return domain.FlashCard{
+		Question:    q.Question,
+		Explanation: q.Explanation,
 	}
 }

@@ -32,7 +32,7 @@ func NewAIService(context context.Context, apiKey string) *AIService {
 		log.Fatal(err)
 	}
 
-	model := client.GenerativeModel("gemini-pro")
+	model := client.GenerativeModel("gemini-1.5-flash")
 	return &AIService{
 		model:   model,
 		context: context,
@@ -99,7 +99,7 @@ func (s *AIService) GenerateContentFromFile(post domain.Post) (domain.GenerateCo
 	}
 	file, err := s.client.UploadFileFromPath(s.context, post.File, nil)
 	if err != nil {
-		return domain.GenerateContent{}, domain.NewError(fmt.Sprintf("failed to upload file to gemini: %s", err), domain.ERR_INTERNAL_SERVER)
+		return domain.GenerateContent{}, domain.NewError(fmt.Sprintf("GenerateContentFromFile: failed to upload file to gemini: %s", err), domain.ERR_INTERNAL_SERVER)
 	}
 	defer s.client.DeleteFile(s.context, file.Name)
 
@@ -121,9 +121,9 @@ The correct answer should be indicated by the numeric index (starting from 0) of
 Make sure:
 1. The correct answer is represented by a number (0, 1, 2, or 3).
 2. The response is a valid JSON array with no additional characters outside of the array.
-    `), genai.FileData{URI: file.URI})
+    `), genai.FileData{URI: file.URI, MIMEType: "application/pdf"})
 	if err != nil {
-		return domain.GenerateContent{}, domain.NewError(fmt.Sprintf("failed to generate questions through gemini: %s", err), domain.ERR_INTERNAL_SERVER)
+		return domain.GenerateContent{}, domain.NewError(fmt.Sprintf("GenerateContentFromFile: failed to generate questions through gemini: %s", err), domain.ERR_INTERNAL_SERVER)
 	}
 	if len(generatedQuestions.Candidates) == 0 {
 		return domain.GenerateContent{}, domain.NewError("No candidate found", domain.ERR_INTERNAL_SERVER)
@@ -135,20 +135,24 @@ Make sure:
 	if cleanQuestions == "" {
 		return domain.GenerateContent{}, domain.NewError("Content extraction failed", domain.ERR_INTERNAL_SERVER)
 	}
+	// Clean and log raw questions response
+	log.Printf("Raw generated questions response: %s", generatedQuestions.Candidates[0].Content.Parts[0])
+	log.Printf("Raw cleaned generated questions response: %s", cleanQuestions)
+
 	var questionsGen []domain.Question
-	err = json.Unmarshal([]byte(cleanQuestions), &questionsGen)
+	err = json.Unmarshal([]byte(s.cleanJSONQuestion(cleanQuestions)), &questionsGen)
 	if err != nil {
-		return domain.GenerateContent{}, domain.NewError(fmt.Sprintf("Failed to unmarshal questions response: %s", err), domain.ERR_INTERNAL_SERVER)
+		return domain.GenerateContent{}, domain.NewError(fmt.Sprintf("GenerateContentFromFile: Failed to unmarshal questions response: %s", err), domain.ERR_INTERNAL_SERVER)
 	}
 
 	generatedSummary, err := s.model.GenerateContent(s.context, genai.Text(`
 	Based on the given content below , generate a summary for the material and return JSON format.
-	Format: 
+	Format:[ 
 	{
 	"summary": "summary of the given document as detailed as possible"
-	} `), genai.FileData{URI: file.URI})
+	}] `), genai.FileData{URI: file.URI})
 	if err != nil {
-		return domain.GenerateContent{}, domain.NewError(fmt.Sprintf("failed to generate summary through gemini: %s", err), domain.ERR_INTERNAL_SERVER)
+		return domain.GenerateContent{}, domain.NewError(fmt.Sprintf("GenerateContentFromFile: failed to generate summary through gemini: %s", err), domain.ERR_INTERNAL_SERVER)
 	}
 	if len(generatedSummary.Candidates) == 0 {
 		return domain.GenerateContent{}, domain.NewError("No candidate found", domain.ERR_INTERNAL_SERVER)
@@ -161,10 +165,14 @@ Make sure:
 		return domain.GenerateContent{}, domain.NewError("Content extraction failed", domain.ERR_INTERNAL_SERVER)
 	}
 
+	// Clean and log raw questions response
+	log.Printf("Raw generated questions response: %s", generatedSummary.Candidates[0].Content.Parts[0])
+	log.Printf("Raw cleaned generated questions response: %s", cleanSummarys)
+
 	var summaryGen []domain.Summary
-	err = json.Unmarshal([]byte(cleanSummarys), &summaryGen)
+	err = json.Unmarshal([]byte(s.cleanJSONSummary(cleanSummarys)), &summaryGen)
 	if err != nil {
-		return domain.GenerateContent{}, domain.NewError(fmt.Sprintf("Failed to unmarshal questions response from file: %s", err), domain.ERR_INTERNAL_SERVER)
+		return domain.GenerateContent{}, domain.NewError(fmt.Sprintf("GenerateContentFromFile: Failed to unmarshal questions response from file: %s", err), domain.ERR_INTERNAL_SERVER)
 	}
 
 	return domain.GenerateContent{Questions: questionsGen, Summarys: summaryGen}, nil
@@ -288,18 +296,18 @@ func (s *AIService) cleanJSONQuestion(response string) string {
 	for response[rightPtr] != ']' {
 		rightPtr--
 	}
-	log.Printf("cleaned questions : %s", response[leftPtr:rightPtr+1])
+	log.Printf("CLEAN QUESTION JSON: cleaned questions : %s", response[leftPtr:rightPtr+1])
 	return response[leftPtr : rightPtr+1]
 }
 
 func (s *AIService) cleanJSONSummary(response string) string {
 	leftPtr, rightPtr := 0, len(response)-1
-	for response[leftPtr] != '[' {
+	for leftPtr < len(response) && response[leftPtr] != '[' {
 		leftPtr++
 	}
-	for response[rightPtr] != ']' {
+	for rightPtr >= 0 && response[rightPtr] != ']' {
 		rightPtr--
 	}
-	log.Printf("cleaned summary : %s", response[leftPtr:rightPtr+1])
+	log.Printf("CLEAN SUMMARY JSON: cleaned summary : %s", response[leftPtr:rightPtr+1])
 	return response[leftPtr : rightPtr+1]
 }

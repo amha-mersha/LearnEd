@@ -84,6 +84,11 @@ type Question struct {
 	Explanation   string   `json:"explanation" bson:"explanation"`
 }
 
+type FlashCard struct {
+	Question    string `json:"question" bson:"question"`
+	Explanation string `json:"explanation" bson:"explanation"`
+}
+
 type GenerateContent struct {
 	ID        primitive.ObjectID `json:"id" bson:"_id"`
 	PostID    primitive.ObjectID `json:"post_id" bson:"post_id"`
@@ -133,6 +138,9 @@ type ClassroomUsecase interface {
 	AddStudent(c context.Context, studentEmail string, classroomID string) CodedError
 	RemoveStudent(c context.Context, classroomID string, studentID string) CodedError
 	EnhanceContent(currentState, query string) (string, CodedError)
+	GetQuiz(c context.Context, postID string) ([]Question, CodedError)
+	GetSummary(c context.Context, postID string) (Summary, CodedError)
+	GetFlashCard(c context.Context, postID string) ([]FlashCard, CodedError)
 }
 
 type ClassroomRepository interface {
@@ -157,4 +165,5 @@ type ResourceRespository interface {
 	RemoveResource(c context.Context, resourceID string) CodedError
 	RemoveResourceByPostID(c context.Context, postID string) CodedError
 	ParseID(id string) (primitive.ObjectID, CodedError)
+	GetResourceByPostID(c context.Context, postID string) (GenerateContent, CodedError)
 }
