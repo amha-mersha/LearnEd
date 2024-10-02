@@ -12,6 +12,7 @@ export const learnApi = createApi({
         body: data,
       }),
     }),
+
     createClassroom: builder.mutation({
       query: ({ data, accessToken }) => ({
         url: "classrooms/",
@@ -34,10 +35,10 @@ export const learnApi = createApi({
       }),
     }),
     postGrades: builder.mutation({
-      query: ({ data, token }) => (
+      query: ({ class_id, student_id, token, data }) => (
         console.log("dd", data, token),
         {
-          url: `classrooms/66f32f5b448485ed1dca27fd/grades/66f3fe604adcefd5d8830a6c`,
+          url: `classrooms/${class_id}/grades/${student_id}`,
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -48,8 +49,8 @@ export const learnApi = createApi({
       ),
     }),
     getAllStudents: builder.query({
-      query: (token) => ({
-        url: `classrooms/66f32f5b448485ed1dca27fd/grades`,
+      query: ({id, token}) => ({
+        url: `classrooms/${id}/grades`,
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -58,7 +59,7 @@ export const learnApi = createApi({
       }),
     }),
     getStudentGrades: builder.query({
-      query: ({studentId, accessToken}) => ({
+      query: ({ studentId, accessToken }) => ({
         url: `classrooms/grades/${studentId}`,
         method: "GET",
         headers: {
@@ -67,6 +68,28 @@ export const learnApi = createApi({
         },
       }),
     }),
+    getStudyGroups: builder.query({
+      query: (accessToken) => ({
+        url: `study-groups/`,
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }),
+    }),
+    createStudyGroup: builder.mutation({
+      query: ({data, accessToken}) => ({
+        url: 'study-groups/',
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: data,
+      }),
+    }),
+
     //---------------------------------Posts---------------------------------
     getPosts: builder.query({
       query: ({classroomId,accessToken}) => ({
@@ -78,6 +101,7 @@ export const learnApi = createApi({
         },
       }),
     }),
+
     createPost: builder.mutation({
       query: ({classroomId,accessToken, data}) => ({
         url: `classrooms/${classroomId}/posts`,
@@ -122,9 +146,10 @@ export const learnApi = createApi({
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
         },
-        body: data
+        body: data,
       }),
     }),
+
     removeComment: builder.mutation({
       query: ({classroomId, postId, commentId, accessToken}) => ({
         url: `/${classroomId}/posts/${postId}/comments/${commentId}`,
@@ -135,13 +160,7 @@ export const learnApi = createApi({
         },
       }),
     }),
-
-
-
-    })
-
-    
-  
+  }),
 });
 
 export const {
@@ -159,4 +178,6 @@ export const {
 
   useAddCommentMutation,
   useRemoveCommentMutation,
+  useGetStudyGroupsQuery,
+  useCreateStudyGroupMutation,
 } = learnApi;

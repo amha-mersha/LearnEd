@@ -1,48 +1,42 @@
 "use client";
 import React, { useState } from "react";
-import Sidebar from "../components/Sidebar/Sidebar";
-import Card from "../components/ClassroomCard";
 import Link from "next/link";
-import CreateClassroomModal from "../components/ClassroomPopup";
 import { Button } from "@/components/ui/button";
-import { useGetClassroomsQuery } from "@/lib/redux/api/getApi";
+import { useGetStudyGroupsQuery } from "@/lib/redux/api/getApi";
 import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton
 import { useSelector } from "react-redux";
+import StudyGroupCard from "@/app/components/StudyGroup/StudyGroupCard";
+import CreateStudyGroupModal from "@/app/components/StudyGroup/StudyGroupPopup";
 
-interface Classroom {
+interface StudyGroup {
   id: string;
   name: string;
   course_name: string;
-  season: string;
-  teachers: string[]; // Array of teacher IDs
   students: string[]; // Array of student IDs
 }
 
-const Page = () => {
+const StudyGroupPage = () => {
   const token = localStorage.getItem('token');
-  
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   const {
-    data: classrooms = [],
+    data: studyGroups = [],
     isLoading,
     error,
     refetch,
-  } = useGetClassroomsQuery(
-    token
-  ); // Fetch classrooms data
+  } = useGetStudyGroupsQuery(token); // Fetch study group data
 
   return (
-    <div className=" bg-[#F6F6F6] min-h-screen  pr-36 pt-10">
+    <div className="bg-[#F6F6F6] min-h-screen pr-36 pt-16">
       <div className="ml-24 flex justify-between">
-        <h1 className="text-3xl font-black">Classes</h1>
+        <h1 className="text-3xl font-black">Study Groups</h1>
         <Button className="mr-16" onClick={() => setIsModalOpen(true)}>
-          Create Class
+          Create Study Group
         </Button>
-
       </div>
       <div className="justify-center w-full flex flex-wrap">
         {isLoading ? (
-          // Render skeletons when loading
+          // Render skeletons while loading
           <>
             {[...Array(4)].map((_, index) => (
               <div key={index} className="w-5/12 ml-8 mt-6">
@@ -51,60 +45,53 @@ const Page = () => {
             ))}
           </>
         ) : error ? (
-          <p>Error fetching classrooms</p>
+          <p>Error fetching study groups</p>
         ) : (
-          classrooms.map((classroom: Classroom) => (
+          studyGroups.map((group: StudyGroup) => (
             <Link
-              key={classroom.id}
-              href={`/dashboard/${classroom.id}`}
+              key={group.id}
+              href={`/dashboard/study-group/${group.id}`}
               className="w-5/12 ml-8 mt-6"
             >
-              <Card
+              <StudyGroupCard
                 info={{
-                  className: classroom.name,
-                  courseName: classroom.course_name,
-                  season: classroom.season,
-                  teacher: classroom.teachers[0], // Display first teacher ID
-                  numStudents: classroom.students.length.toString(), // Display number of students
+                  groupName: group.name,
+                  courseName: group.course_name,
+                  numMembers: group.students.length.toString(), // Display number of students
                 }}
               />
             </Link>
           ))
         )}
       </div>
-      <CreateClassroomModal
+      <CreateStudyGroupModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         refetch={refetch}
       />
     </div>
+    
   );
 };
 
-// Skeleton component styled like ClassroomCard
+// Skeleton component styled like StudyGroupCard
 const SkeletonCard = () => {
   return (
     <div className="w-full h-52 p-4 flex flex-col shadow-md justify-between rounded-3xl bg-white">
       <div className="flex justify-between w-full align-middle">
         <div>
-          <Skeleton className="w-32 h-8" /> {/* Skeleton for class name */}
-          <Skeleton className="w-24 h-5 mt-2" />{" "}
-          {/* Skeleton for course name */}
+          <Skeleton className="w-32 h-8" /> {/* Skeleton for group name */}
+          <Skeleton className="w-24 h-5 mt-2" /> {/* Skeleton for course name */}
         </div>
-        <Skeleton className="w-16 h-5 mt-2" /> {/* Skeleton for season */}
       </div>
       <div className="flex justify-between w-full mt-4">
         <div className="flex justify-center align-middle space-x-2">
-          <Skeleton className="w-5 h-5" /> {/* Skeleton for book icon */}
-          <Skeleton className="w-20 h-6" /> {/* Skeleton for teacher name */}
-        </div>
-        <div className="flex justify-center align-middle space-x-2">
           <Skeleton className="w-6 h-6" /> {/* Skeleton for people icon */}
-          <Skeleton className="w-16 h-6" /> {/* Skeleton for students count */}
+          <Skeleton className="w-16 h-6" /> {/* Skeleton for members count */}
         </div>
       </div>
     </div>
   );
 };
 
-export default Page;
+export default StudyGroupPage;

@@ -22,6 +22,7 @@ func InitRouter(database *mongo.Database, port int, routePrefix string) {
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
 		MaxAge:           time.Hour,
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 	}))
 
 	// services

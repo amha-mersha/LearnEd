@@ -22,7 +22,7 @@ func NewClassroomRouter(classroomRepository domain.ClassroomRepository, authRepo
 	router.PATCH("/:classroomID/posts/:postID", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleTeacher), classroomController.UpdatePost)
 	router.DELETE("/:classroomID/posts/:postID", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleTeacher), classroomController.RemovePost)
 
-	router.POST("/:classroomID/posts/:postID", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleTeacher, domain.RoleStudent), classroomController.AddComment)
+	router.POST("/:classroomID/posts/:postID/comments", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleTeacher, domain.RoleStudent), classroomController.AddComment)
 	router.DELETE("/:classroomID/posts/:postID/comments/:commentID", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleTeacher, domain.RoleStudent), classroomController.RemoveComment)
 
 	router.PUT("/:classroomID/grades/:studentID", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleTeacher), classroomController.PutGrade)

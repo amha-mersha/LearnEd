@@ -5,3 +5,9 @@ export interface cardType {
     teacher: string,
     numStudents: string
 }
+
+export interface studyGroupType{
+    groupName: string,
+    courseName: string,
+    numMembers: string
+}
