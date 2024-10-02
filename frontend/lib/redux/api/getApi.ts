@@ -99,7 +99,74 @@ export const learnApi = createApi({
         },
         body: data,
       })
-    })
+    }),
+    getPosts: builder.query({
+      query: ({classroomId,accessToken}) => ({
+        url: `classrooms/${classroomId}/posts`,
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }),
+    }),
+    createPost: builder.mutation({
+      query: ({classroomId,accessToken, data}) => ({
+        url: `classrooms/${classroomId}/posts`,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: data,
+      }),
+    }),
+
+    updatePost: builder.mutation({
+      query: ({classroomId, postId, accessToken, data}) => ({
+        url: `/${classroomId}/posts/${postId}`,
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: data,
+      }),
+    }),
+
+    deletePost: builder.mutation({
+      query: ({classroomId, postId, accessToken, data}) => ({
+        url: `/${classroomId}/posts/${postId}`,
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: data,
+      }),
+    }),
+    //---------------------------------Comments---------------------------------
+    addComment: builder.mutation({
+      query: ({classroomId, postId, accessToken, data}) => ({
+        url: `classrooms/${classroomId}/posts/${postId}/comments`,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: data
+      }),
+    }),
+    removeComment: builder.mutation({
+      query: ({classroomId, postId, commentId, accessToken}) => ({
+        url: `/${classroomId}/posts/${postId}/comments/${commentId}`,
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }),
+    }),
   }),
 });
 
@@ -112,5 +179,11 @@ export const {
   useGetStudentGradesQuery,
   useGetStudyGroupsQuery,
   useCreateStudyGroupMutation,
-  useInviteToStudyGroupMutation
+  useInviteToStudyGroupMutation,
+  useCreatePostMutation,
+  useGetPostsQuery,
+  useUpdatePostMutation,
+  useDeletePostMutation,
+  useAddCommentMutation,
+  useRemoveCommentMutation,
 } = learnApi;

@@ -3,15 +3,30 @@ import React, { useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal, FileText } from "lucide-react";
-import { postType } from "@/types/postType";
+import { PostType } from "@/types/postType";
 import Comment from "./Comment";
+import { useAddCommentMutation } from "@/lib/redux/api/getApi";
 
 interface Props {
-  info: postType;
+  info: any;
+  class_id: string | string[];
 }
 
-const Post = ({ info }: Props) => {
+const Post = ({ info, class_id }: Props) => {
   const [more, setMore] = useState(false);
+  const [comment, setComment] = useState("");
+  const token = localStorage.getItem("token");
+  const [addComment, { data, isSuccess, isError }] = useAddCommentMutation();
+
+  const handleComment = () => {
+    addComment({
+      postId: info.data.id,
+      data: {"content": comment},
+      accessToken: token,
+      classroomId: class_id,
+    });
+    setComment("")
+  };
 
   return (
     <div className="bg-white rounded-lg shadow-md p-4 space-y-4">
@@ -21,17 +36,17 @@ const Post = ({ info }: Props) => {
           <div className="w-7 h-7 mt-1 bg-blue-900 rounded-full"></div>
           <div>
             <h3 className="">
-              <span className="font-bold">{info.name}</span> has posted some
-              notes
+              <span className="font-bold">{info.creator_name}</span> has posted
+              some notes
             </h3>
-            <p className="text-xs text-gray-500">{info.createdAt}</p>
+            <p className="text-xs text-gray-500">{info.data.created_at}</p>
           </div>
         </div>
         <Button variant="ghost" size="icon">
           <MoreHorizontal className="h-5 w-5" />
         </Button>
       </div>
-
+      <div className="font-semibold ml-10">{info.data.content}</div>
       {info.file && (
         <div className="flex items-center space-x-2 bg-gray-100 p-2 rounded">
           <FileText className="h-5 w-5 text-gray-500" />
@@ -49,24 +64,36 @@ const Post = ({ info }: Props) => {
           </h1>
         </div>
       )}
-
       {more && (
         <div className="mt-4 ml-16">
-          <Textarea placeholder="Add comment" className="w-full" />
+          <Textarea
+            placeholder="Add comment"
+            className="w-full"
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+          />
           <div className="flex justify-end mt-2 space-x-2">
             <Button
               className=" rounded-full text-xs px-3 py-0"
               variant="outline"
+              onClick={() => setComment("")}
             >
               Cancel
             </Button>
-            <Button className=" rounded-full text-xs px-3 py-0">Comment</Button>
+            {/* --------------------- add comment ----------------------*/}
+            <Button
+              className=" rounded-full text-xs px-3 py-0"
+              onClick={handleComment}
+            >
+              Comment
+            </Button>
           </div>
         </div>
       )}
-
       {more &&
-        info.comments.map((item, ind) => <Comment key={ind} info={item} />)}
+        info.data.comments.map((item: any, ind: number) => (
+          <Comment key={ind} post_id={info.data.id} class_id={class_id} info={item} />
+        ))}
 
       {more && (
         <div className="flex justify-end">
@@ -81,5 +108,4 @@ const Post = ({ info }: Props) => {
     </div>
   );
 };
-
 export default Post;
