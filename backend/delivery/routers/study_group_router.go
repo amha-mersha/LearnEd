@@ -22,7 +22,7 @@ func NewStudyGroupRouter(studygroupRep domain.StudyGroupRepository, authReposito
 	router.PATCH("/:studyGroupID/posts/:postID", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleStudent), sgController.UpdatePost)
 	router.DELETE("/:studyGroupID/posts/:postID", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleStudent), sgController.RemovePost)
 
-	router.POST("/:studyGroupID/posts/:postID", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleStudent), sgController.AddComment)
+	router.POST("/:studyGroupID/posts/:postID/comments", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleStudent), sgController.AddComment)
 	router.DELETE("/:studyGroupID/posts/:postID/comments/:commentID", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleStudent), sgController.RemoveComment)
 
 	router.GET("/", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleStudent), sgController.GetStudyGroup)
