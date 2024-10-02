@@ -2,29 +2,18 @@ package ai_service
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
 	"learned-api/domain"
 	"log"
-	"net/http"
-	"os"
-	"path/filepath"
 	"reflect"
 	"strings"
 
 	"github.com/google/generative-ai-go/genai"
 	option "google.golang.org/api/option"
-	"rsc.io/pdf"
 )
 
 type AIService struct {
 	model   domain.AIModelInterface
 	context context.Context
-	client  genai.Client
-}
-
-var AllowedFileTypes = map[string]string{
-	"pdf": "application/pdf",
 }
 
 func NewAIService(context context.Context, apiKey string) *AIService {
@@ -33,11 +22,10 @@ func NewAIService(context context.Context, apiKey string) *AIService {
 		log.Fatal(err)
 	}
 
-	model := client.GenerativeModel("gemini-1.5-flash")
+	model := client.GenerativeModel("gemini-pro")
 	return &AIService{
 		model:   model,
 		context: context,
-		client:  *client,
 	}
 }
 

@@ -1,6 +1,6 @@
 // import { Avatar } from "@/components/ui/avatar"
 import { dummy_posts } from "@/utils/dummy_posts";
-import Post from "./Post";
+import Post from "./post";
 
 export default function Posts() {
   return (

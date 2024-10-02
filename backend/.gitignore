@@ -4,4 +4,3 @@ bin
 *.out
 coverage.*
 /tmp/
-uploads
