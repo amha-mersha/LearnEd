@@ -77,6 +77,17 @@ export const learnApi = createApi({
         },
       }),
     }),
+    createStudyGroup: builder.mutation({
+      query: ({data, accessToken}) => ({
+        url: 'study-groups/',
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: data
+      })
+    })
   }),
 });
 
