@@ -9,8 +9,9 @@ import React, { useState } from "react";
 const page = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const params = useParams();
-  console.log('pp', params.posts)
-  console.log('tt', localStorage.getItem("token"))
+
+  console.log("pp", params);
+  console.log("tt", localStorage.getItem("token"));
 
   return (
     <div className="bg-[#F6F6F6] pt-10 min-h-screen ">
@@ -26,6 +27,15 @@ const page = () => {
           }}
         >
           <Button className="mr-40">Upload grades</Button>
+        </Link>
+        <Link
+          className="mr-40"
+          href={{
+            pathname: `/dashboard/create_content`,
+            query: { class_id: params.posts },
+          }}
+        >
+          <Button className="mr-40">Create Content</Button>x
         </Link>
       </div>
       <Posts class_id={params.posts} />

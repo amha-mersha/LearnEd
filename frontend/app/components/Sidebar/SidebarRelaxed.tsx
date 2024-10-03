@@ -8,9 +8,13 @@ const logout = require("../../../public/Images/logout.svg");
 import Image from "next/image";
 import { useDispatch } from "react-redux";
 import { collapse } from "@/lib/redux/slices/sidebarSlice";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 const SidebarRelaxed = () => {
   const dispatch = useDispatch();
+  const pathname = usePathname();
+  console.log(pathname);
 
   return (
     <div className=" w-1/5 bg-white left-0 h-screen top-0 fixed">
@@ -28,11 +32,16 @@ const SidebarRelaxed = () => {
       </div>
 
       <div className=" flex flex-col ml-16 space-y-4">
+        <Link href={`/dashboard`}>
+          <div className={`${pathname === "/dashboard" ? 'bg-[#e2dbdb]' : ''} flex p-2 rounded-xl mr-6 space-x-3`}>
+            <Image className="w-6" src={classroom} alt="class"></Image>
+            <h1 className="font-semibold">Class Rooms</h1>
+          </div>
+        </Link>
         <div className="flex space-x-3">
-          <Image className="w-6" src={classroom} alt="class"></Image>
-          <h1 className="font-semibold">Class Rooms</h1>
+          <Image className="w-6" src={classroom} alt=""></Image>
+          <h1 className="font-semibold">Study Group</h1>
         </div>
-
         <div className="flex space-x-3">
           <Image className="w-7" src={history} alt=""></Image>
           <h1 className="font-semibold">History</h1>
