@@ -30,8 +30,8 @@ export default function PostClassroomContent({ searchParams }: { searchParams: a
   const [selectedTags, setSelectedTags] = useState<number[]>([]);
   const [postContent] = usePostContentMutation();
   const [enhanceContent] = useEnhanceContentMutation();
-  const token = localStorage.getItem('token');
-  console.log("tt", token)
+  const accessToken = localStorage.getItem('token');
+  console.log("tt", accessToken)
   const classroomId = searchParams.class_id;
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,7 +44,7 @@ export default function PostClassroomContent({ searchParams }: { searchParams: a
     try {
       const enhancedDescription = await enhanceContent({
         currentState: assignmentDescription, // text from your input field
-        accessToken: token,
+        accessToken: accessToken,
       }).unwrap();
   
       // Set the response (enhanced description) to your form field or state
@@ -84,7 +84,7 @@ export default function PostClassroomContent({ searchParams }: { searchParams: a
       await postContent({
         classroomId,
         data: formData,
-        token,
+        accessToken,
       }).unwrap();
 
       console.log("Content posted successfully");
