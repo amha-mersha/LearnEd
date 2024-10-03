@@ -49,7 +49,7 @@ export const learnApi = createApi({
       ),
     }),
     getAllStudents: builder.query({
-      query: ({id, token}) => ({
+      query: ({ id, token }) => ({
         url: `classrooms/${id}/grades`,
         method: "GET",
         headers: {
@@ -79,18 +79,18 @@ export const learnApi = createApi({
       }),
     }),
     createStudyGroup: builder.mutation({
-      query: ({data, accessToken}) => ({
-        url: 'study-groups/',
+      query: ({ data, accessToken }) => ({
+        url: "study-groups/",
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
         },
-        body: data
-      })
+        body: data,
+      }),
     }),
     inviteToStudyGroup: builder.mutation({
-      query: ({studyGroupId, data, accessToken }) => ({
+      query: ({ studyGroupId, data, accessToken }) => ({
         url: `study-groups/${studyGroupId}/students`,
         method: "POST",
         headers: {
@@ -98,10 +98,10 @@ export const learnApi = createApi({
           Authorization: `Bearer ${accessToken}`,
         },
         body: data,
-      })
+      }),
     }),
     getPosts: builder.query({
-      query: ({classroomId,accessToken}) => ({
+      query: ({ classroomId, accessToken }) => ({
         url: `classrooms/${classroomId}/posts`,
         method: "GET",
         headers: {
@@ -111,7 +111,7 @@ export const learnApi = createApi({
       }),
     }),
     createPost: builder.mutation({
-      query: ({classroomId,accessToken, data}) => ({
+      query: ({ classroomId, accessToken, data }) => ({
         url: `classrooms/${classroomId}/posts`,
         method: "POST",
         headers: {
@@ -123,7 +123,7 @@ export const learnApi = createApi({
     }),
 
     updatePost: builder.mutation({
-      query: ({classroomId, postId, accessToken, data}) => ({
+      query: ({ classroomId, postId, accessToken, data }) => ({
         url: `/${classroomId}/posts/${postId}`,
         method: "PATCH",
         headers: {
@@ -135,7 +135,7 @@ export const learnApi = createApi({
     }),
 
     deletePost: builder.mutation({
-      query: ({classroomId, postId, accessToken, data}) => ({
+      query: ({ classroomId, postId, accessToken, data }) => ({
         url: `/${classroomId}/posts/${postId}`,
         method: "DELETE",
         headers: {
@@ -147,18 +147,18 @@ export const learnApi = createApi({
     }),
     //---------------------------------Comments---------------------------------
     addComment: builder.mutation({
-      query: ({classroomId, postId, accessToken, data}) => ({
+      query: ({ classroomId, postId, accessToken, data }) => ({
         url: `classrooms/${classroomId}/posts/${postId}/comments`,
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
         },
-        body: data
+        body: data,
       }),
     }),
     removeComment: builder.mutation({
-      query: ({classroomId, postId, commentId, accessToken}) => ({
+      query: ({ classroomId, postId, commentId, accessToken }) => ({
         url: `/${classroomId}/posts/${postId}/comments/${commentId}`,
         method: "DELETE",
         headers: {
@@ -168,14 +168,17 @@ export const learnApi = createApi({
       }),
     }),
     getQuiz: builder.query({
-      query: ({token, id}) => (console.log("tokk", token, id),{
-        url: `classrooms/posts/get_quiz/${id}`,
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }),
+      query: ({ token, id }) => (
+        console.log("tokk", token, id),
+        {
+          url: `classrooms/posts/get_quiz/${id}`,
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ),
     }),
     postContent: builder.mutation({
       query: ({ classroomId, data, accessToken }) => ({
@@ -188,29 +191,52 @@ export const learnApi = createApi({
       }),
     }),
     enhanceContent: builder.mutation({
-        query: ({ currentState, accessToken }) => ({
-          url: `classrooms/enhance_content`,
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-          body: {
-            current_state: currentState,
-            query: "Please expand on this assignment description to make it clearer and more comprehensive. Focus on providing detailed guidance, including key objectives, expected outcomes, and specific instructions, ensuring it is more structured and informative for students. Your response should be at most 100 words",
-          },
-        }),
+      query: ({ currentState, accessToken }) => ({
+        url: `classrooms/enhance_content`,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: {
+          current_state: currentState,
+          query:
+            "Please expand on this assignment description to make it clearer and more comprehensive. Focus on providing detailed guidance, including key objectives, expected outcomes, and specific instructions, ensuring it is more structured and informative for students. Your response should be at most 100 words",
+        },
       }),
+    }),
     getFlashcards: builder.query({
-        query: ({postId, accessToken}) => ({
-            url: `classrooms/posts/get_flashcard/${postId}`,
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${accessToken}`,
-            },
-        })
-    })
+      query: ({ postId, accessToken }) => ({
+        url: `classrooms/posts/get_flashcard/${postId}`,
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }),
+    }),
+    // inviteToStudyGroup: builder.mutation({
+    //   query: ({studyGroupId, data, accessToken }) => ({
+    //     url: `study-groups/${studyGroupId}/students`,
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       Authorization: `Bearer ${accessToken}`,
+    //     },
+    //     body: data,
+    //   })
+    // }),
+    inviteToClassrooms: builder.mutation({
+      query: ({ classroomId, data, accessToken }) => ({
+        url: `classrooms/${classroomId}/students`,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -223,7 +249,7 @@ export const {
   useGetStudentGradesQuery,
   useGetStudyGroupsQuery,
   useCreateStudyGroupMutation,
-  useInviteToStudyGroupMutation,
+
   useCreatePostMutation,
   useGetPostsQuery,
   useUpdatePostMutation,
@@ -234,4 +260,6 @@ export const {
   usePostContentMutation,
   useEnhanceContentMutation,
   useGetFlashcardsQuery,
+  useInviteToStudyGroupMutation,
+  useInviteToClassroomsMutation,
 } = learnApi;
