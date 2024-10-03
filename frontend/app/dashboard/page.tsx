@@ -28,7 +28,7 @@ const Page = () => {
   } = useGetClassroomsQuery(
     token
   ); // Fetch classrooms data
-
+  
   return (
     <div className=" bg-[#F6F6F6] min-h-screen  pr-36 pt-10">
       <div className="ml-24 flex justify-between">

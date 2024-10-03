@@ -27,7 +27,7 @@ const Page = () => {
         </Button>
       </div>
       
-      <Posts />
+      <Posts class_id={params.posts}/>
       
       <StudyStudentInvite
         studyGroupId={studyGroupId}
