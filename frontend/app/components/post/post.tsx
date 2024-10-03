@@ -19,6 +19,7 @@ const Post = ({ info, class_id }: Props) => {
   const [menuOpen, setMenuOpen] = useState(false); // State to manage the menu popup
   const token = localStorage.getItem("token");
   const [addComment, { data, isSuccess, isError }] = useAddCommentMutation();
+  console.log("-------", info)
 
   const handleComment = () => {
     addComment({
