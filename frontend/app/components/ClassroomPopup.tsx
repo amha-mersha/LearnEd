@@ -1,3 +1,4 @@
+"use client"
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -98,7 +99,7 @@ export default function CreateClassroomModal({
           <div className="space-y-2">
             <label className="text-sm font-medium">Season and Year</label>
             <div className="flex space-x-4">
-              <Select onValueChange={(value) => setSeason(value)}>
+              <Select onValueChange={(value: string) => setSeason(value)}>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Select a season" />
                 </SelectTrigger>

@@ -64,7 +64,7 @@ func (usecase *AuthUsecase) Login(c context.Context, user dtos.LoginDTO) (string
 	}
 
 	// TODO: replace token duration with an env constant
-	token, err := usecase.jwtService.SignJWTWithPayload(usecase.repository.HexifyString(foundUser.ID), foundUser.Type, "accessToken", 200*time.Minute)
+	token, err := usecase.jwtService.SignJWTWithPayload(usecase.repository.HexifyString(foundUser.ID), foundUser.Type, "accessToken", 900*time.Minute)
 	if err != nil {
 		return "", "", err
 	}

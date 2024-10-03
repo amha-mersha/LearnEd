@@ -3,6 +3,7 @@ import SuccessAlert from "@/app/components/core/SuccessAlert";
 import Posts from "@/app/components/post/Posts";
 import StudentInvite from "@/app/components/StudentInvite";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useState } from "react";
 
@@ -24,8 +25,26 @@ const page = () => {
         <Button className="mr-40" onClick={() => setIsModalOpen(true)}>
           Invite Students
         </Button>
+        <Link
+          className="mr-40"
+          href={{
+            pathname: `/dashboard/grading`,
+            query: { class_id: params.posts },
+          }}
+        >
+          <Button className="mr-40">Upload grades</Button>
+        </Link>
+        <Link
+          className="mr-40"
+          href={{
+            pathname: `/dashboard/create_content`,
+            query: { class_id: params.posts },
+          }}
+        >
+          <Button className="mr-40">Create Content</Button>x
+        </Link>
       </div>
-      <Posts />
+      <Posts class_id={params.posts} />
       <StudentInvite
       classroomId={classroomId}
         isOpen={isModalOpen}

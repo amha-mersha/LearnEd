@@ -22,3 +22,8 @@ type GradeDTO struct {
 type AddStudentDTO struct {
 	Email string `json:"email"`
 }
+
+type EnhanceContentDTO struct {
+	CurrentState string `json:"current_state"`
+	Query        string `json:"query"`
+}
