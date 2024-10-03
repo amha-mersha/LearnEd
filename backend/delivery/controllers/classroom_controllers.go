@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"learned-api/delivery/env"
 	"learned-api/domain"
 	"learned-api/domain/dtos"
 	"net/http"
@@ -75,6 +76,12 @@ func (controller *ClassroomController) AddPost(c *gin.Context) {
 		c.String(http.StatusBadRequest, "Failed to upload file: "+err.Error())
 		return
 	}
+	var fileURL string
+	if err != http.ErrMissingFile {
+		fileURL = "/api/" + env.ENV.ROUTEPREFIX + "/classrooms" + file.Filename
+	} else {
+		fileURL = ""
+	}
 	if file != nil {
 		workingDir, _ := os.Getwd()
 		uniqueFileName := uuid.New().String() + filepath.Ext(file.Filename)
@@ -88,7 +95,7 @@ func (controller *ClassroomController) AddPost(c *gin.Context) {
 	post.Content = c.PostForm("content")
 	post.IsAssignment = c.PostForm("is_assignment") == "true"
 	post.IsProcessed = c.PostForm("is_processed") == "true"
-	post.File = savePath
+	post.File = fileURL
 	deadlineStr := c.PostForm("deadline")
 	if deadlineStr != "" {
 		parsedDeadline, err := time.Parse(time.RFC3339, deadlineStr)
