@@ -1,6 +1,6 @@
 # LearnEd - AI-Driven School Management System
 
-**Empowering Teachers with Smart Tools**
+**Empowering Teachers and Students with Smart Tools**
 
 ## Problem Statement
 Teachers often spend a lot of time managing grade reports and handling administrative tasks, leaving less time for effective teaching. Similarly, students struggle to reach their full potential due to the lack of tools that help summarize and condense academic material for easier understanding and study.
@@ -48,6 +48,9 @@ With LearnEd, both students and teachers can create and join multiple classrooms
    ```bash
    npm run
    ```
+
+## Figma File
+- [Figma File](https://www.figma.com/design/69keq2Cct1itWwk8EKpEU6/Amha-Mersha's-team-library?node-id=0-1&t=8z9r89uH4dJHfFLU-1)
 
 ## Contributing
 We welcome contributions to improve LearnEd. Please follow our [contribution guidelines](CONTRIBUTING.md) for submitting pull requests.
