@@ -49,8 +49,8 @@ With LearnEd, both students and teachers can create and join multiple classrooms
    npm run
    ```
 
-## Figma File
-- [Figma File](https://www.figma.com/design/69keq2Cct1itWwk8EKpEU6/Amha-Mersha's-team-library?node-id=0-1&t=8z9r89uH4dJHfFLU-1)
+### [Figma File](https://www.figma.com/design/69keq2Cct1itWwk8EKpEU6/Amha-Mersha's-team-library?node-id=0-1&t=8z9r89uH4dJHfFLU-1)
+### [Pitch Deck](https://www.canva.com/design/DAGSg3-WdN4/PB7ghK8aDt1iBacF3nW-2w/edit?utm_content=DAGSg3-WdN4&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 
 ## Contributing
 We welcome contributions to improve LearnEd. Please follow our [contribution guidelines](CONTRIBUTING.md) for submitting pull requests.
