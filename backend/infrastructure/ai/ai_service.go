@@ -2,18 +2,29 @@ package ai_service
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"learned-api/domain"
 	"log"
+	"net/http"
+	"os"
+	"path/filepath"
 	"reflect"
 	"strings"
 
 	"github.com/google/generative-ai-go/genai"
 	option "google.golang.org/api/option"
+	"rsc.io/pdf"
 )
 
 type AIService struct {
 	model   domain.AIModelInterface
 	context context.Context
+	client  genai.Client
+}
+
+var AllowedFileTypes = map[string]string{
+	"pdf": "application/pdf",
 }
 
 func NewAIService(context context.Context, apiKey string) *AIService {
@@ -22,10 +33,11 @@ func NewAIService(context context.Context, apiKey string) *AIService {
 		log.Fatal(err)
 	}
 
-	model := client.GenerativeModel("gemini-pro")
+	model := client.GenerativeModel("gemini-1.5-flash")
 	return &AIService{
 		model:   model,
 		context: context,
+		client:  *client,
 	}
 }
 
@@ -45,7 +57,6 @@ func (s *AIService) ExtractText(value interface{}) string {
 	case reflect.Struct:
 		field := v.FieldByName("Text")
 		if !field.IsValid() {
-			log.Printf("Field 'Text' not found in struct of type %T", value)
 			return ""
 		}
 		return field.String()
@@ -54,7 +65,6 @@ func (s *AIService) ExtractText(value interface{}) string {
 		return v.String()
 
 	default:
-		log.Printf("Unsupported type %T for field extraction", value)
 		return ""
 	}
 }
@@ -64,7 +74,6 @@ func (s *AIService) EnhanceContent(currentState, query string) (string, domain.C
 
 	resp, err := s.model.GenerateContent(s.context, genai.Text(prompt))
 	if err != nil {
-		log.Printf("Error generating review content: %v", err)
 		return "", domain.NewError(err.Error(), domain.ERR_INTERNAL_SERVER)
 	}
 
