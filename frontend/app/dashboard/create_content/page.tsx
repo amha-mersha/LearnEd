@@ -12,6 +12,9 @@ import { Badge } from "@/components/ui/badge";
 import { Upload, Send, Eye } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useEnhanceContentMutation, usePostContentMutation } from "@/lib/redux/api/getApi";
+import SuccessAlert from "@/app/components/core/SuccessAlert";
+import ErrorAlert from "@/app/components/core/ErrorAlert";
+
 
 const tagOptions = [
   { id: 1, name: "Homework", color: "bg-blue-500" },
@@ -28,10 +31,14 @@ export default function PostClassroomContent({ searchParams }: { searchParams: a
   const [assignmentDescription, setAssignmentDescription] = useState("");
   const [enhancedAssignmentDescription, setEnhancedAssignmentDescription] = useState("");
   const [selectedTags, setSelectedTags] = useState<number[]>([]);
+
   const [postContent] = usePostContentMutation();
   const [enhanceContent] = useEnhanceContentMutation();
-  const accessToken = localStorage.getItem('token');
-  console.log("tt", accessToken)
+
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);  // Success message state
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);      // Error message state
+
+  const accessToken = localStorage.getItem("token");
   const classroomId = searchParams.class_id;
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,17 +50,17 @@ export default function PostClassroomContent({ searchParams }: { searchParams: a
   const handleElaborateDescription = async () => {
     try {
       const enhancedDescription = await enhanceContent({
-        currentState: assignmentDescription, // text from your input field
+        currentState: assignmentDescription,
         accessToken: accessToken,
       }).unwrap();
-  
-      // Set the response (enhanced description) to your form field or state
+
       setEnhancedAssignmentDescription(enhancedDescription.message);
+      setSuccessMessage("Assignment description enhanced successfully!"); // Trigger success alert
     } catch (error) {
       console.error("Error enhancing content", error);
+      setErrorMessage("Failed to enhance assignment description.");        // Trigger error alert
     }
   };
-  
 
   const handleTagToggle = (tagId: number) => {
     setSelectedTags((prev) =>
@@ -69,13 +76,10 @@ export default function PostClassroomContent({ searchParams }: { searchParams: a
 
   const handleSubmit = async () => {
     const formData = new FormData();
-
-    // Append fields to the FormData object
     formData.append("content", content);
-    formData.append("is_assignment", "true"); // Always true for now
+    formData.append("is_assignment", "true");
     formData.append("is_processed", allowProcessing.toString());
 
-    // If a file is provided, append it to FormData
     if (file) {
       formData.append("file", file);
     }
@@ -87,37 +91,33 @@ export default function PostClassroomContent({ searchParams }: { searchParams: a
         accessToken,
       }).unwrap();
 
-      console.log("Content posted successfully");
+      setSuccessMessage("Content posted successfully!");  // Trigger success alert
     } catch (error) {
       console.error("Error posting content", error);
+      setErrorMessage("Failed to post content.");         // Trigger error alert
     }
   };
 
   return (
-    <div className="w-full bg-gradient-to-b from-blue-50 to-white ">
+    <div className="w-full bg-gradient-to-b from-blue-50 to-white">
       <div className="container ml-10 p-4 max-w-4xl min-h-screen">
         <header className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold text-blue-600">
-            Post Classroom Content
-          </h1>
+          <h1 className="text-3xl font-bold text-blue-600">Post Classroom Content</h1>
         </header>
 
+        {/* Show Success Alert */}
+        {successMessage && <SuccessAlert message={successMessage} />}
+        {/* Show Error Alert */}
+        {errorMessage && <ErrorAlert message={errorMessage} />}
 
         <Card className="mb-6">
           <CardHeader>
-            <CardTitle className="text-xl text-blue-600">
-              Content Details
-            </CardTitle>
+            <CardTitle className="text-xl text-blue-600">Content Details</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-6">
               <div>
-                <Label
-                  htmlFor="content-textarea"
-                  className="text-lg font-semibold"
-                >
-                  Content
-                </Label>
+                <Label htmlFor="content-textarea" className="text-lg font-semibold">Content</Label>
                 <Textarea
                   id="content-textarea"
                   placeholder="Enter your content here"
@@ -132,24 +132,14 @@ export default function PostClassroomContent({ searchParams }: { searchParams: a
                 <div>
                   <Label className="text-lg font-semibold">File Upload</Label>
                   <div className="flex items-center space-x-4 mt-2">
-                    <Button
-                      variant="outline"
-                      onClick={() =>
-                        document.getElementById("file-upload")?.click()
-                      }
-                    >
+                    <Button variant="outline" onClick={() => document.getElementById("file-upload")?.click()}>
                       <Upload className="mr-2 h-4 w-4" /> Upload File
                     </Button>
                     <span className="text-sm text-gray-600">
                       {file ? file.name : "No file chosen"}
                     </span>
                   </div>
-                  <input
-                    id="file-upload"
-                    type="file"
-                    className="hidden"
-                    onChange={handleFileChange}
-                  />
+                  <input id="file-upload" type="file" className="hidden" onChange={handleFileChange} />
                 </div>
                 <div className="flex items-center space-x-2">
                   <Switch
@@ -159,9 +149,7 @@ export default function PostClassroomContent({ searchParams }: { searchParams: a
                   />
                   <Label htmlFor="allow-processing">Allow Processing</Label>
                 </div>
-                <p className="text-sm text-blue-600">
-                  AI will process the file if allowed.
-                </p>
+                <p className="text-sm text-blue-600">AI will process the file if allowed.</p>
               </div>
 
               <Separator />
@@ -171,9 +159,7 @@ export default function PostClassroomContent({ searchParams }: { searchParams: a
                   {tagOptions.map((tag) => (
                     <Badge
                       key={tag.id}
-                      variant={
-                        selectedTags.includes(tag.id) ? "default" : "outline"
-                      }
+                      variant={selectedTags.includes(tag.id) ? "default" : "outline"}
                       className={`cursor-pointer ${tag.color} hover:${tag.color} transition-colors`}
                       onClick={() => handleTagToggle(tag.id)}
                     >
@@ -186,12 +172,9 @@ export default function PostClassroomContent({ searchParams }: { searchParams: a
           </CardContent>
         </Card>
 
-
         <Card className="mb-6">
           <CardHeader>
-            <CardTitle className="text-xl text-blue-600">
-              Assignment Description
-            </CardTitle>
+            <CardTitle className="text-xl text-blue-600">Assignment Description</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -201,17 +184,12 @@ export default function PostClassroomContent({ searchParams }: { searchParams: a
                 onChange={(e) => setAssignmentDescription(e.target.value)}
                 rows={4}
               />
-              <Button
-                onClick={handleElaborateDescription}
-                className="bg-blue-600 hover:bg-blue-700 text-white"
-              >
+              <Button onClick={handleElaborateDescription} className="bg-blue-600 hover:bg-blue-700 text-white">
                 Generate Content ✨
               </Button>
               {enhancedAssignmentDescription && (
                 <div className="p-4 bg-blue-50 rounded-md border border-blue-200">
-                  <h3 className="font-semibold mb-2 text-blue-700">
-                    AI-Enhanced Description:
-                  </h3>
+                  <h3 className="font-semibold mb-2 text-blue-700">AI-Enhanced Description:</h3>
                   <p className="text-gray-700">{enhancedAssignmentDescription}</p>
                 </div>
               )}
@@ -224,10 +202,7 @@ export default function PostClassroomContent({ searchParams }: { searchParams: a
           <Button variant="outline" onClick={handlePreview}>
             <Eye className="mr-2 h-4 w-4" /> Preview
           </Button>
-          <Button
-            onClick={handleSubmit}
-            className="bg-blue-600 hover:bg-blue-700"
-          >
+          <Button onClick={handleSubmit} className="bg-blue-600 hover:bg-blue-700">
             <Send className="mr-2 h-4 w-4" /> Post Content
           </Button>
         </div>
