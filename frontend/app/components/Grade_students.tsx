@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/button";
 import { Edit, Save } from "lucide-react";
 import { Parameter, Student, studentsData } from "@/utils/grades";
 import { Input } from "@/components/ui/input";
-import { useSelector } from "react-redux";
 
 interface Props {
   student: Student;
@@ -20,6 +19,7 @@ interface Props {
   updateScore: (studentId: number, param: string, score: number) => void;
   calculateTotal: (scores: { [key: string]: number }) => number;
   toggleEdit: (studentId: number) => void;
+  class_id: string | string[];
 }
 interface scores {
   record_name: string;
@@ -33,19 +33,16 @@ const Grade_students = ({
   updateScore,
   calculateTotal,
   toggleEdit,
+  class_id,
 }: Props) => {
   const [postGrades, { isError, isLoading, isSuccess }] =
     usePostGradesMutation();
-  let tok = useSelector((state: any) => state.token.accessToken);
-  const token = tok.payload;
-
+  console.log("trtrt", student.id);
+  const student_id = student.id;
   const handleSubmit = async () => {
     const score: any = [];
-    const class_id = "66fc5f1764ea1026d3b5813d";
-    const student_id = "66fba6d880e72f71b4a21f9b";
-    // const temp_token =
-    //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzQXQiOiIyMDI0LTEwLTAzVDA2OjE2OjA0Ljk2ODA1NjQrMDM6MDAiLCJpZCI6IjY2ZmM1ZWNhNjRlYTEwMjZkM2I1ODEzYyIsInJvbGUiOiJ0ZWFjaGVyIiwidG9rZW5UeXBlIjoiYWNjZXNzVG9rZW4ifQ.-3KCqqCqzBtUvfhSUEbsOoAZKX9GYcT8k9riuw9gA2s";
-    const token = localStorage.getItem('token');
+
+    const token = localStorage.getItem("token");
     for (let param in student.scores) {
       for (let an_param in parameters) {
         if (param === parameters[an_param].name) {
@@ -57,15 +54,21 @@ const Grade_students = ({
         }
       }
     }
+    console.log("score", score);
+
     const res = { grades: score };
-    const result = await postGrades({
-      data: res,
-      token: token,
-      class_id: class_id,
-      student_id: student_id,
-    });
-    const { data } = result;
-    console.log("works? ", data);
+    console.log("res", res);
+    try {
+      const result = await postGrades({
+        class_id,
+        student_id,
+        token,
+        data: res,
+      }).unwrap();
+      console.log("works? ", result);
+    } catch (e) {
+      console.error("failed", e);
+    }
   };
 
   return (

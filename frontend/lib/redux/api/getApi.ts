@@ -36,7 +36,7 @@ export const learnApi = createApi({
     }),
     postGrades: builder.mutation({
       query: ({ class_id, student_id, token, data }) => (
-        console.log("dd", data, token),
+        console.log("dd", class_id, token, data, student_id),
         {
           url: `classrooms/${class_id}/grades/${student_id}`,
           method: "PUT",
@@ -167,6 +167,50 @@ export const learnApi = createApi({
         },
       }),
     }),
+    getQuiz: builder.query({
+      query: ({token, id}) => (console.log("tokk", token, id),{
+        url: `classrooms/posts/get_quiz/${id}`,
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+    }),
+    postContent: builder.mutation({
+      query: ({ classroomId, data, accessToken }) => ({
+        url: `classrooms/${classroomId}/posts`,
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: data,
+      }),
+    }),
+    enhanceContent: builder.mutation({
+        query: ({ currentState, accessToken }) => ({
+          url: `classrooms/enhance_content`,
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: {
+            current_state: currentState,
+            query: "Please expand on this assignment description to make it clearer and more comprehensive. Focus on providing detailed guidance, including key objectives, expected outcomes, and specific instructions, ensuring it is more structured and informative for students. Your response should be at most 100 words",
+          },
+        }),
+      }),
+    getFlashcards: builder.query({
+        query: ({postId, accessToken}) => ({
+            url: `classrooms/posts/get_flashcard/${postId}`,
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`,
+            },
+        })
+    })
   }),
 });
 
@@ -186,4 +230,8 @@ export const {
   useDeletePostMutation,
   useAddCommentMutation,
   useRemoveCommentMutation,
+  useGetQuizQuery,
+  usePostContentMutation,
+  useEnhanceContentMutation,
+  useGetFlashcardsQuery,
 } = learnApi;
