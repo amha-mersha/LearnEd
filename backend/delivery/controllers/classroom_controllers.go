@@ -92,6 +92,7 @@ func (controller *ClassroomController) AddPost(c *gin.Context) {
 	post.IsAssignment = c.PostForm("is_assignment") == "true"
 	post.IsProcessed = c.PostForm("is_processed") == "true"
 	post.File = fileURL
+	post.FileName = savePath
 	deadlineStr := c.PostForm("deadline")
 	if deadlineStr != "" {
 		parsedDeadline, err := time.Parse(time.RFC3339, deadlineStr)

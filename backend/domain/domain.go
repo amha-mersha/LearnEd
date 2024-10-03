@@ -91,6 +91,7 @@ type Post struct {
 	CreatorID    primitive.ObjectID `json:"creator_id" bson:"creator_id"`
 	Content      string             `json:"content"`
 	File         string             `json:"file"`
+	FileName     string             `json:"file_name"`
 	IsProcessed  bool               `json:"is_processed" bson:"is_processed"`
 	IsAssignment bool               `json:"is_assignment" bson:"is_assignment"`
 	Deadline     time.Time          `json:"deadline"`

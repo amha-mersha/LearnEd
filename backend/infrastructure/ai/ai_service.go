@@ -92,16 +92,16 @@ func (s *AIService) EnhanceContent(currentState, query string) (string, domain.C
 }
 
 func (s *AIService) GenerateContentFromFile(post domain.Post) (domain.GenerateContent, domain.CodedError) {
-	if err := s.ValidateFile(post.File); err != nil {
+	if err := s.ValidateFile(post.FileName); err != nil {
 		return domain.GenerateContent{}, err
 	}
-	file, err := s.client.UploadFileFromPath(s.context, post.File, nil)
+	file, err := s.client.UploadFileFromPath(s.context, post.FileName, nil)
 	if err != nil {
 		return domain.GenerateContent{}, domain.NewError(fmt.Sprintf("GenerateContentFromFile: failed to upload file to gemini: %s", err), domain.ERR_INTERNAL_SERVER)
 	}
 	defer s.client.DeleteFile(s.context, file.Name)
 	var pagecount int
-	pagecount, errCount := s.CalculatePage(post.File)
+	pagecount, errCount := s.CalculatePage(post.FileName)
 	if errCount != nil {
 		return domain.GenerateContent{}, errCount
 	}
