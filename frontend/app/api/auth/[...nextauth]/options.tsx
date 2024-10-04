@@ -26,7 +26,6 @@ export const options = {
         );
 
         const data = await response.json();
-
         if (data) {
           return {
             id: data.token,

@@ -5,37 +5,52 @@ import logo from "../../../public/Images/LearnEd.svg";
 import { MouseEvent, useState } from "react";
 import { getSession, signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-
+import ErrorAlert from "@/app/components/core/ErrorAlert";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null); 
   const router = useRouter();
+  const errorMessageNull = () => {
+    setTimeout(() => {
+      setErrorMessage("")
+    }, 5000);
+  }
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const data = { email: email, password: password };
 
-    let result = await signIn("credentials", {
-      redirect: false,
-      email: data.email,
-      password: data.password,
-    });
+    try {
+      let result = await signIn("credentials", {
+        redirect: false,
+        email: data.email,
+        password: data.password,
+      });
 
-    if (result?.ok) {
-      const updatedSession = await getSession();
-      if (updatedSession) {
-        localStorage.setItem("token", updatedSession.user.accessToken);
-        localStorage.setItem("role", updatedSession.user.role);
-        router.push(`/`);
+      if (result?.ok) {
+        const updatedSession = await getSession();
+
+        if (updatedSession?.user.accessToken) {
+          localStorage.setItem("token", updatedSession.user.accessToken);
+          localStorage.setItem("role", updatedSession.user.role);
+          router.push(`/`);
+        } else {
+          setErrorMessage("Invalid Information")
+          errorMessageNull()
+        }
+      } else {
+        throw new Error();
       }
-    } else {
-      alert("Nope");
+    } catch (e) {
+      console.error(e);
     }
   };
 
   return (
     <section className="bg-gray-50 dark:bg-gray-900">
+      {errorMessage && <ErrorAlert message={errorMessage} />}
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <Link
           href="/"
