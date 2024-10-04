@@ -94,14 +94,15 @@ const Post = ({ info, class_id }: Props) => {
 
 
       <div className="font-semibold ml-10">{info.data.content}</div>
-      {info.file && (
+      {info.data.file && (
         <div className="flex items-center space-x-2 bg-gray-100 p-2 rounded">
-          <FileText className="h-5 w-5 text-gray-500" />
-          <span className="text-sm">Biology chapter 1 & 2.pdf</span>
-          <span className="text-xs text-gray-500">45.7kb</span>
+          <FileText className="h-5 w-5" />
+          <a href={info.data.file} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+            View Attached File
+          </a>
         </div>
-      )}
-      {!more && (
+            )}
+            {!more && (
         <div className="flex justify-end">
           <h1
             onClick={() => setMore(true)}
