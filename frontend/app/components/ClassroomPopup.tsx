@@ -54,7 +54,6 @@ export default function CreateClassroomModal({
 
     try {
       await createClassroom({ data: payload, accessToken }).unwrap();  // Pass both data and accessToken
-      console.log("Classroom created successfully");
       refetch(); // Refetch the classrooms data
       onClose(); // Close the modal on success
     } catch (error) {

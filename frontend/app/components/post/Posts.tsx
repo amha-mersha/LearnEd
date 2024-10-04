@@ -14,9 +14,7 @@ export default function Posts({class_id}: Props) {
 
   //---------------------------------Hooks---------------------------------
   // ClassroomID to be changed later - currently hardcoded
-  console.log("id", class_id)
   const { data: posts = [], error, isLoading } = useGetPostsQuery({classroomId: class_id, accessToken: token});
-  console.log("pss", posts)
   //---------------------------------UI States---------------------------------
   if (isLoading) {
     return (

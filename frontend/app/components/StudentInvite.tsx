@@ -20,7 +20,6 @@ export default function StudentInvite({ isOpen, onClose, classroomId, onSuccess 
 
   try {
       await inviteToClassroom({classroomId, data: payload, accessToken }).unwrap();
-      console.log("Successfully invited student");
       onClose(); 
       onSuccess(); // Trigger success action in parent component
   } catch (err) {

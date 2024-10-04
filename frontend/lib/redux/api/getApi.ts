@@ -35,18 +35,15 @@ export const learnApi = createApi({
       }),
     }),
     postGrades: builder.mutation({
-      query: ({ class_id, student_id, token, data }) => (
-        console.log("dd", class_id, token, data, student_id),
-        {
-          url: `classrooms/${class_id}/grades/${student_id}`,
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: data,
-        }
-      ),
+      query: ({ class_id, student_id, token, data }) => ({
+        url: `classrooms/${class_id}/grades/${student_id}`,
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: data,
+      }),
     }),
     getAllStudents: builder.query({
       query: ({ id, token }) => ({
@@ -168,17 +165,14 @@ export const learnApi = createApi({
       }),
     }),
     getQuiz: builder.query({
-      query: ({ token, id }) => (
-        console.log("tokk", token, id),
-        {
-          url: `classrooms/posts/get_quiz/${id}`,
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      ),
+      query: ({ token, id }) => ({
+        url: `classrooms/posts/get_quiz/${id}`,
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }),
     }),
     postContent: builder.mutation({
       query: ({ classroomId, data, accessToken }) => ({

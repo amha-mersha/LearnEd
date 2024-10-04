@@ -36,7 +36,6 @@ export default function SignUp() {
 
   //submit function
   const onSubmit = async (formData: SignUpFormInputs) => {
-    console.log(formData);
     try {
       // Call the signUp mutation with the form data
       const result = await signUp({
@@ -46,7 +45,6 @@ export default function SignUp() {
         type: formData.role, // type not role
       }).unwrap();
 
-      console.log("Sign-up successful:", result);
 
       // Redirect to login
       router.push("/auth/login");
