@@ -24,14 +24,12 @@ export default function SignIn() {
 
     if (result?.ok) {
       const updatedSession = await getSession();
-      console.log("updatedsession", updatedSession)
       if (updatedSession) {
         localStorage.setItem("token", updatedSession.user.accessToken);
         localStorage.setItem("role", updatedSession.user.role);
         router.push(`/`);
       }
     } else {
-      console.log(result);
       alert("Nope");
     }
   };

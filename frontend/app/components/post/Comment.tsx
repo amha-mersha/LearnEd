@@ -20,7 +20,6 @@ const Comment = ({ info, post_id, class_id }: Props) => {
     });
 
   }
-  console.log("innn", info);
   return (
     <div className="space-y-4 hover:bg-[#F6F6F6] rounded-xl p-2 ml-16">
       <div className="flex justify-between">

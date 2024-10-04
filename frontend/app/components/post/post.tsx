@@ -13,13 +13,11 @@ interface Props {
 }
 
 const Post = ({ info, class_id }: Props) => {
-  console.log("info", info);
   const [more, setMore] = useState(false);
   const [comment, setComment] = useState("");
   const [menuOpen, setMenuOpen] = useState(false); // State to manage the menu popup
   const token = localStorage.getItem("token");
   const [addComment, { data, isSuccess, isError }] = useAddCommentMutation();
-  console.log("-------", info)
 
   const handleComment = () => {
     addComment({
@@ -30,7 +28,6 @@ const Post = ({ info, class_id }: Props) => {
     });
     setComment("");
   };
-  console.log("info", info);
   return (
     <div className="bg-white rounded-lg shadow-md p-4 space-y-4 relative">
       <div className="flex items-center justify-between">

@@ -15,11 +15,9 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 export default function Component({ searchParams }: { searchParams: any }) {
   const token = localStorage.getItem("token");
   const post_id = searchParams.post_id;
-  console.log("post", post_id)
   // const questions = dummy.message
 
   let questions: any = [];
-  console.log("kjkj", post_id)
   const id = post_id
   const { data, isError, isSuccess } = useGetQuizQuery({ token, id });
   const [userAnswers, setUserAnswers] = useState<{ [key: number]: string }>(

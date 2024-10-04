@@ -37,7 +37,6 @@ const Grade_students = ({
 }: Props) => {
   const [postGrades, { isError, isLoading, isSuccess }] =
     usePostGradesMutation();
-  console.log("trtrt", student.id);
   const student_id = student.id;
   const handleSubmit = async () => {
     const score: any = [];
@@ -54,10 +53,8 @@ const Grade_students = ({
         }
       }
     }
-    console.log("score", score);
 
     const res = { grades: score };
-    console.log("res", res);
     try {
       const result = await postGrades({
         class_id,
@@ -65,7 +62,6 @@ const Grade_students = ({
         token,
         data: res,
       }).unwrap();
-      console.log("works? ", result);
     } catch (e) {
       console.error("failed", e);
     }
