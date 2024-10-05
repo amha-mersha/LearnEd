@@ -27,7 +27,7 @@ With LearnEd, both students and teachers can create and join multiple classrooms
 ## Get Started
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/LearnEd.git
+   git clone https://github.com/amha-mersha/LearnEd.git
    ```
 2. Go to the LearnEd folder
    ```bash
