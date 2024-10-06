@@ -13,15 +13,15 @@ export default function RootLayout({
   const relaxed = useSelector((state: any) => state.hamburger.value);
 
   return (
-      <Provider store={store}>
-            <div className="flex relative bg-slate-100">
-              <div className=" min-h-screen">
-                <Sidebar />
-              </div>
-              <main className={relaxed ? `ml-64 pl-4 w-full` : `ml-28 w-full`}>
-                {children}
-              </main>
-            </div>
-      </Provider>
+    <Provider store={store}>
+      <div className="flex relative bg-slate-100">
+        <div className=" min-h-screen">
+          <Sidebar />
+        </div>
+        <main className={relaxed ? `ml-64 pl-4 w-full` : `ml-28 w-full`}>
+          {children}
+        </main>
+      </div>
+    </Provider>
   );
 }
