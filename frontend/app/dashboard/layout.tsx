@@ -3,7 +3,6 @@ import React from "react";
 import { Provider, useSelector } from "react-redux";
 import { store } from "@/lib/redux/store";
 import Sidebar from "../components/Sidebar/Sidebar";
-import { SessionProvider } from "next-auth/react";
 import Navbar from "../components/Navbar";
 
 export default function RootLayout({
@@ -14,7 +13,6 @@ export default function RootLayout({
   const relaxed = useSelector((state: any) => state.hamburger.value);
 
   return (
-    <SessionProvider>
       <Provider store={store}>
         <html lang="en">
           <body className="">
@@ -29,6 +27,5 @@ export default function RootLayout({
           </body>
         </html>
       </Provider>
-    </SessionProvider>
   );
 }

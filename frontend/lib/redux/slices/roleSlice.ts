@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Session } from "next-auth";
 
 export const roleSlice = createSlice({
     name: 'role',
