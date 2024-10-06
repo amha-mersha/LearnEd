@@ -13,6 +13,15 @@ export const learnApi = createApi({
       }),
     }),
 
+    login: builder.mutation({
+      query: (data) => ({
+        url: "auth/login",
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: data,
+      }),
+    }),
+
     createClassroom: builder.mutation({
       query: ({ data, accessToken }) => ({
         url: "classrooms/",
@@ -243,7 +252,7 @@ export const {
   useGetStudentGradesQuery,
   useGetStudyGroupsQuery,
   useCreateStudyGroupMutation,
-
+  useLoginMutation,
   useCreatePostMutation,
   useGetPostsQuery,
   useUpdatePostMutation,
