@@ -14,8 +14,6 @@ export default function RootLayout({
 
   return (
       <Provider store={store}>
-        <html lang="en">
-          <body className="">
             <div className="flex relative bg-slate-100">
               <div className=" min-h-screen">
                 <Sidebar />
@@ -24,8 +22,6 @@ export default function RootLayout({
                 {children}
               </main>
             </div>
-          </body>
-        </html>
       </Provider>
   );
 }
