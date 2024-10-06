@@ -2,46 +2,37 @@
 import Link from "next/link";
 import Image from "next/image";
 import logo from "../../../public/Images/LearnEd.svg";
-import { MouseEvent, useState } from "react";
-import { getSession, signIn, useSession } from "next-auth/react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import ErrorAlert from "@/app/components/core/ErrorAlert";
+import { useLoginMutation } from "@/lib/redux/api/getApi";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState<string | null>(null); 
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [login] = useLoginMutation();
   const router = useRouter();
+
   const errorMessageNull = () => {
     setTimeout(() => {
-      setErrorMessage("")
+      setErrorMessage("");
     }, 5000);
-  }
+  };
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const data = { email: email, password: password };
 
     try {
-      let result = await signIn("credentials", {
-        redirect: false,
-        email: data.email,
-        password: data.password,
-      });
-
-      if (result?.ok) {
-        const updatedSession = await getSession();
-
-        if (updatedSession?.user.accessToken) {
-          localStorage.setItem("token", updatedSession.user.accessToken);
-          localStorage.setItem("role", updatedSession.user.role);
-          router.push(`/`);
-        } else {
-          setErrorMessage("Invalid Information")
-          errorMessageNull()
-        }
+      let result = await login(data);
+      if (result.data?.token) {
+        localStorage.setItem("token", result.data.token);
+        localStorage.setItem("role", result.data.role);
+        router.push(`/`);
       } else {
-        throw new Error();
+        setErrorMessage("Invalid Information");
+        errorMessageNull();
       }
     } catch (e) {
       console.error(e);
