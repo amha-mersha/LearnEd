@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-const page = () => {
+const Page = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false); // State to track success alert
   const params = useParams();
@@ -50,7 +50,7 @@ const page = () => {
               query: { class_id: params.posts },
             }}
           >
-            <Button className="mr-40">Create Content</Button>x
+            <Button className="mr-40">Create Content</Button>
           </Link>
         </div>
         )}
@@ -67,4 +67,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
