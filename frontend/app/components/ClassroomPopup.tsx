@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useCreateClassroomMutation } from "@/lib/redux/api/getApi";
+import Cookies from "js-cookie";
 
 export default function CreateClassroomModal({
   isOpen,
@@ -34,8 +35,7 @@ export default function CreateClassroomModal({
   const [year, setYear] = useState("");
   const [createClassroom, { isLoading, isError, isSuccess }] =
     useCreateClassroomMutation();
-  const accessToken =
-    localStorage.getItem('token');
+  const accessToken = Cookies.get("token");
 
   const handleSubmit =async (e: React.FormEvent)=> {
     e.preventDefault();

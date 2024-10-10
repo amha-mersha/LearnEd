@@ -6,6 +6,7 @@ import CreateClassroomModal from "../components/ClassroomPopup";
 import { Button } from "@/components/ui/button";
 import { useGetClassroomsQuery } from "@/lib/redux/api/getApi";
 import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton
+import Cookie from "js-cookie";
 
 interface Classroom {
   id: string;
@@ -17,14 +18,16 @@ interface Classroom {
 }
 
 const Page = () => {
-  const token = localStorage.getItem('token');
+  // const token = localStorage.getItem('token');
+  const token = Cookie.get("token"); // Retrieve token from cookie
   
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [role, setRole] = useState<string | null>(null);
+  const [role, setRole] = useState<string | undefined>(undefined);
 
   // Retrieve role and token from localStorage
   useEffect(() => {
-    const storedRole = localStorage.getItem("role");
+    // const storedRole = localStorage.getItem("role");
+    const storedRole = Cookie.get("role");
     setRole(storedRole);
   }, []);
   const {

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import Cookie from "js-cookie";
 
 const Page = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -14,11 +15,12 @@ const Page = () => {
   const { posts: id } = params;
   const classroomId = Array.isArray(id) ? id[0] : id || '';
 
-  const [role, setRole] = useState<string | null>(null);
+  const [role, setRole] = useState<string | undefined>(undefined);
 
   // Retrieve role and token from localStorage
   useEffect(() => {
-    const storedRole = localStorage.getItem("role");
+    // const storedRole = localStorage.getItem("role");
+    const storedRole = Cookie.get("role");
     setRole(storedRole);
   }, []);
 

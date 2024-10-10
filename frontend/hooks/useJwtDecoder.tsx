@@ -11,7 +11,7 @@ interface JwtPayload {
 }
 
 // Custom hook to decode the token and extract the id
-export const useJwtDecoder = (token: string | null) => {
+export const useJwtDecoder = (token: string | undefined) => {
   const [id, setId] = useState<string | null>(null);
 
   useEffect(() => {

@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/table";
 import { Parameter, Student, studentsData } from "@/utils/grades";
 import Grade_students from "@/app/components/Grade_students";
+import Cookie from "js-cookie";
 
 export default function GradingPage({ searchParams }: { searchParams: any }) {
   let studs: any = [];
@@ -22,7 +23,8 @@ export default function GradingPage({ searchParams }: { searchParams: any }) {
   const [incomingCopy, setIncomingCopy] = useState<any>([]);
   // const temp_id_classroom = "66fc5f1764ea1026d3b5813d";
 
-  const token = localStorage.getItem("token");
+  // const token = localStorage.getItem("token");
+  const token = Cookie.get("token");
 
   const { data, isLoading, isError, isSuccess } = useGetAllStudentsQuery({
     id: searchParams.class_id,

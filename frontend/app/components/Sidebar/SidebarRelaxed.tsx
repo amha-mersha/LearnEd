@@ -7,6 +7,7 @@ const hamburger = require("../../../public/Images/solar_hamburger-menu-broken.sv
 const logout = require("../../../public/Images/logout.svg");
 const studyperson = require("../../../public/Images/fluent_people-16-regular.svg");
 const gradereport = require("../../../public/Images/carbon_report.svg");
+import Cookie from "js-cookie";
 
 import Image from "next/image";
 import { useDispatch } from "react-redux";
@@ -17,11 +18,13 @@ import Link from "next/link";
 const SidebarRelaxed = () => {
   const dispatch = useDispatch();
   const pathname = usePathname();
-  const [role, setRole] = useState<string | null>(null);
+  const [role, setRole] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     // Fetch the role from localStorage
-    const userRole = localStorage.getItem("role");
+    // const userRole = localStorage.getItem("role");
+    const userRole = Cookie.get("role");
+
     setRole(userRole);
   }, []);
 

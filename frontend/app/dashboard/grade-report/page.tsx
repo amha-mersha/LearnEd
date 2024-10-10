@@ -7,9 +7,11 @@ import { useJwtDecoder } from "@/hooks/useJwtDecoder";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetStudentGradesQuery } from "@/lib/redux/api/getApi";
 import ErrorAlert from "@/app/components/core/ErrorAlert";
+import Cookie from "js-cookie";
 
 const GradeReport = () => {
-  const token = localStorage.getItem("token");
+  // const token = localStorage.getItem("token");
+  const token = Cookie.get("token");
   const studentId = useJwtDecoder(token); // Decode the token to get the student ID
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [shouldFetchGrades, setShouldFetchGrades] = useState(false);

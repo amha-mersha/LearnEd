@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 import { useEnhanceContentMutation, usePostContentMutation } from "@/lib/redux/api/getApi";
 import SuccessAlert from "@/app/components/core/SuccessAlert";
 import ErrorAlert from "@/app/components/core/ErrorAlert";
+import Cookie from "js-cookie";
 
 
 const tagOptions = [
@@ -38,7 +39,8 @@ export default function PostClassroomContent({ searchParams }: { searchParams: a
   const [successMessage, setSuccessMessage] = useState<string | null>(null);  // Success message state
   const [errorMessage, setErrorMessage] = useState<string | null>(null);      // Error message state
 
-  const accessToken = localStorage.getItem("token");
+  // const accessToken = localStorage.getItem("token");
+  const accessToken = Cookie.get("token");
   const classroomId = searchParams.class_id;
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {

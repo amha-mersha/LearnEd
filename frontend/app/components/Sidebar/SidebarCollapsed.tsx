@@ -9,11 +9,13 @@ import { useDispatch } from "react-redux";
 import { relax } from "@/lib/redux/slices/sidebarSlice";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import Cookie from "js-cookie";
 
 const SidebarCollapsed = () => {
   const dispatch = useDispatch();
   const pathname = usePathname();
-  const role = localStorage.getItem("role")
+  // const role = localStorage.getItem("role")
+  const role = Cookie.get("role");
 
   return (
     <div className=" w-1/12 bg-white h-screen left-0 top-0 fixed ">

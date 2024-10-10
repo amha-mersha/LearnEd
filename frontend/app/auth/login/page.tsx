@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import ErrorAlert from "@/app/components/core/ErrorAlert";
 import { useLoginMutation } from "@/lib/redux/api/getApi";
+import Cookie from "js-cookie";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -27,8 +28,10 @@ export default function SignIn() {
     try {
       let result = await login(data);
       if (result.data?.token) {
-        localStorage.setItem("token", result.data.token);
-        localStorage.setItem("role", result.data.role);
+        // localStorage.setItem("token", result.data.token);
+        // localStorage.setItem("role", result.data.role);
+        Cookie.set("token", result.data.token);
+        Cookie.set("role", result.data.role);
         router.push(`/`);
       } else {
         setErrorMessage("Invalid Information");

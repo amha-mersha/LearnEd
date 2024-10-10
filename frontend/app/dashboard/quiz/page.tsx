@@ -11,9 +11,11 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import Cookie from "js-cookie";
 
 export default function Component({ searchParams }: { searchParams: any }) {
-  const token = localStorage.getItem("token");
+  // const token = localStorage.getItem("token");
+  const token = Cookie.get("token");
   const post_id = searchParams.post_id;
   // const questions = dummy.message
 

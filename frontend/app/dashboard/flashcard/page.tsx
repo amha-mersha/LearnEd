@@ -6,10 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetFlashcardsQuery } from "@/lib/redux/api/getApi";
+import Cookie from "js-cookie";
 
 export default function FlashCards({ searchParams }: { searchParams: any }) {
   const postId = searchParams.post_id;
-  const accessToken = localStorage.getItem("token")
+  // const accessToken = localStorage.getItem("token")
+  const accessToken = Cookie.get("token");
   
 
   // Fetch flashcards using RTK Query

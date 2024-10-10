@@ -7,6 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import Cookie from "js-cookie";
 
 import { useCreateStudyGroupMutation } from "@/lib/redux/api/getApi";
 
@@ -23,7 +24,8 @@ export default function CreateStudyGroupModal({
   const [courseName, setCourseName] = useState("");
   const [createStudyGroup, { isLoading, isError, isSuccess }] =
     useCreateStudyGroupMutation();
-  const accessToken = localStorage.getItem("token");
+  // const accessToken = localStorage.getItem("token");
+  const accessToken = Cookie.get("token");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

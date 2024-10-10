@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useRemoveCommentMutation } from "@/lib/redux/api/getApi";
 import { commentType } from "@/types/commentType";
 import React from "react";
+import Cookie from "js-cookie";
 interface Props {
   info: any;
   post_id: string | string[]
@@ -10,7 +11,8 @@ interface Props {
 
 const Comment = ({ info, post_id, class_id }: Props) => {
   const [deleteComment, { data, isSuccess, isError }] = useRemoveCommentMutation();
-  const token = localStorage.getItem("token")
+  // const token = localStorage.getItem("token")
+  const token = Cookie.get("token"); 
   const handleDelete = () => {
     deleteComment({
       postId: post_id,

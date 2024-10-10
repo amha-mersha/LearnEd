@@ -6,6 +6,7 @@ import { MoreHorizontal, FileText } from "lucide-react";
 import { useAddCommentMutation } from "@/lib/redux/api/getApi";
 import Comment from "./Comment";
 import Link from "next/link";
+import Cookie from "js-cookie";
 
 interface Props {
   info: any;
@@ -16,7 +17,8 @@ const Post = ({ info, class_id }: Props) => {
   const [more, setMore] = useState(false);
   const [comment, setComment] = useState("");
   const [menuOpen, setMenuOpen] = useState(false); // State to manage the menu popup
-  const token = localStorage.getItem("token");
+  // const token = localStorage.getItem("token");
+  const token = Cookie.get("token");
   const [addComment, { data, isSuccess, isError }] = useAddCommentMutation();
 
   const handleComment = () => {

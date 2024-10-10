@@ -3,6 +3,7 @@ import Post from "./post";
 import { useGetPostsQuery } from "@/lib/redux/api/getApi";
 import { PostType } from "@/types/postType";
 import { Key } from "react";
+import Cookie from "js-cookie";
 
 interface Props {
   class_id: string | string[]
@@ -10,7 +11,8 @@ interface Props {
 
 
 export default function Posts({class_id}: Props) {
-  const token = localStorage.getItem('token');
+  // const token = localStorage.getItem('token');
+  const token = Cookie.get("token");
 
   //---------------------------------Hooks---------------------------------
   // ClassroomID to be changed later - currently hardcoded

@@ -7,6 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton
 import { useSelector } from "react-redux";
 import StudyGroupCard from "@/app/components/StudyGroup/StudyGroupCard";
 import CreateStudyGroupModal from "@/app/components/StudyGroup/StudyGroupPopup";
+import Cookie from "js-cookie";
 
 interface StudyGroup {
   id: string;
@@ -16,7 +17,8 @@ interface StudyGroup {
 }
 
 const StudyGroupPage = () => {
-  const token = localStorage.getItem('token');
+  // const token = localStorage.getItem('token');
+  const token = Cookie.get("token");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {

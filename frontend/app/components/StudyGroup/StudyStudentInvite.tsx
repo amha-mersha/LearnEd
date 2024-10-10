@@ -9,6 +9,7 @@ export default function StudyStudentInvite({ isOpen, onClose, studyGroupId, onSu
   const [studentEmail, setStudentEmail] = useState('');
   const [inviteToStudyGroup, { isLoading, isError, isSuccess }] = useInviteToStudyGroupMutation();
   const accessToken = localStorage.getItem('token');
+  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

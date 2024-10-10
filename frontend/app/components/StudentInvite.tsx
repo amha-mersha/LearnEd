@@ -3,13 +3,15 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { useInviteToClassroomsMutation } from '@/lib/redux/api/getApi';
+import Cookie from 'js-cookie';
 
 
 export default function StudentInvite({ isOpen, onClose, classroomId, onSuccess }: { isOpen: boolean; onClose: () => void; classroomId: string; onSuccess: () => void }) {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [studentEmail, setStudentEmail] = useState('');
   const [inviteToClassroom, { isLoading, isError, isSuccess }] = useInviteToClassroomsMutation();
-  const accessToken = localStorage.getItem('token');
+  // const accessToken = localStorage.getItem('token');
+  const accessToken = Cookie.get('token');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

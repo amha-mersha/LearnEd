@@ -1,5 +1,6 @@
 import React from "react";
 import { usePostGradesMutation } from "@/lib/redux/api/getApi";
+import Cookie from "js-cookie";
 import {
   Table,
   TableBody,
@@ -41,7 +42,7 @@ const Grade_students = ({
   const handleSubmit = async () => {
     const score: any = [];
 
-    const token = localStorage.getItem("token");
+    const token = Cookie.get('token');
     for (let param in student.scores) {
       for (let an_param in parameters) {
         if (param === parameters[an_param].name) {
