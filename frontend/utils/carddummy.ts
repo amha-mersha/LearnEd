@@ -1,4 +1,5 @@
 export const cardinfo = [
+  
   {
     className: "Chemistry",
     courseName: "chem-101",
