@@ -10,6 +10,7 @@ export interface Student {
     isEditing: boolean
 }
 
+
 export const studentsData: Student[] = [
     { id: 1, name: "William Donds", scores: { "Mid Exam": 45, "Final Exam": 45 }, isEditing: false },
     { id: 2, name: "Alan Becker", scores: { "Mid Exam": 45, "Final Exam": 45 }, isEditing: false },
