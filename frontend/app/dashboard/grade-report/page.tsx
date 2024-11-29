@@ -40,45 +40,66 @@ const GradeReport = () => {
     }
   );
 
-  
+  const noGradesAvailable =
+    !isLoading &&
+    data?.data?.every(
+      (classroom: any) => classroom.grades.records.length === 0
+    );
 
   return (
     <>
-    {error && <ErrorAlert message="Failed to load grade reports. Please try again." />}
-    <div className="bg-[#F6F6F6] min-h-screen pl-32 pr-20 pt-10">
-      <header>
-        <h1 className="font-bold text-2xl mb-4">Grade Report</h1>
-      </header>
-      <div className="flex flex-row">
-        <p>Name:</p>
-        <p className="pl-1 font-medium">William Saliba</p>
+      {error && (
+        <ErrorAlert message="Failed to load grade reports. Please try again." />
+      )}
+      <div className="bg-[#F6F6F6] min-h-screen pl-32 pr-20 pt-10">
+        <header>
+          <h1 className="font-bold text-2xl mb-4">Grade Report</h1>
+        </header>
+        <div className="flex flex-row">
+          <p>Name:</p>
+          <p className="pl-1 font-medium">William Saliba</p>
+        </div>
+        <p className="font-semibold text-lg mt-10">Enrolled Classes</p>
+
+        <div>
+          {isLoading ? (
+            // Render 2 skeletons while loading
+            <>
+              <Skeleton className="w-full h-32 bg-gray-200 rounded-lg mb-6" />
+              <Skeleton className="w-full h-32 bg-gray-200 rounded-lg mb-6" />
+            </>
+          ) : noGradesAvailable ? (
+            // Fallback for when no grades are available across all classrooms
+            <div className="flex flex-col items-center justify-center w-full h-64">
+              <p className="text-gray-500 text-lg font-medium">
+                No grades available yet.
+              </p>
+            </div>
+          ) : (
+            // Render GradeReportCard only if records array is not empty
+            data?.data?.map((classroom: any) => {
+              if (classroom.grades.records.length > 0) {
+                return (
+                  <GradeReportCard
+                    key={classroom.classroom_id}
+                    classroom={classroom}
+                  />
+                );
+              } else if (classroom.grades.records.length === 0) {
+                return (
+                  <div className="flex flex-col items-center justify-center w-full h-64">
+                    <p className="text-gray-500 text-lg font-medium">
+                      No grades available yet.
+                    </p>
+                  </div>
+                );
+              }
+              return null;
+            })
+          )}
+        </div>
       </div>
-      <p className="font-semibold text-lg mt-10">Enrolled Classes</p>
-      
-      <div>
-        {isLoading ? (
-          // Render 2 skeletons while loading
-          <>
-            <Skeleton className="w-full h-32 bg-gray-200 rounded-lg mb-6" />
-            <Skeleton className="w-full h-32 bg-gray-200 rounded-lg mb-6" />
-          </>
-        ) : (
-          // Render GradeReportCard only if records array is not empty
-          data?.data?.map((classroom: any) => {
-            if (classroom.grades.records.length > 0) {
-              return (
-                <GradeReportCard
-                key={classroom.classroom_id}
-                classroom={classroom}
-                />
-              );
-            }
-            return null;
-          })
-        )}
-      </div>
-    </div>
-        </>
+    </>
   );
 };
 
