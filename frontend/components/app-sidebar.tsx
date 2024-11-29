@@ -71,7 +71,7 @@ export function AppSidebar() {
         </div> */}
         <div className="flex justify-center py-6">
           {state === "expanded" ? (
-            <Image src={logo} className="w-32 py-4" alt="logo"></Image>
+            <Image src={logo} priority className="w-32 py-4" alt="logo"></Image>
           ) : (
             <BookOpen className="w-8 h-8 text-blue-800" />
           )}
