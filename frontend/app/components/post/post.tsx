@@ -60,7 +60,7 @@ const Post = ({ info, class_id }: Props) => {
           <ul className="space-y-1">
             {info.data.is_processed ? (
               <Link
-                href={{ pathname: "/dashboard/quiz", query: { post_id: info.data.id } }}
+                href={{ pathname: "/dashboard/quiz", query: { post_id: info.data.id, title: info.data.content } }}
                 onClick={() => setMenuOpen(false)}
               >
                 <li className="hover:bg-gray-100 px-2 py-1 cursor-pointer">
