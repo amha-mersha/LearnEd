@@ -47,7 +47,7 @@ const items = [
   },
   {
     title: "History",
-    url: "#",
+    url: "/dashboard/history",
     icon: History,
   },
 ];

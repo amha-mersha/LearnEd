@@ -1,5 +1,5 @@
 "use client";
-import { Question, dummy } from "@/utils/questions";
+// import { Question, dummy } from "@/utils/questions";
 import { useState } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
@@ -12,12 +12,13 @@ import {
 } from "@/components/ui/collapsible";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import Cookie from "js-cookie";
+import { saveQuizResult } from "@/utils/quizHistory";
 
 export default function Component({ searchParams }: { searchParams: any }) {
   // const token = localStorage.getItem("token");
   const token = Cookie.get("token");
   const post_id = searchParams.post_id;
-  // const questions = dummy.message
+  const title = searchParams.title;
 
   const choiceMapper = {
     0: "A",
@@ -42,6 +43,7 @@ export default function Component({ searchParams }: { searchParams: any }) {
     };
 
     const handleSubmit = () => {
+      saveQuizResult(title, questions, userAnswers);
       setSubmitted(true);
     };
 
