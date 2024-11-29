@@ -19,19 +19,23 @@ export default function Component({ searchParams }: { searchParams: any }) {
   const post_id = searchParams.post_id;
   // const questions = dummy.message
 
+  const choiceMapper = {
+    0: "A",
+    1: "B",
+    2: "C",
+    3: "D",
+  };
+
   let questions: any = [];
-  const id = post_id
+  const id = post_id;
   const { data, isError, isSuccess } = useGetQuizQuery({ token, id });
-  const [userAnswers, setUserAnswers] = useState<{ [key: number]: string }>(
-    {}
-  );
+  const [userAnswers, setUserAnswers] = useState<{ [key: number]: string }>({});
   const [submitted, setSubmitted] = useState(false);
   const [openExplanations, setOpenExplanations] = useState<{
     [key: number]: boolean;
   }>({});
   if (isSuccess) {
     questions = data.message;
-
 
     const handleAnswerChange = (questionId: number, answer: string) => {
       setUserAnswers((prev) => ({ ...prev, [questionId]: answer }));
@@ -123,7 +127,11 @@ export default function Component({ searchParams }: { searchParams: any }) {
                   >
                     {isCorrect(question, ind)
                       ? "Correct!"
-                      : `Incorrect. The correct answer is: ${question.correct_answer}`}
+                      : `Incorrect. The correct answer is: ${
+                          choiceMapper[
+                            question.correct_answer as keyof typeof choiceMapper
+                          ]
+                        }`}
                   </p>
                   <Collapsible>
                     <CollapsibleTrigger

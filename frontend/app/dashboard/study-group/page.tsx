@@ -48,7 +48,13 @@ const StudyGroupPage = () => {
           </>
         ) : error ? (
           <p>Error fetching study groups</p>
-        ) : (
+        ) : studyGroups.length === 0 ? (
+          <div className="flex flex-col items-center justify-center w-full h-64">
+            <p className="text-gray-500 text-lg font-medium">
+              No study groups joined yet.
+            </p>
+          </div>
+        ): (
           studyGroups.map((group: StudyGroup) => (
             <Link
               key={group.id}

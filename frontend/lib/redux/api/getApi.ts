@@ -1,8 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import BASEURL from "../../../app/baseurl";
 
 export const learnApi = createApi({
   reducerPath: "LearnEdApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "https://learned-ci09.onrender.com/" }),
+  baseQuery: fetchBaseQuery({ baseUrl: `${BASEURL}/api/v1/` }),
   endpoints: (builder) => ({
     signUp: builder.mutation({
       query: (data) => ({

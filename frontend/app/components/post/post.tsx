@@ -7,6 +7,8 @@ import { useAddCommentMutation } from "@/lib/redux/api/getApi";
 import Comment from "./Comment";
 import Link from "next/link";
 import Cookie from "js-cookie";
+import BASEURL from "../../../app/baseurl";
+
 
 interface Props {
   info: any;
@@ -30,6 +32,7 @@ const Post = ({ info, class_id }: Props) => {
     });
     setComment("");
   };
+  console.info("info", info);
   return (
     <div className="bg-white rounded-lg shadow-md p-4 space-y-4 relative">
       <div className="flex items-center justify-between">
@@ -96,7 +99,7 @@ const Post = ({ info, class_id }: Props) => {
       {info.data.file && (
         <div className="flex items-center space-x-2 bg-gray-100 p-2 rounded">
           <FileText className="h-5 w-5" />
-          <a href={info.data.file} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+          <a href={`${BASEURL}${info.data.file}`} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
             View Attached File
           </a>
         </div>

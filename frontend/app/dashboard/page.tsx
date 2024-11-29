@@ -40,7 +40,7 @@ const Page = () => {
   ); // Fetch classrooms data
   
   return (
-    <div className=" bg-[#F6F6F6] min-h-screen  pr-36 pt-10">
+    <div className=" bg-[#F6F6F6] min-h-screen w-full pr-36 pt-10">
       <div className="ml-24 flex justify-between">
         <h1 className="text-3xl font-black">Classes</h1>
         {role !== "student" && ( // Conditionally render the button if the role is not 'student'
@@ -62,7 +62,13 @@ const Page = () => {
           </>
         ) : error ? (
           <p>Error fetching classrooms</p>
-        ) : (
+        ) : classrooms.length === 0 ? (
+          <div className="flex flex-col items-center justify-center w-full h-64">
+            <p className="text-gray-500 text-lg font-medium">
+              No classrooms joined yet.
+            </p>
+          </div>
+        ): (
           classrooms.map((classroom: Classroom) => (
             <Link
               key={classroom.id}
