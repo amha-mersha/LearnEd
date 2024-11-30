@@ -8,6 +8,7 @@ import { useSignUpMutation } from "@/lib/redux/api/getApi";
 import LoadingIndicator from "@/app/components/core/LoadingIndicator";
 import { useState } from "react";
 import ErrorAlert from "@/app/components/core/ErrorAlert";
+import { useTranslations } from "next-intl";
 
 interface SignUpFormInputs {
   name: string;
@@ -24,6 +25,7 @@ export default function SignUp() {
     watch,
     formState: { errors },
   } = useForm<SignUpFormInputs>();
+  const t = useTranslations("AuthSignup")
 
   // rtk query hook
   const [signUp, { isLoading }] = useSignUpMutation();
@@ -76,7 +78,7 @@ export default function SignUp() {
           <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700 mb-4">
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
               <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-                Create an account
+                {t("Create an account")}
               </h1>
               <form
                 className="space-y-4 md:space-y-6"
@@ -88,7 +90,7 @@ export default function SignUp() {
                     htmlFor="name"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
-                    Your name
+                    {t("Your name")}
                   </label>
                   <input
                     type="text"
@@ -120,7 +122,7 @@ export default function SignUp() {
                     htmlFor="email"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
-                    Your email
+                    {t("Your email")}
                   </label>
                   <input
                     type="email"
@@ -149,7 +151,7 @@ export default function SignUp() {
                     htmlFor="password"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
-                    Password
+                    {t("Password")}
                   </label>
                   <input
                     type="password"
@@ -188,7 +190,7 @@ export default function SignUp() {
                     htmlFor="confirm-password"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
-                    Confirm password
+                    {t("Confirm password")}
                   </label>
                   <input
                     type="password"
@@ -211,7 +213,7 @@ export default function SignUp() {
                 {/* Role selection */}
                 <div>
                   <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                    Select your role
+                    {t("Select your role")}
                   </label>
                   <div className="flex space-x-4">
                     <div>
@@ -228,7 +230,7 @@ export default function SignUp() {
                         htmlFor="role-teacher"
                         className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                       >
-                        Teacher
+                        {t("Teacher")}
                       </label>
                     </div>
                     <div>
@@ -245,7 +247,7 @@ export default function SignUp() {
                         htmlFor="role-student"
                         className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                       >
-                        Student
+                        {t("Student")}
                       </label>
                     </div>
                   </div>
@@ -269,17 +271,17 @@ export default function SignUp() {
                     type="submit"
                     className="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                   >
-                    Create Account
+                    {t("Create Account")}
                   </button>
                 )}
 
                 <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                  Already have an account?{" "}
+                  {t("Already have an account?")}{" "}
                   <Link
                     href="/auth/login"
                     className="font-medium text-blue-600 hover:underline dark:text-primary-500"
                   >
-                    Sign In
+                    {t("Sign In")}
                   </Link>
                 </p>
               </form>

@@ -3,6 +3,7 @@ import { useRemoveCommentMutation } from "@/lib/redux/api/getApi";
 import { commentType } from "@/types/commentType";
 import React from "react";
 import Cookie from "js-cookie";
+import { useTranslations } from "next-intl";
 interface Props {
   info: any;
   post_id: string | string[]
@@ -12,7 +13,8 @@ interface Props {
 const Comment = ({ info, post_id, class_id }: Props) => {
   const [deleteComment, { data, isSuccess, isError }] = useRemoveCommentMutation();
   // const token = localStorage.getItem("token")
-  const token = Cookie.get("token"); 
+  const token = Cookie.get("token");
+  const t = useTranslations("Posts")
   const handleDelete = () => {
     deleteComment({
       postId: post_id,
@@ -35,7 +37,7 @@ const Comment = ({ info, post_id, class_id }: Props) => {
             </div>
           </div>
         </div>
-        <Button className="w-16 h-10 mt-3 mr-2" onClick={handleDelete} >Delete</Button>
+        <Button className="w-16 h-10 mt-3 mr-2" onClick={handleDelete}>{t("Delete")}</Button>
       </div>
       <p className="text-sm ml-10 font-semibold">{info.content}</p>
     </div>

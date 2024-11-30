@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { useInviteToClassroomsMutation } from '@/lib/redux/api/getApi';
 import Cookie from 'js-cookie';
+import { useTranslations } from 'next-intl';
 
 
 export default function StudentInvite({ isOpen, onClose, classroomId, onSuccess }: { isOpen: boolean; onClose: () => void; classroomId: string; onSuccess: () => void }) {
@@ -12,6 +13,7 @@ export default function StudentInvite({ isOpen, onClose, classroomId, onSuccess 
   const [inviteToClassroom, { isLoading, isError, isSuccess }] = useInviteToClassroomsMutation();
   // const accessToken = localStorage.getItem('token');
   const accessToken = Cookie.get('token');
+  const t = useTranslations("AppComponentsCore")
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -44,7 +46,7 @@ export default function StudentInvite({ isOpen, onClose, classroomId, onSuccess 
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[500px] py-24 px-20">
         <DialogHeader className=''>
-          <DialogTitle className=" text-center font-black">Invite Students</DialogTitle>
+          <DialogTitle className=" text-center font-black">{t("Invite Students")}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-10 mt-2">
           <div className="space-y-2">
@@ -58,9 +60,9 @@ export default function StudentInvite({ isOpen, onClose, classroomId, onSuccess 
           </div>
          
           <Button type="submit" className="w-full">
-            Invite
+            {t("Invite")}
           </Button>
-          {isError && <p className="text-red-500">Failed to invite student. {errorMessage}</p>}
+          {isError && <p className="text-red-500">{t("Failed to invite student")} {errorMessage}</p>}
         </form>
       </DialogContent>
     </Dialog>

@@ -25,6 +25,7 @@ const Page = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [role, setRole] = useState<string | undefined>(undefined);
   const t = useTranslations('Home');
+  const td = useTranslations("DashboardCore")
 
   // Retrieve role and token from localStorage
   useEffect(() => {
@@ -47,7 +48,7 @@ const Page = () => {
         <h1 className="text-3xl font-black">{t('title')}</h1>
         {role !== "student" && ( // Conditionally render the button if the role is not 'student'
           <Button className="mr-16" onClick={() => setIsModalOpen(true)}>
-            Create Class
+            {td("Create Class")}
           </Button>
         )}
 
@@ -63,11 +64,11 @@ const Page = () => {
             ))}
           </>
         ) : error ? (
-          <p>Error fetching classrooms</p>
+          <p>{td("Error fetching classrooms")}</p>
         ) : classrooms.length === 0 ? (
           <div className="flex flex-col items-center justify-center w-full h-64">
             <p className="text-gray-500 text-lg font-medium">
-              No classrooms joined yet.
+              {td("No classrooms joined yet")}
             </p>
           </div>
         ): (

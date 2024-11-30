@@ -82,3 +82,14 @@ func (controller *AuthController) ChangePassword(c *gin.Context) {
 
 	c.JSON(http.StatusOK, domain.Response{"message": "Password changed successfully"})
 }
+
+func (controller *AuthController) GetInfo(c *gin.Context) {
+	id := c.Param("id")
+	userInfo, sErr := controller.usecase.GetInfo(c, id)
+	if sErr != nil {
+		c.JSON(GetHTTPErrorCode(sErr), domain.Response{"error": sErr.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, userInfo)
+}

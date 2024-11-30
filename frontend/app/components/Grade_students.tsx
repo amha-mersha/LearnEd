@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Edit, Save } from "lucide-react";
 import { Parameter, Student, studentsData } from "@/utils/grades";
 import { Input } from "@/components/ui/input";
+import { useTranslations } from "next-intl";
 
 interface Props {
   student: Student;
@@ -39,6 +40,7 @@ const Grade_students = ({
   const [postGrades, { isError, isLoading, isSuccess }] =
     usePostGradesMutation();
   const student_id = student.id;
+  const t = useTranslations("AppComponentsCore")
   const handleSubmit = async () => {
     const score: any = [];
 
@@ -103,7 +105,7 @@ const Grade_students = ({
           variant={student.isEditing ? "outline" : "default"}
         >
           {student.isEditing ? (
-            <button className="w-6 h-4 pr-10 font-bold">Submit</button>
+            <button className="w-6 h-4 pr-10 font-bold">{t("Submit")}</button>
           ) : (
             <Edit className="w-4 h-4" />
           )}

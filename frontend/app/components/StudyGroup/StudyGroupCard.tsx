@@ -5,6 +5,7 @@ import React from 'react'
 import people from '../../../public/Images/fluent_people-16-regular.svg'
 import Image from 'next/image'
 import {studyGroupType } from '@/types/cardType';
+import { useTranslations } from 'next-intl';
 
 interface Props{
     info: studyGroupType
@@ -12,6 +13,7 @@ interface Props{
 
 
 const StudyGroupCard = ({info}: Props) => {
+    const t = useTranslations("StudyGroup")
 
     return (
             <div className='w-full h-52 p-4 flex flex-col shadow-md justify-between rounded-3xl bg-white'>
@@ -31,7 +33,7 @@ const StudyGroupCard = ({info}: Props) => {
                     </div> */}
                     <div className=' flex justify-center align-middle space-x-1'>
                         <Image className='w-6' src={people} alt=''/>
-                        <h1 className='text-lg font-semibold'>{info.numMembers} Students</h1>
+                        <h1 className='text-lg font-semibold'>{info.numMembers} {t("Students")}</h1>
                     </div>
                 </div>
             </div>

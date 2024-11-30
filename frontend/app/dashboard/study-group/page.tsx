@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import StudyGroupCard from "@/app/components/StudyGroup/StudyGroupCard";
 import CreateStudyGroupModal from "@/app/components/StudyGroup/StudyGroupPopup";
 import Cookie from "js-cookie";
+import { useTranslations } from "next-intl";
 
 interface StudyGroup {
   id: string;
@@ -20,6 +21,7 @@ const StudyGroupPage = () => {
   // const token = localStorage.getItem('token');
   const token = Cookie.get("token");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const t = useTranslations("DashboardCore")
 
   const {
     data: studyGroups = [],
@@ -31,9 +33,9 @@ const StudyGroupPage = () => {
   return (
     <div className="bg-[#F6F6F6] min-h-screen pr-36 pt-16">
       <div className="ml-24 flex justify-between">
-        <h1 className="text-3xl font-black">Study Groups</h1>
+        <h1 className="text-3xl font-black">{t("label")}</h1>
         <Button className="mr-16" onClick={() => setIsModalOpen(true)}>
-          Create Study Group
+          {t("Create Study Group")}
         </Button>
       </div>
       <div className="justify-center w-full flex flex-wrap">
@@ -47,11 +49,11 @@ const StudyGroupPage = () => {
             ))}
           </>
         ) : error ? (
-          <p>Error fetching study groups</p>
+          <p>{t("Error fetching study groups")}</p>
         ) : studyGroups.length === 0 ? (
           <div className="flex flex-col items-center justify-center w-full h-64">
             <p className="text-gray-500 text-lg font-medium">
-              No study groups joined yet.
+              {t("No study groups joined yet")}
             </p>
           </div>
         ): (

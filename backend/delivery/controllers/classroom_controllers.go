@@ -32,7 +32,7 @@ func (controller *ClassroomController) CreateClassroom(c *gin.Context) {
 
 	id, exists := c.Keys["id"]
 	if !exists {
-		c.JSON(http.StatusForbidden, domain.Response{"message": "coudn't find the id field"})
+		c.JSON(http.StatusForbidden, domain.Response{"message": "couldn't find the id field"})
 		return
 	}
 
@@ -55,7 +55,7 @@ func (controller *ClassroomController) DeleteClassroom(c *gin.Context) {
 
 	id, exists := c.Keys["id"]
 	if !exists {
-		c.JSON(http.StatusForbidden, domain.Response{"message": "coudn't find the id field"})
+		c.JSON(http.StatusForbidden, domain.Response{"message": "couldn't find the id field"})
 		return
 	}
 
@@ -105,7 +105,7 @@ func (controller *ClassroomController) AddPost(c *gin.Context) {
 	classroomID := c.Param("classroomID")
 	creatorID, exists := c.Keys["id"]
 	if !exists {
-		c.JSON(http.StatusForbidden, domain.Response{"message": "coudn't find the id field"})
+		c.JSON(http.StatusForbidden, domain.Response{"message": "couldn't find the id field"})
 		return
 	}
 
@@ -130,7 +130,7 @@ func (controller *ClassroomController) UpdatePost(c *gin.Context) {
 	postID := c.Param("postID")
 	creatorID, exists := c.Keys["id"]
 	if !exists {
-		c.JSON(http.StatusForbidden, domain.Response{"message": "coudn't find the id field"})
+		c.JSON(http.StatusForbidden, domain.Response{"message": "couldn't find the id field"})
 		return
 	}
 
@@ -149,7 +149,7 @@ func (controller *ClassroomController) RemovePost(c *gin.Context) {
 	postID := c.Param("postID")
 	creatorID, exists := c.Keys["id"]
 	if !exists {
-		c.JSON(http.StatusForbidden, domain.Response{"message": "coudn't find the id field"})
+		c.JSON(http.StatusForbidden, domain.Response{"message": "couldn't find the id field"})
 		return
 	}
 
@@ -174,7 +174,7 @@ func (controller *ClassroomController) AddComment(c *gin.Context) {
 	postID := c.Param("postID")
 	creatorID, exists := c.Keys["id"]
 	if !exists {
-		c.JSON(http.StatusForbidden, domain.Response{"message": "coudn't find the id field"})
+		c.JSON(http.StatusForbidden, domain.Response{"message": "couldn't find the id field"})
 		return
 	}
 
@@ -194,7 +194,7 @@ func (controller *ClassroomController) RemoveComment(c *gin.Context) {
 	commentID := c.Param("commentID")
 	creatorID, exists := c.Keys["id"]
 	if !exists {
-		c.JSON(http.StatusForbidden, domain.Response{"message": "coudn't find the id field"})
+		c.JSON(http.StatusForbidden, domain.Response{"message": "couldn't find the id field"})
 		return
 	}
 
@@ -214,7 +214,7 @@ func (controller *ClassroomController) PutGrade(c *gin.Context) {
 	studentID := c.Param("studentID")
 	creatorID, exists := c.Keys["id"]
 	if !exists {
-		c.JSON(http.StatusForbidden, domain.Response{"message": "coudn't find the id field"})
+		c.JSON(http.StatusForbidden, domain.Response{"message": "couldn't find the id field"})
 		return
 	}
 
@@ -243,7 +243,7 @@ func (controller *ClassroomController) AddStudent(c *gin.Context) {
 
 	creatorID, exists := c.Keys["id"]
 	if !exists {
-		c.JSON(http.StatusForbidden, domain.Response{"message": "coudn't find the id field"})
+		c.JSON(http.StatusForbidden, domain.Response{"message": "couldn't find the id field"})
 		return
 	}
 
@@ -262,7 +262,7 @@ func (controller *ClassroomController) RemoveStudent(c *gin.Context) {
 	studentID := c.Param("studentID")
 	creatorID, exists := c.Keys["id"]
 	if !exists {
-		c.JSON(http.StatusForbidden, domain.Response{"message": "coudn't find the id field"})
+		c.JSON(http.StatusForbidden, domain.Response{"message": "couldn't find the id field"})
 		return
 	}
 
@@ -280,7 +280,7 @@ func (controller *ClassroomController) GetGrades(c *gin.Context) {
 	classroomID := c.Param("classroomID")
 	creatorID, exists := c.Keys["id"]
 	if !exists {
-		c.JSON(http.StatusForbidden, domain.Response{"message": "coudn't find the id field"})
+		c.JSON(http.StatusForbidden, domain.Response{"message": "couldn't find the id field"})
 		return
 	}
 
@@ -299,7 +299,7 @@ func (controller *ClassroomController) GetStudentGrade(c *gin.Context) {
 	studentID := c.Param("studentID")
 	creatorID, exists := c.Keys["id"]
 	if !exists {
-		c.JSON(http.StatusForbidden, domain.Response{"message": "coudn't find the id field"})
+		c.JSON(http.StatusForbidden, domain.Response{"message": "couldn't find the id field"})
 		return
 	}
 
@@ -317,7 +317,7 @@ func (controller *ClassroomController) GetPosts(c *gin.Context) {
 	classroomID := c.Param("classroomID")
 	creatorID, exists := c.Keys["id"]
 	if !exists {
-		c.JSON(http.StatusForbidden, domain.Response{"message": "coudn't find the id field"})
+		c.JSON(http.StatusForbidden, domain.Response{"message": "couldn't find the id field"})
 		return
 	}
 
@@ -334,7 +334,7 @@ func (controller *ClassroomController) GetPosts(c *gin.Context) {
 func (controller *ClassroomController) GetClassrooms(c *gin.Context) {
 	creatorID, exists := c.Keys["id"]
 	if !exists {
-		c.JSON(http.StatusForbidden, domain.Response{"message": "coudn't find the id field"})
+		c.JSON(http.StatusForbidden, domain.Response{"message": "couldn't find the id field"})
 		return
 	}
 
@@ -352,7 +352,7 @@ func (controlller *ClassroomController) GetGradeReport(c *gin.Context) {
 	studentID := c.Param("studentID")
 	creatorID, exists := c.Keys["id"]
 	if !exists {
-		c.JSON(http.StatusForbidden, domain.Response{"message": "coudn't find the id field"})
+		c.JSON(http.StatusForbidden, domain.Response{"message": "couldn't find the id field"})
 		return
 	}
 

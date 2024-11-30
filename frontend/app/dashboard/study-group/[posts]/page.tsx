@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { useParams } from 'next/navigation';
 import StudyStudentInvite from "@/app/components/StudyGroup/StudyStudentInvite";
 import SuccessAlert from "@/app/components/core/SuccessAlert";
+import { useTranslations } from "next-intl";
 
 
 const Page = () => {
@@ -13,6 +14,7 @@ const Page = () => {
   const params = useParams();
   const { posts: id } = params;
   const studyGroupId = Array.isArray(id) ? id[0] : id || '';
+  const t = useTranslations("StudyGroup")
 
   const handleInviteSuccess = () => {
     setShowSuccessMessage(true);
@@ -23,7 +25,7 @@ const Page = () => {
     <div className="bg-[#F6F6F6] pt-10 min-h-screen ">
       <div className="flex justify-end">
         <Button className="mr-40" onClick={() => setIsModalOpen(true)}>
-          Invite Students
+          {t("Invite Students")}
         </Button>
       </div>
       

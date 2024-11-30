@@ -17,3 +17,8 @@ type ChangePasswordDTO struct {
 	OldPassword string `json:"old_password"`
 	NewPassword string `json:"new_password"`
 }
+
+type UserData struct {
+	Name string `json:"name"`
+	Type string `json:"type"`
+}

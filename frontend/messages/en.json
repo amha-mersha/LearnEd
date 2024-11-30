@@ -4,6 +4,7 @@
       "description": "This is a multilingual website"
     },
     "Sidebar": {
+      "label": "Application",
       "classroom": "Class Rooms",
       "studygroup": "Study Group",
       "grades": "Grade Report",
@@ -11,5 +12,143 @@
       "settings": "Settings",
       "signout": "Sign Out",
       "Language Selection": "Language Selection"
+    },
+    "GradingPage": {
+      "title": "Grading Parameters",
+      "add": "Add",
+      "name": "Name",
+      "total": "Total"
+    },
+    "QuizComponent": {
+      "title": "Quiz",
+      "explanation": "Explanation",
+      "submit": "Submit Answers",
+      "Total Score": "Total Score"
+    },
+    "AuthLogin": {
+      "Sign in to your account": "Sign in to your account",
+      "Your email": "Your email",
+      "Password": "Password",
+      "Remember me": "Remember me",
+      "Forgot password?": "Forgot password?",
+      "Sign in": "Sign in",
+      "Don’t have an account yet?": "Don’t have an account yet?",
+      "Sign up": "Sign up"
+    },
+    "AuthSignup": {
+      "Create an account": "Create an account",
+      "Your name": "Your name",
+      "Your email": "Your email",
+      "Password": "Password",
+      "Confirm password": "Confirm password",
+      "Select your role": "Select your role",
+      "Teacher": "Teacher",
+      "Student": "Student",
+      "Create Account": "Create Account",
+      "Already have an account?": "Already have an account?",
+      "Sign In": "Sign In"
+    },
+    "AppComponentsCore": {
+      "Students": "Students",
+      "Create Classroom": "Create Classroom",
+      "Classroom Name": "Classroom Name",
+      "Course Name": "Course Name",
+      "Season and Year": "Season and Year",
+      "Season": "Season",
+      "Spring": "Spring",
+      "Summer": "Summer",
+      "Fall": "Fall",
+      "Winter": "Winter",
+      "Failed to create classroom": "Failed to create classroom.",
+      "Classroom created successfully": "Classroom created successfully!",
+      "Submit": "Submit",
+      "Log out": "Log out",
+      "Login": "Login",
+      "Invite Students": "Invite Students",
+      "Invite": "Invite",
+      "Failed to invite student": "Failed to invite student.",
+      "Error": "Error",
+      "Loading": "Loading...",
+      "Success": "Success"
+    },
+    "ReportCard": {
+      "Teacher": "Teacher",
+      "Class": "Class",
+      "Total Students": "Total Students",
+      "Total Grade": "Total Grade"
+    },
+    "Posts": {
+      "Delete": "Delete",
+      "has posted some notes": "has posted some notes",
+      "Loading posts": "Loading posts...",
+      "Failed to load posts": "Failed to load posts",
+      "Please try again later": "Please try again later."
+    },
+    "StudyGroup": {
+      "label": "Study Groups",
+      "Students": "Students",
+      "Create Study Group": "Create Study Group",
+      "Error fetching study groups": "Error fetching study groups",
+      "No study groups joined yet": "No study groups joined yet.",
+      "Study Group Name": "Study Group Name",
+      "Course Name": "Course Name",
+      "Failed to create study group": "Failed to create study group.",
+      "Study group created successfully": "Study group created successfully!",
+      "Invite Students": "Invite Students",
+      "Invite":"Invite",
+      "Failed to invite student": "Failed to invite student."
+    },
+    "DashboardCore": {
+      "Create Class": "Create Class",
+      "Error fetching classrooms": "Error fetching classrooms",
+      "No classrooms joined yet": "No classrooms joined yet."
+    },
+    "History": {
+      "Quiz History": "Quiz History",
+      "No quiz history found": "No quiz history found.", 
+      "Quiz from": "Quiz from",
+      "Score":"Score",
+      "Your Answer": "Your Answer",
+      "Correct Answer": "Correct Answer"
+    },
+    "Grading": {
+      "Grading Parameters": "Grading Parameters",
+      "Add": "Add",
+      "Name": "Name",
+      "Total": "Total",
+      "Actions": "Actions" 
+    },
+    "GradeReport": {
+      "Grade Report": "Grade Report",
+      "Name": "Name",
+      "Enrolled Classes": "Enrolled Classes",
+      "No grades available yet": "No grades available yet."
+    },
+    "FlashCards": {
+      "No flashcards found": "No flashcards found.",
+      "Question": "Question",
+      "Answer": "Answer",
+      "Card": "Card",
+      "of": "of"
+    },
+    "CreateContent": {
+      "Post Classroom Content": "Post Classroom Content",
+      "Content Details": "Content Details",
+      "Content": "Content",
+      "File Upload": "File Upload",
+      "Upload File": "Upload File",
+      "Allow Processing": "Allow Processing",
+      "AI will process the file if allowed" : "AI will process the file if allowed.",
+      "Tags": "Tags",
+      "Assignment Description": "Assignment Description",
+      "Generate Content": "Generate Content",
+      "AI-Enhanced Description": "AI-Enhanced Description", 
+      "Preview": "Preview",
+      "Post Content": "Post Content"
+    },
+    "DashboardPosts": {
+      "Invite Students": "Invite Students",
+      "Upload grades": "Upload grades",
+      "Create Content": "Create Content"
     }
   }

@@ -10,6 +10,7 @@ import {
 import Cookie from "js-cookie";
 
 import { useCreateStudyGroupMutation } from "@/lib/redux/api/getApi";
+import { useTranslations } from "next-intl";
 
 export default function CreateStudyGroupModal({
   isOpen,
@@ -26,6 +27,7 @@ export default function CreateStudyGroupModal({
     useCreateStudyGroupMutation();
   // const accessToken = localStorage.getItem("token");
   const accessToken = Cookie.get("token");
+  const t = useTranslations("StudyGroup")
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,13 +56,13 @@ export default function CreateStudyGroupModal({
       <DialogContent className="sm:max-w-[425px] py-20 px-16">
         <DialogHeader className="">
           <DialogTitle className="text-center font-black">
-            Create Study Group
+            {t("Create Study Group")}
           </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 mt-2">
           <div className="space-y-2">
             <label htmlFor="studyGroupName" className="text-sm font-medium">
-              Study Group Name
+              {t("Study Group Name")}
             </label>
             <Input
               id="studyGroupName"
@@ -72,7 +74,7 @@ export default function CreateStudyGroupModal({
           </div>
           <div className="space-y-2">
             <label htmlFor="courseName" className="text-sm font-medium">
-              Course Name
+              {t("Course Name")}
             </label>
             <Input
               id="courseName"
@@ -87,10 +89,10 @@ export default function CreateStudyGroupModal({
             {isLoading ? "Creating..." : "Create Study group"}
           </Button>
           {isError && (
-            <p className="text-red-500">Failed to create study group.</p>
+            <p className="text-red-500">{t("Failed to create study group")}</p>
           )}
           {isSuccess && (
-            <p className="text-green-500">Study group created successfully!</p>
+            <p className="text-green-500">{t("Study group created successfully")}</p>
           )}
         </form>
       </DialogContent>
