@@ -119,7 +119,7 @@ export function AppSidebar() {
       <SidebarContent>
         {/* Application Section */}
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SidebarGroupLabel>{t("label")}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items

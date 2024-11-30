@@ -15,6 +15,7 @@ import { useEnhanceContentMutation, usePostContentMutation } from "@/lib/redux/a
 import SuccessAlert from "@/app/components/core/SuccessAlert";
 import ErrorAlert from "@/app/components/core/ErrorAlert";
 import Cookie from "js-cookie";
+import { useTranslations } from "next-intl";
 
 
 const tagOptions = [
@@ -38,6 +39,7 @@ export default function PostClassroomContent({ searchParams }: { searchParams: a
 
   const [successMessage, setSuccessMessage] = useState<string | null>(null);  // Success message state
   const [errorMessage, setErrorMessage] = useState<string | null>(null);      // Error message state
+  const t = useTranslations("CreateContent")
 
   // const accessToken = localStorage.getItem("token");
   const accessToken = Cookie.get("token");
@@ -104,7 +106,7 @@ export default function PostClassroomContent({ searchParams }: { searchParams: a
     <div className="w-full bg-gradient-to-b from-blue-50 to-white">
       <div className="container ml-10 p-4 max-w-4xl min-h-screen">
         <header className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold text-blue-600">Post Classroom Content</h1>
+          <h1 className="text-3xl font-bold text-blue-600">{t("Post Classroom Content")}</h1>
         </header>
 
         {/* Show Success Alert */}
@@ -114,12 +116,12 @@ export default function PostClassroomContent({ searchParams }: { searchParams: a
 
         <Card className="mb-6">
           <CardHeader>
-            <CardTitle className="text-xl text-blue-600">Content Details</CardTitle>
+            <CardTitle className="text-xl text-blue-600">{t("Content Details")}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-6">
               <div>
-                <Label htmlFor="content-textarea" className="text-lg font-semibold">Content</Label>
+                <Label htmlFor="content-textarea" className="text-lg font-semibold">{t("Content")}</Label>
                 <Textarea
                   id="content-textarea"
                   placeholder="Enter your content here"
@@ -132,10 +134,10 @@ export default function PostClassroomContent({ searchParams }: { searchParams: a
 
               <div className="space-y-4">
                 <div>
-                  <Label className="text-lg font-semibold">File Upload</Label>
+                  <Label className="text-lg font-semibold">{t("File Upload")}</Label>
                   <div className="flex items-center space-x-4 mt-2">
                     <Button variant="outline" onClick={() => document.getElementById("file-upload")?.click()}>
-                      <Upload className="mr-2 h-4 w-4" /> Upload File
+                      <Upload className="mr-2 h-4 w-4" /> {t("Upload File")}
                     </Button>
                     <span className="text-sm text-gray-600">
                       {file ? file.name : "No file chosen"}
@@ -149,14 +151,14 @@ export default function PostClassroomContent({ searchParams }: { searchParams: a
                     checked={allowProcessing}
                     onCheckedChange={setAllowProcessing}
                   />
-                  <Label htmlFor="allow-processing">Allow Processing</Label>
+                  <Label htmlFor="allow-processing">{t("Allow Processing")}</Label>
                 </div>
-                <p className="text-sm text-blue-600">AI will process the file if allowed.</p>
+                <p className="text-sm text-blue-600">{t("AI will process the file if allowed")}</p>
               </div>
 
               <Separator />
               <div>
-                <Label className="text-lg font-semibold">Tags</Label>
+                <Label className="text-lg font-semibold">{t("Tags")}</Label>
                 <div className="flex flex-wrap gap-2 mt-4">
                   {tagOptions.map((tag) => (
                     <Badge
@@ -176,7 +178,7 @@ export default function PostClassroomContent({ searchParams }: { searchParams: a
 
         <Card className="mb-6">
           <CardHeader>
-            <CardTitle className="text-xl text-blue-600">Assignment Description</CardTitle>
+            <CardTitle className="text-xl text-blue-600">{t("Assignment Description")}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -187,11 +189,11 @@ export default function PostClassroomContent({ searchParams }: { searchParams: a
                 rows={4}
               />
               <Button onClick={handleElaborateDescription} className="bg-blue-600 hover:bg-blue-700 text-white">
-                Generate Content ✨
+                {t("Generate Content")} ✨
               </Button>
               {enhancedAssignmentDescription && (
                 <div className="p-4 bg-blue-50 rounded-md border border-blue-200">
-                  <h3 className="font-semibold mb-2 text-blue-700">AI-Enhanced Description:</h3>
+                  <h3 className="font-semibold mb-2 text-blue-700">{t("AI-Enhanced Description")}:</h3>
                   <p className="text-gray-700">{enhancedAssignmentDescription}</p>
                 </div>
               )}
@@ -202,10 +204,10 @@ export default function PostClassroomContent({ searchParams }: { searchParams: a
 
         <div className="flex justify-end space-x-4">
           <Button variant="outline" onClick={handlePreview}>
-            <Eye className="mr-2 h-4 w-4" /> Preview
+            <Eye className="mr-2 h-4 w-4" /> {t("Preview")}
           </Button>
           <Button onClick={handleSubmit} className="bg-blue-600 hover:bg-blue-700">
-            <Send className="mr-2 h-4 w-4" /> Post Content
+            <Send className="mr-2 h-4 w-4" /> {t("Post Content")}
           </Button>
         </div>
       </div>

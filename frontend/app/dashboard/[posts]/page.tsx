@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Cookie from "js-cookie";
+import { useTranslations } from "next-intl";
 
 const Page = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -16,6 +17,7 @@ const Page = () => {
   const classroomId = Array.isArray(id) ? id[0] : id || '';
 
   const [role, setRole] = useState<string | undefined>(undefined);
+  const t = useTranslations("DashboardPosts")
 
   // Retrieve role and token from localStorage
   useEffect(() => {
@@ -34,7 +36,7 @@ const Page = () => {
         {role !== "student" && (
           <div className="flex justify-end">
           <Button className="mr-40" onClick={() => setIsModalOpen(true)}>
-            Invite Students
+            {t("Invite Students")}
           </Button>
           <Link
             className="mr-40"
@@ -43,7 +45,7 @@ const Page = () => {
               query: { class_id: params.posts },
             }}
           >
-            <Button className="mr-40">Upload grades</Button>
+            <Button className="mr-40">{t("Upload grades")}</Button>
           </Link>
           <Link
             className="mr-40"
@@ -52,7 +54,7 @@ const Page = () => {
               query: { class_id: params.posts },
             }}
           >
-            <Button className="mr-40">Create Content</Button>
+            <Button className="mr-40">{t("Create Content")}</Button>
           </Link>
         </div>
         )}

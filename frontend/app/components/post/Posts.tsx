@@ -4,6 +4,7 @@ import { useGetPostsQuery } from "@/lib/redux/api/getApi";
 import { PostType } from "@/types/postType";
 import { Key } from "react";
 import Cookie from "js-cookie";
+import { useTranslations } from "next-intl";
 
 interface Props {
   class_id: string | string[]
@@ -13,6 +14,7 @@ interface Props {
 export default function Posts({class_id}: Props) {
   // const token = localStorage.getItem('token');
   const token = Cookie.get("token");
+  const t = useTranslations("Posts")
 
   //---------------------------------Hooks---------------------------------
   // ClassroomID to be changed later - currently hardcoded
@@ -26,7 +28,7 @@ export default function Posts({class_id}: Props) {
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
           </svg>
-          <p className="mt-4 text-gray-600">Loading posts...</p>
+          <p className="mt-4 text-gray-600">{t("Loading posts")}</p>
         </div>
       </div>
     );
@@ -36,8 +38,8 @@ export default function Posts({class_id}: Props) {
     return (
       <div className="flex justify-center items-center h-64">
         <div className="text-center">
-          <p className="text-red-600 text-lg font-semibold">Failed to load posts</p>
-          <p className="text-gray-500">Please try again later.</p>
+          <p className="text-red-600 text-lg font-semibold">{t("Failed to load posts")}</p>
+          <p className="text-gray-500">{t("Please try again later")}</p>
         </div>
       </div>
     );

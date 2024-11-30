@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { CheckCircle2 } from "lucide-react"
+import { useTranslations } from 'next-intl'
 
 interface SuccessAlertProps {
   message: string
@@ -11,6 +12,7 @@ interface SuccessAlertProps {
 
 export default function SuccessAlert({ message, duration = 5000 }: SuccessAlertProps) {
   const [isVisible, setIsVisible] = useState(true)
+  const t = useTranslations("AppComponentsCore")
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -29,7 +31,7 @@ export default function SuccessAlert({ message, duration = 5000 }: SuccessAlertP
         className="animate-in fade-in slide-in-from-top-5 border-green-500 bg-green-50 text-green-900"
       >
         <CheckCircle2 className="h-4 w-4 text-green-500" />
-        <AlertTitle>Success</AlertTitle>
+        <AlertTitle>{t("Success")}</AlertTitle>
         <AlertDescription>{message}</AlertDescription>
       </Alert>
     </div>

@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import ErrorAlert from "@/app/components/core/ErrorAlert";
 import { useLoginMutation } from "@/lib/redux/api/getApi";
 import Cookie from "js-cookie";
+import { useTranslations } from "next-intl";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -14,6 +15,7 @@ export default function SignIn() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [login] = useLoginMutation();
   const router = useRouter();
+  const t = useTranslations('AuthLogin');
 
   const errorMessageNull = () => {
     setTimeout(() => {
@@ -55,7 +57,7 @@ export default function SignIn() {
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-              Sign in to your account
+              {t("Sign in to your account")}
             </h1>
             <form className="space-y-4 md:space-y-6" action="#">
               <div>
@@ -63,7 +65,7 @@ export default function SignIn() {
                   htmlFor="email"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >
-                  Your email
+                  {t("Your email")}
                 </label>
                 <input
                   type="email"
@@ -80,7 +82,7 @@ export default function SignIn() {
                   htmlFor="password"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >
-                  Password
+                  {t("Password")}
                 </label>
                 <input
                   type="password"
@@ -108,7 +110,7 @@ export default function SignIn() {
                       htmlFor="remember"
                       className="text-gray-500 dark:text-gray-300"
                     >
-                      Remember me
+                      {t("Remember me")}
                     </label>
                   </div>
                 </div>
@@ -116,7 +118,7 @@ export default function SignIn() {
                   href="/forgot-password"
                   className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
                 >
-                  Forgot password?
+                  {t("Forgot password?")}
                 </Link>
               </div>
               <button
@@ -125,15 +127,15 @@ export default function SignIn() {
                   handleSubmit(e)
                 }
               >
-                Sign in
+                {t("Sign in")}
               </button>
               <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                Don’t have an account yet?{" "}
+                {t("Don’t have an account yet?")}{" "}
                 <Link
                   href="/auth/signup"
                   className="font-medium text-blue-600 hover:underline dark:text-primary-500"
                 >
-                  Sign up
+                  {t("Sign up")}
                 </Link>
               </p>
             </form>
