@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useGetClassroomsQuery } from "@/lib/redux/api/getApi";
 import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton
 import Cookie from "js-cookie";
+import {useTranslations} from 'next-intl';
 
 interface Classroom {
   id: string;
@@ -23,6 +24,7 @@ const Page = () => {
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [role, setRole] = useState<string | undefined>(undefined);
+  const t = useTranslations('Home');
 
   // Retrieve role and token from localStorage
   useEffect(() => {
@@ -42,7 +44,7 @@ const Page = () => {
   return (
     <div className=" bg-[#F6F6F6] min-h-screen w-full pr-36 pt-10">
       <div className="ml-24 flex justify-between">
-        <h1 className="text-3xl font-black">Classes</h1>
+        <h1 className="text-3xl font-black">{t('title')}</h1>
         {role !== "student" && ( // Conditionally render the button if the role is not 'student'
           <Button className="mr-16" onClick={() => setIsModalOpen(true)}>
             Create Class

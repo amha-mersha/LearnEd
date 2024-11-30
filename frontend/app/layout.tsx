@@ -1,27 +1,30 @@
-"use client";
+// app/layout.tsx
+import { Poppins } from 'next/font/google';
+import { getLocale, getMessages } from 'next-intl/server';
+import ClientProviders from './components/ClientProviders';
 import "./globals.css";
-import { Provider } from "react-redux";
-import { store } from "@/lib/redux/store";
 
-import { Poppins } from 'next/font/google'
-
-//👇 Configure our font object
-const openSans = Poppins({
+const poppins = Poppins({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
   display: 'swap',
-})
+});
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+  const messages = await getMessages();
+
   return (
-    <Provider store={store}>
-      <html lang="en" className={openSans.className}>
-        <body>{children}</body>
-      </html>
-    </Provider>
+    <html lang={locale} className={poppins.className}>
+      <body>
+        <ClientProviders messages={messages} locale={locale}>
+          {children}
+        </ClientProviders>
+      </body>
+    </html>
   );
 }
