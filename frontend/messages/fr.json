@@ -1,15 +1,154 @@
 {
-    "Home": {
+  "Home": {
       "title": "Cours",
-      "description": "This is a multilingual websitessss"
-    },
-    "Sidebar": {
+      "description": "Ceci est un site web multilingue"
+  },
+  "Sidebar": {
+      "label": "Application",
       "classroom": "Salles de classe",
       "studygroup": "Groupe d'étude",
-      "grades": "Rapport de note",
-      "history": "Histoire",
+      "grades": "Bulletin de notes",
+      "history": "Historique",
       "settings": "Paramètres",
-      "signout": "Se déconnecter",
+      "signout": "Déconnexion",
       "Language Selection": "Sélection de la langue"
-    }
+  },
+  "GradingPage": {
+      "title": "Paramètres de notation",
+      "add": "Ajouter",
+      "name": "Nom",
+      "total": "Total"
+  },
+  "QuizComponent": {
+      "title": "Quiz",
+      "explanation": "Explication",
+      "submit": "Soumettre les réponses",
+      "Total Score": "Score total"
+  },
+  "AuthLogin": {
+      "Sign in to your account": "Connectez-vous à votre compte",
+      "Your email": "Votre email",
+      "Password": "Mot de passe",
+      "Remember me": "Se souvenir de moi",
+      "Forgot password?": "Mot de passe oublié ?",
+      "Sign in": "Se connecter",
+      "Don’t have an account yet?": "Vous n'avez pas encore de compte ?",
+      "Sign up": "S'inscrire"
+  },
+  "AuthSignup": {
+      "Create an account": "Créer un compte",
+      "Your name": "Votre nom",
+      "Your email": "Votre email",
+      "Password": "Mot de passe",
+      "Confirm password": "Confirmer le mot de passe",
+      "Select your role": "Sélectionnez votre rôle",
+      "Teacher": "Enseignant",
+      "Student": "Étudiant",
+      "Create Account": "Créer un compte",
+      "Already have an account?": "Vous avez déjà un compte ?",
+      "Sign In": "Se connecter"
+  },
+  "AppComponentsCore": {
+      "Students": "Étudiants",
+      "Create Classroom": "Créer une salle de classe",
+      "Classroom Name": "Nom de la salle de classe",
+      "Course Name": "Nom du cours",
+      "Season and Year": "Saison et année",
+      "Season": "Saison",
+      "Spring": "Printemps",
+      "Summer": "Été",
+      "Fall": "Automne",
+      "Winter": "Hiver",
+      "Failed to create classroom": "Échec de la création de la salle de classe.",
+      "Classroom created successfully": "Salle de classe créée avec succès !",
+      "Submit": "Soumettre",
+      "Log out": "Se déconnecter",
+      "Login": "Connexion",
+      "Invite Students": "Inviter des étudiants",
+      "Invite": "Inviter",
+      "Failed to invite student": "Échec de l'invitation de l'étudiant.",
+      "Error": "Erreur",
+      "Loading": "Chargement...",
+      "Success": "Succès"
+  },
+  "ReportCard": {
+      "Teacher": "Enseignant",
+      "Class": "Classe",
+      "Total Students": "Nombre total d'étudiants",
+      "Total Grade": "Note totale"
+  },
+  "Posts": {
+      "Delete": "Supprimer",
+      "has posted some notes": "a publié des notes",
+      "Loading posts": "Chargement des publications...",
+      "Failed to load posts": "Échec du chargement des publications",
+      "Please try again later": "Veuillez réessayer plus tard."
+  },
+  "StudyGroup": {
+      "label": "Groupes d'étude",
+      "Students": "Étudiants",
+      "Create Study Group": "Créer un groupe d'étude",
+      "Error fetching study groups": "Erreur lors de la récupération des groupes d'étude",
+      "No study groups joined yet": "Aucun groupe d'étude rejoint pour le moment.",
+      "Study Group Name": "Nom du groupe d'étude",
+      "Course Name": "Nom du cours",
+      "Failed to create study group": "Échec de la création du groupe d'étude.",
+      "Study group created successfully": "Groupe d'étude créé avec succès !",
+      "Invite Students": "Inviter des étudiants",
+      "Invite": "Inviter",
+      "Failed to invite student": "Échec de l'invitation de l'étudiant."
+  },
+  "DashboardCore": {
+      "Create Class": "Créer une classe",
+      "Error fetching classrooms": "Erreur lors de la récupération des salles de classe",
+      "No classrooms joined yet": "Aucune salle de classe rejointe pour le moment."
+  },
+  "History": {
+      "Quiz History": "Historique des quiz",
+      "No quiz history found": "Aucun historique de quiz trouvé.",
+      "Quiz from": "Quiz de",
+      "Score": "Score",
+      "Your Answer": "Votre réponse",
+      "Correct Answer": "Réponse correcte"
+  },
+  "Grading": {
+      "Grading Parameters": "Paramètres de notation",
+      "Add": "Ajouter",
+      "Name": "Nom",
+      "Total": "Total",
+      "Actions": "Actions"
+  },
+  "GradeReport": {
+      "Grade Report": "Bulletin de notes",
+      "Name": "Nom",
+      "Enrolled Classes": "Cours inscrits",
+      "No grades available yet": "Aucune note disponible pour le moment."
+  },
+  "FlashCards": {
+      "No flashcards found": "Aucune carte mémoire trouvée.",
+      "Question": "Question",
+      "Answer": "Réponse",
+      "Card": "Carte",
+      "of": "de"
+  },
+  "CreateContent": {
+      "Post Classroom Content": "Publier du contenu pour la salle de classe",
+      "Content Details": "Détails du contenu",
+      "Content": "Contenu",
+      "File Upload": "Téléchargement de fichier",
+      "Upload File": "Télécharger un fichier",
+      "Allow Processing": "Autoriser le traitement",
+      "AI will process the file if allowed": "L'IA traitera le fichier si autorisé.",
+      "Tags": "Étiquettes",
+      "Assignment Description": "Description de la tâche",
+      "Generate Content": "Générer du contenu",
+      "AI-Enhanced Description": "Description améliorée par l'IA",
+      "Preview": "Aperçu",
+      "Post Content": "Publier le contenu"
+  },
+  "DashboardPosts": {
+      "Invite Students": "Inviter des étudiants",
+      "Upload grades": "Télécharger les notes",
+      "Create Content": "Créer du contenu"
   }
+}
