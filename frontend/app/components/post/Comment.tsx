@@ -3,6 +3,7 @@ import { useRemoveCommentMutation } from "@/lib/redux/api/getApi";
 import { commentType } from "@/types/commentType";
 import React from "react";
 import Cookie from "js-cookie";
+import { useFormatter } from "next-intl";
 interface Props {
   info: any;
   post_id: string | string[]
@@ -12,7 +13,8 @@ interface Props {
 const Comment = ({ info, post_id, class_id }: Props) => {
   const [deleteComment, { data, isSuccess, isError }] = useRemoveCommentMutation();
   // const token = localStorage.getItem("token")
-  const token = Cookie.get("token"); 
+  const token = Cookie.get("token");
+  const format = useFormatter(); 
   const handleDelete = () => {
     deleteComment({
       postId: post_id,
@@ -31,7 +33,7 @@ const Comment = ({ info, post_id, class_id }: Props) => {
           <div className="flex-1">
             <div className="flex justify-start  flex-col">
               <h4 className="font-bold">{info.creator_name}</h4>
-              <p className="text-xs text-gray-500">{info.created_at}</p>
+              <p className="text-xs text-gray-500">{format.relativeTime(info.created_at)}</p>
             </div>
           </div>
         </div>
