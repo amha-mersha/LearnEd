@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import React, { useEffect, useState, useTransition } from "react";
 const logo = require("../public/Images/LearnEd.svg");
 import {
@@ -40,19 +40,17 @@ import { Locale } from "@/i18n/config";
 import { setUserLocale } from "@/services/locale";
 import { useTranslations } from "next-intl";
 
-
-
 export function AppSidebar() {
   const pathname = usePathname();
   const [role, setRole] = useState<string | undefined>(undefined);
   const { state } = useSidebar();
   const [isPending, startTransition] = useTransition();
-  const [currentLocale, setCurrentLocale] = useState<string>('en');
-  const t = useTranslations('Sidebar');
+  const [currentLocale, setCurrentLocale] = useState<string>("en");
+  const t = useTranslations("Sidebar");
 
   useEffect(() => {
     const userRole = Cookie.get("role");
-    const storedLocale = Cookie.get("NEXT_LOCALE") || 'en';
+    const storedLocale = Cookie.get("NEXT_LOCALE") || "en";
     setRole(userRole);
     setCurrentLocale(storedLocale);
   }, []);
@@ -68,30 +66,31 @@ export function AppSidebar() {
   };
 
   const languageOptions = [
-    { value: 'en', label: 'English' },
-    { value: 'fr', label: 'French' }
+    { value: "en", label: "English" },
+    { value: "fr", label: "French" },
+    { value: "am", label: "Amharic" },
   ];
 
   const items = [
     {
-      title: t('classroom'),
+      title: t("classroom"),
       url: "/dashboard",
       icon: Home,
     },
     {
-      title: t('studygroup'),
+      title: t("studygroup"),
       url: "/dashboard/study-group",
       icon: Users,
       role: "student",
     },
     {
-      title: t('grades'),
+      title: t("grades"),
       url: "/dashboard/grade-report",
       icon: BarChart,
       role: "student",
     },
     {
-      title: t('history'),
+      title: t("history"),
       url: "/dashboard/history",
       icon: History,
     },
@@ -149,11 +148,11 @@ export function AppSidebar() {
 
       <SidebarFooter>
         <SidebarMenu>
-        <SidebarMenuItem>
+          <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
-                  <Languages /> {t('Language Selection')}
+                  <Languages /> {t("Language Selection")}
                   <ChevronUp className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
@@ -162,10 +161,12 @@ export function AppSidebar() {
                 className="w-[--radix-popper-anchor-width]"
               >
                 {languageOptions.map((lang) => (
-                  <DropdownMenuItem 
+                  <DropdownMenuItem
                     key={lang.value}
                     onSelect={() => handleLocaleChange(lang.value)}
-                    className={`cursor-pointer ${currentLocale === lang.value ? 'bg-gray-100' : ''}`}
+                    className={`cursor-pointer ${
+                      currentLocale === lang.value ? "bg-gray-100" : ""
+                    }`}
                   >
                     <span>{lang.label}</span>
                     {currentLocale === lang.value && (
@@ -188,7 +189,7 @@ export function AppSidebar() {
                 }`}
               >
                 <Settings className="mr-3 w-5 h-5" />
-                <span>{t('settings')}</span>
+                <span>{t("settings")}</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -196,7 +197,7 @@ export function AppSidebar() {
             <SidebarMenuButton asChild>
               <a href="/logout" className="flex items-center p-2 rounded-lg">
                 <LogOut className="mr-3 w-5 h-5" />
-                <span>{t('signout')}</span>
+                <span>{t("signout")}</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
