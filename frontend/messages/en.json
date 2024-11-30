@@ -88,6 +88,7 @@
       "label": "Study Groups",
       "Students": "Students",
       "Create Study Group": "Create Study Group",
+      "Creating": "Creating...",
       "Error fetching study groups": "Error fetching study groups",
       "No study groups joined yet": "No study groups joined yet.",
       "Study Group Name": "Study Group Name",
@@ -150,5 +151,8 @@
       "Invite Students": "Invite Students",
       "Upload grades": "Upload grades",
       "Create Content": "Create Content"
-    }
+    },
+    "en": "English",
+    "fr": "French",
+    "am": "Amharic"
   }
