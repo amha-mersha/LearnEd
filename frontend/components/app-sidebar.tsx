@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+'use client';
+import React, { useEffect, useState, useTransition } from "react";
 const logo = require("../public/Images/LearnEd.svg");
 import {
-  Calendar,
+  Languages,
   Home,
   Settings,
   History,
@@ -9,6 +10,9 @@ import {
   Users,
   BarChart,
   BookOpen,
+  ChevronUp,
+  User2,
+  Check,
 } from "lucide-react";
 import Cookie from "js-cookie";
 import {
@@ -26,44 +30,79 @@ import {
 } from "@/components/ui/sidebar";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Locale } from "@/i18n/config";
+import { setUserLocale } from "@/services/locale";
+import { useTranslations } from "next-intl";
 
-const items = [
-  {
-    title: "Class Rooms",
-    url: "/dashboard",
-    icon: Home,
-  },
-  {
-    title: "Study Group",
-    url: "/dashboard/study-group",
-    icon: Users,
-    role: "student",
-  },
-  {
-    title: "Grade Report",
-    url: "/dashboard/grade-report",
-    icon: BarChart,
-    role: "student",
-  },
-  {
-    title: "History",
-    url: "/dashboard/history",
-    icon: History,
-  },
-];
+
 
 export function AppSidebar() {
   const pathname = usePathname();
   const [role, setRole] = useState<string | undefined>(undefined);
   const { state } = useSidebar();
+  const [isPending, startTransition] = useTransition();
+  const [currentLocale, setCurrentLocale] = useState<string>('en');
+  const t = useTranslations('Sidebar');
 
   useEffect(() => {
     const userRole = Cookie.get("role");
+    const storedLocale = Cookie.get("NEXT_LOCALE") || 'en';
     setRole(userRole);
+    setCurrentLocale(storedLocale);
   }, []);
 
+  const handleLocaleChange = (locale: string) => {
+    startTransition(() => {
+      const typedLocale = locale as Locale;
+      setUserLocale(typedLocale);
+      setCurrentLocale(locale);
+      // Optional: You might want to reload the page or use router to refresh
+      // window.location.reload();
+    });
+  };
+
+  const languageOptions = [
+    { value: 'en', label: 'English' },
+    { value: 'fr', label: 'French' }
+  ];
+
+  const items = [
+    {
+      title: t('classroom'),
+      url: "/dashboard",
+      icon: Home,
+    },
+    {
+      title: t('studygroup'),
+      url: "/dashboard/study-group",
+      icon: Users,
+      role: "student",
+    },
+    {
+      title: t('grades'),
+      url: "/dashboard/grade-report",
+      icon: BarChart,
+      role: "student",
+    },
+    {
+      title: t('history'),
+      url: "/dashboard/history",
+      icon: History,
+    },
+  ];
+
   return (
-    <Sidebar variant="floating" className="w-1/5 fixed h-screen bg-white" collapsible="icon">
+    <Sidebar
+      variant="floating"
+      className="w-1/5 fixed h-screen bg-white"
+      collapsible="icon"
+    >
       <SidebarHeader>
         {/* Logo Section */}
         {/* <div className="flex justify-center py-6">
@@ -110,6 +149,33 @@ export function AppSidebar() {
 
       <SidebarFooter>
         <SidebarMenu>
+        <SidebarMenuItem>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <SidebarMenuButton>
+                  <Languages /> {t('Language Selection')}
+                  <ChevronUp className="ml-auto" />
+                </SidebarMenuButton>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                side="top"
+                className="w-[--radix-popper-anchor-width]"
+              >
+                {languageOptions.map((lang) => (
+                  <DropdownMenuItem 
+                    key={lang.value}
+                    onSelect={() => handleLocaleChange(lang.value)}
+                    className={`cursor-pointer ${currentLocale === lang.value ? 'bg-gray-100' : ''}`}
+                  >
+                    <span>{lang.label}</span>
+                    {currentLocale === lang.value && (
+                      <Check className="ml-auto h-4 w-4" />
+                    )}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton
               asChild
@@ -122,7 +188,7 @@ export function AppSidebar() {
                 }`}
               >
                 <Settings className="mr-3 w-5 h-5" />
-                <span>Settings</span>
+                <span>{t('settings')}</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -130,7 +196,7 @@ export function AppSidebar() {
             <SidebarMenuButton asChild>
               <a href="/logout" className="flex items-center p-2 rounded-lg">
                 <LogOut className="mr-3 w-5 h-5" />
-                <span>Sign Out</span>
+                <span>{t('signout')}</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>

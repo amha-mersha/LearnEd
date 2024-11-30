@@ -1,6 +1,15 @@
 {
     "Home": {
-      "title": "Welcome to My Website",
+      "title": "Classes",
       "description": "This is a multilingual website"
+    },
+    "Sidebar": {
+      "classroom": "Class Rooms",
+      "studygroup": "Study Group",
+      "grades": "Grade Report",
+      "history": "History",
+      "settings": "Settings",
+      "signout": "Sign Out",
+      "Language Selection": "Language Selection"
     }
   }
