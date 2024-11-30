@@ -14,6 +14,7 @@ import {
 import { Parameter, Student, studentsData } from "@/utils/grades";
 import Grade_students from "@/app/components/Grade_students";
 import Cookie from "js-cookie";
+import { useTranslations } from "next-intl";
 
 export default function GradingPage({ searchParams }: { searchParams: any }) {
   let studs: any = [];
@@ -25,6 +26,7 @@ export default function GradingPage({ searchParams }: { searchParams: any }) {
 
   // const token = localStorage.getItem("token");
   const token = Cookie.get("token");
+  const t = useTranslations("Grading")
 
   const { data, isLoading, isError, isSuccess } = useGetAllStudentsQuery({
     id: searchParams.class_id,
@@ -127,7 +129,7 @@ export default function GradingPage({ searchParams }: { searchParams: any }) {
   if (isSuccess) {
     return (
       <div className="w-[75vw] mx-auto p-4">
-        <h1 className="text-2xl font-bold mb-4">Grading Parameters</h1>
+        <h1 className="text-2xl font-bold mb-4">{t("Grading Parameters")}</h1>
 
         <div className="flex gap-2 mb-4">
           <Input
@@ -145,7 +147,7 @@ export default function GradingPage({ searchParams }: { searchParams: any }) {
             className="w-24"
             aria-label="Maximum points for new parameter"
           />
-          <Button onClick={addParameter}>Add</Button>
+          <Button onClick={addParameter}>{t("Add")}</Button>
         </div>
 
         <div className="flex gap-2 mb-4">
@@ -162,14 +164,14 @@ export default function GradingPage({ searchParams }: { searchParams: any }) {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
+              <TableHead>{t("Name")}</TableHead>
               {parameters?.map((param) => (
                 <TableHead key={param.name}>
                   {param.name}({param.points})
                 </TableHead>
               ))}
-              <TableHead>Total({calculateMaxTotal()})</TableHead>
-              <TableHead>Actions</TableHead>
+              <TableHead>{t("Total")}({calculateMaxTotal()})</TableHead>
+              <TableHead>{t("Actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

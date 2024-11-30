@@ -142,6 +142,7 @@ type AuthUsecase interface {
 	Signup(c context.Context, user dtos.SignupDTO) CodedError
 	Login(c context.Context, user dtos.LoginDTO) (string, string, CodedError)
 	ChangePassword(c context.Context, user dtos.ChangePasswordDTO) CodedError
+	GetInfo(c context.Context, userID string) (dtos.UserData, CodedError)
 }
 
 type AuthRepository interface {

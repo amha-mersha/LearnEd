@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { X } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 interface Student {
   id: number
@@ -25,6 +26,7 @@ export function GradingPageComponent() {
     { id: 7, name: "Zoe Nakamura", scores: { "Mid Exam": 43, "Final Exam": 47 } },
     { id: 8, name: "Hassan Al-Farsi", scores: { "Mid Exam": 48, "Final Exam": 42 } },
   ])
+  const t = useTranslations('GradingPage');
 
   const addParameter = () => {
     if (newParameter && !parameters.includes(newParameter)) {
@@ -58,7 +60,7 @@ export function GradingPageComponent() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Grading Parameters</h1>
+      <h1 className="text-2xl font-bold mb-4">{t("title")}</h1>
       
       <div className="flex gap-2 mb-4">
         <Input 
@@ -68,7 +70,7 @@ export function GradingPageComponent() {
           className="flex-grow"
           aria-label="New grading parameter"
         />
-        <Button onClick={addParameter}>Add</Button>
+        <Button onClick={addParameter}>{t('add')}</Button>
       </div>
 
       <div className="flex gap-2 mb-4">
@@ -89,11 +91,11 @@ export function GradingPageComponent() {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Name</TableHead>
+            <TableHead>{t("name")}</TableHead>
             {parameters.map(param => (
               <TableHead key={param}>{param}</TableHead>
             ))}
-            <TableHead>Total</TableHead>
+            <TableHead>{t("total")}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

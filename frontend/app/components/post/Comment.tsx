@@ -4,6 +4,7 @@ import { commentType } from "@/types/commentType";
 import React from "react";
 import Cookie from "js-cookie";
 import { useFormatter } from "next-intl";
+import { useTranslations } from "next-intl";
 interface Props {
   info: any;
   post_id: string | string[]
@@ -15,6 +16,7 @@ const Comment = ({ info, post_id, class_id }: Props) => {
   // const token = localStorage.getItem("token")
   const token = Cookie.get("token");
   const format = useFormatter(); 
+  const t = useTranslations("Posts")
   const handleDelete = () => {
     deleteComment({
       postId: post_id,
@@ -37,7 +39,7 @@ const Comment = ({ info, post_id, class_id }: Props) => {
             </div>
           </div>
         </div>
-        <Button className="w-16 h-10 mt-3 mr-2" onClick={handleDelete} >Delete</Button>
+        <Button className="w-16 h-10 mt-3 mr-2" onClick={handleDelete}>{t("Delete")}</Button>
       </div>
       <p className="text-sm ml-10 font-semibold">{info.content}</p>
     </div>

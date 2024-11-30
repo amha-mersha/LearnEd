@@ -4,6 +4,7 @@ import { cardType } from '../../types/cardType'
 const book = require('../../public/Images/mynaui_book-open.svg');
 const people = require('../../public/Images/fluent_people-16-regular.svg');
 import Image from 'next/image'
+import { useTranslations } from 'next-intl';
 
 interface Props{
     info: cardType
@@ -11,6 +12,7 @@ interface Props{
 
 
 const ClassroomCard = ({info}: Props) => {
+    const t = useTranslations("AppComponentsCore")
 
     return (
             <div className='w-full h-52 p-4 flex flex-col shadow-md justify-between rounded-3xl bg-white'>
@@ -30,7 +32,7 @@ const ClassroomCard = ({info}: Props) => {
                     </div>
                     <div className=' flex justify-center align-middle space-x-1'>
                         <Image className='w-6' src={people} alt=''/>
-                        <h1 className='text-lg font-semibold'>{info.numStudents} Students</h1>
+                        <h1 className='text-lg font-semibold'>{info.numStudents} {t("Students")}</h1>
                     </div>
                 </div>
             </div>

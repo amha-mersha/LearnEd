@@ -10,6 +10,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible"
 import { ChevronDown, ChevronUp } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 interface Question {
   id: number
@@ -47,6 +48,7 @@ export function QuizComponent() {
   const [userAnswers, setUserAnswers] = useState<{ [key: number]: string }>({})
   const [submitted, setSubmitted] = useState(false)
   const [openExplanations, setOpenExplanations] = useState<{ [key: number]: boolean }>({})
+  const t = useTranslations('QuizComponent');
 
   const handleAnswerChange = (questionId: number, answer: string) => {
     setUserAnswers((prev) => ({ ...prev, [questionId]: answer }))
@@ -80,7 +82,7 @@ export function QuizComponent() {
           }
         }
       `}</style>
-      <h1 className="text-2xl font-bold mb-6">Quiz</h1>
+      <h1 className="text-2xl font-bold mb-6">{t("title")}</h1>
       {questions.map((question) => (
         <div
           key={question.id}
@@ -120,7 +122,7 @@ export function QuizComponent() {
                   ) : (
                     <ChevronDown className="w-4 h-4 mr-1" />
                   )}
-                  {openExplanations[question.id] ? "Hide" : "Show"} Explanation
+                  {openExplanations[question.id] ? "Hide" : "Show"} {t("explanation")}
                 </CollapsibleTrigger>
                 <CollapsibleContent className="mt-2 text-sm">
                   {question.explanation}
@@ -140,7 +142,7 @@ export function QuizComponent() {
             border: '3px solid transparent',
           }}
         >
-          <span className="relative z-10">Submit Answers</span>
+          <span className="relative z-10">{t("submit")}</span>
           <span className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-500 opacity-50 filter blur-xl"></span>
         </Button>
       )}
