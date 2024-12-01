@@ -242,9 +242,7 @@ export const learnApi = createApi({
       }),
     }),
     createstudyPost: builder.mutation({
-      query: ({ studyGroupId, accessToken, data }) => (
-        console.log('data: ', data)
-        ,{
+      query: ({ studyGroupId, accessToken, data }) => ({
         url: `study-groups/${studyGroupId}/posts`,
         method: "POST",
         headers: {
