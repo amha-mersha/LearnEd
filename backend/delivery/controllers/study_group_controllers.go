@@ -64,6 +64,24 @@ func (controller *StudyGroupController) DeleteStudyGroup(c *gin.Context) {
 	c.JSON(http.StatusOK, domain.Response{"message": "study group deleted successfully"})
 }
 
+func (controller *StudyGroupController) GetPosts(c *gin.Context) {
+	studyGroupID := c.Param("studyGroupID")
+	creatorID, exists := c.Keys["id"]
+	if !exists {
+		c.JSON(http.StatusForbidden, domain.Response{"message": "couldn't find the id field"})
+		return
+	}
+
+	id := creatorID.(string)
+	posts, err := controller.usecase.GetPosts(c, id, studyGroupID)
+	if err != nil {
+		c.JSON(GetHTTPErrorCode(err), domain.Response{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, posts)
+}
+
 func (controller *StudyGroupController) AddPost(c *gin.Context) {
 	var post domain.Post
 	if err := c.ShouldBindJSON(&post); err != nil {
