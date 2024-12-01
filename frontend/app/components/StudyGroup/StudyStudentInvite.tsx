@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useInviteToStudyGroupMutation } from '@/lib/redux/api/getApi';
 
-export default function StudyStudentInvite({ isOpen, onClose, studyGroupId, onSuccess }: { isOpen: boolean; onClose: () => void; studyGroupId: string; onSuccess: () => void }) {
+export default function StudyStudentInvite({ isOpen, onClose, studyGroupId, onSuccess }: { isOpen: boolean; onClose: () => void; studyGroupId: string | string[]; onSuccess: () => void }) {
   const [studentEmail, setStudentEmail] = useState('');
   const [inviteToStudyGroup, { isLoading, isError, isSuccess }] = useInviteToStudyGroupMutation();
   const accessToken = localStorage.getItem('token');
