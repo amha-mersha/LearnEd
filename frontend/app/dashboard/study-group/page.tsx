@@ -9,12 +9,14 @@ import StudyGroupCard from "@/app/components/StudyGroup/StudyGroupCard";
 import CreateStudyGroupModal from "@/app/components/StudyGroup/StudyGroupPopup";
 import Cookie from "js-cookie";
 import { useTranslations } from "next-intl";
+import { studyPostType } from "@/types/studyPostType";
 
 interface StudyGroup {
   id: string;
   name: string;
   course_name: string;
   students: string[]; // Array of student IDs
+  posts: studyPostType[];
 }
 
 const StudyGroupPage = () => {
@@ -56,11 +58,15 @@ const StudyGroupPage = () => {
               {t("No study groups joined yet")}
             </p>
           </div>
-        ): (
-          studyGroups.map((group: StudyGroup) => (
+        ) : (
+          studyGroups.map((group: StudyGroup, ind: number) => (
             <Link
               key={group.id}
-              href={`/dashboard/study-group/${group.id}`}
+              href={{ pathname: `/dashboard/study-group/${group.id}`,
+              query: {
+                post: JSON.stringify(group.posts)
+              }
+            }}
               className="w-5/12 ml-8 mt-6"
             >
               <StudyGroupCard
@@ -80,7 +86,6 @@ const StudyGroupPage = () => {
         refetch={refetch}
       />
     </div>
-    
   );
 };
 
@@ -91,7 +96,8 @@ const SkeletonCard = () => {
       <div className="flex justify-between w-full align-middle">
         <div>
           <Skeleton className="w-32 h-8" /> {/* Skeleton for group name */}
-          <Skeleton className="w-24 h-5 mt-2" /> {/* Skeleton for course name */}
+          <Skeleton className="w-24 h-5 mt-2" />{" "}
+          {/* Skeleton for course name */}
         </div>
       </div>
       <div className="flex justify-between w-full mt-4">

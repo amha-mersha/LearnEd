@@ -18,6 +18,7 @@ func NewStudyGroupRouter(studygroupRep domain.StudyGroupRepository, authReposito
 	router.POST("/:studyGroupID/students", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleStudent), sgController.AddStudent)
 	router.DELETE("/:studyGroupID/students/:studentID", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleStudent), sgController.RemoveStudent)
 
+	router.GET("/:studyGroupID/posts", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleStudent), sgController.GetPosts)
 	router.POST("/:studyGroupID/posts", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleStudent), sgController.AddPost)
 	router.PATCH("/:studyGroupID/posts/:postID", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleStudent), sgController.UpdatePost)
 	router.DELETE("/:studyGroupID/posts/:postID", middleware.AuthMiddlewareWithRoles(jwtService, domain.RoleStudent), sgController.RemovePost)
