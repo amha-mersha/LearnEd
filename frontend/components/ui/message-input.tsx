@@ -15,9 +15,7 @@ interface Props {
 export default function MessageInput({studyGroupId}: Props) {
   const [message, setMessage] = useState("");
   const accessToken = Cookie.get("token");
-  console.log("token", accessToken);
   const [addpost] = useCreatestudyPostMutation();
-  console.log("id", studyGroupId)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

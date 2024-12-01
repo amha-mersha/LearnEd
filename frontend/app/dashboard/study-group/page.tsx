@@ -31,8 +31,6 @@ const StudyGroupPage = () => {
     error,
     refetch,
   } = useGetStudyGroupsQuery(token); // Fetch study group data
-  console.log(studyGroups);
-  console.log(token);
 
   return (
     <div className="bg-[#F6F6F6] min-h-screen pr-36 pt-16">

@@ -19,7 +19,6 @@ const Page = ({searchParams}: {searchParams: searchParamsType}) => {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false); // State to track success alert
   const params = useParams();
   const posts = JSON.parse(searchParams.post)
-  console.log(typeof posts, posts)
   const t = useTranslations("StudyGroup")
 
   const handleInviteSuccess = () => {
