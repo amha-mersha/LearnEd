@@ -45,7 +45,7 @@ const Page = ({searchParams}: {searchParams: searchParamsType}) => {
       />
       
       {showSuccessMessage && <SuccessAlert message="Student invited successfully!" />} {/* Show success alert */}
-      <StudyGroupChat />
+      <StudyGroupChat studygroup_id = {params.posts} />
     </div>
   );
 };

@@ -241,6 +241,19 @@ export const learnApi = createApi({
         body: data,
       }),
     }),
+    createstudyPost: builder.mutation({
+      query: ({ studyGroupId, accessToken, data }) => (
+        console.log('data: ', data)
+        ,{
+        url: `study-groups/${studyGroupId}/posts`,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -266,4 +279,5 @@ export const {
   useGetFlashcardsQuery,
   useInviteToStudyGroupMutation,
   useInviteToClassroomsMutation,
+  useCreatestudyPostMutation,
 } = learnApi;
