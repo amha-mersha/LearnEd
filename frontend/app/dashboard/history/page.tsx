@@ -7,7 +7,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 
 export default function QuizHistoryPage() {
   const [quizHistory, setQuizHistory] = useState<any[]>([]);
@@ -15,6 +15,7 @@ export default function QuizHistoryPage() {
     {}
   );
   const t = useTranslations("History")
+  const format = useFormatter();
 
   useEffect(() => {
     const history = getQuizHistory();
@@ -48,7 +49,7 @@ export default function QuizHistoryPage() {
                       {t("Quiz from")}: {quiz.title}
                     </h2>
                     <span className="text-sm text-gray-500">
-                      {new Date(quiz.timestamp).toLocaleString()}
+                      {format.relativeTime(new Date(quiz.timestamp)) }
                     </span>
                   </div>
                   <div className="flex items-center space-x-2">

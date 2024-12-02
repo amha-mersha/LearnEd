@@ -13,7 +13,7 @@ import { useTranslations } from "next-intl";
 const GradeReport = () => {
   // const token = localStorage.getItem("token");
   const token = Cookie.get("token");
-  const t = useTranslations("GradeReport")
+  const t = useTranslations("GradeReport");
   const studentId = useJwtDecoder(token); // Decode the token to get the student ID
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [shouldFetchGrades, setShouldFetchGrades] = useState(false);
@@ -59,7 +59,7 @@ const GradeReport = () => {
         </header>
         <div className="flex flex-row">
           <p>{t("Name")}:</p>
-          <p className="pl-1 font-medium">William Saliba</p>
+          <p className="pl-1 font-medium">Chachi</p>
         </div>
         <p className="font-semibold text-lg mt-10">{t("Enrolled Classes")}</p>
 
@@ -87,15 +87,8 @@ const GradeReport = () => {
                     classroom={classroom}
                   />
                 );
-              } else if (classroom.grades.records.length === 0) {
-                return (
-                  <div className="flex flex-col items-center justify-center w-full h-64">
-                    <p className="text-gray-500 text-lg font-medium">
-                      {t("No grades available yet")}
-                    </p>
-                  </div>
-                );
               }
+
               return null;
             })
           )}

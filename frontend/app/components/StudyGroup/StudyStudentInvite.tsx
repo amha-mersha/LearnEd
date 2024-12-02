@@ -5,11 +5,12 @@ import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useInviteToStudyGroupMutation } from '@/lib/redux/api/getApi';
 import { useTranslations } from 'next-intl';
+import Cookies from "js-cookie";
 
 export default function StudyStudentInvite({ isOpen, onClose, studyGroupId, onSuccess }: { isOpen: boolean; onClose: () => void; studyGroupId: string | string[]; onSuccess: () => void }) {
   const [studentEmail, setStudentEmail] = useState('');
   const [inviteToStudyGroup, { isLoading, isError, isSuccess }] = useInviteToStudyGroupMutation();
-  const accessToken = localStorage.getItem('token');
+  const accessToken = Cookies.get('token');
   const t = useTranslations("StudyGroup")
   
 

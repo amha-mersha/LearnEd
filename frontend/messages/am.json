@@ -1,11 +1,11 @@
 {
     "Home": {
-      "title": "ክፍላት",
+      "title": "ክፍሎች",
       "description": "ይህ ገጽ ባለብዙ ቋንቋ ነው "
     },
     "Sidebar": {
       "label": "መተግበሪያ",
-      "classroom": "መማሪያ ክፍላት",
+      "classroom": "መማሪያ ክፍሎች",
       "studygroup": "የጥናት ቡድን",
       "grades": "የትምህርት ዉጠት",
       "history": "ታሪክ",
@@ -50,8 +50,8 @@
     },
     "AppComponentsCore": {
       "Students": "ተማሪዎች",
-      "Create Classroom": "ክፍላት ይፍጠሩ",
-      "Classroom Name": "ክፍላት ስም",
+      "Create Classroom": "ክፍሎች ይፍጠሩ",
+      "Classroom Name": "ክፍሎች ስም",
       "Course Name": "የትምህርት ስም",
       "Season and Year": "ወቅት እና ዓመት",
       "Season": "ወቅት",
@@ -59,7 +59,7 @@
       "Summer": "በጋ",
       "Fall": "መኸር",
       "Winter": "ክረምት",
-      "Failed to create classroom": "ክፍላትን መፍጠር አልተቻለም.",
+      "Failed to create classroom": "ክፍሎችን መፍጠር አልተቻለም.",
       "Classroom created successfully": "ክፍል በተሳካ ሁነታ ተፈጥሯል!",
       "Submit": "አስገባ",
       "Log out": "ውጣ",
@@ -88,6 +88,7 @@
       "label": "የጥናት ቡድን",
       "Students": "ተማሪዎች",
       "Create Study Group": "የጥናት ቡድን ይፍጠሩ",
+      "Creating": "በመፍጠር ላይ...",
       "Error fetching study groups": "የጥናት ቡድን መፍጠር አልተቻለም",
       "No study groups joined yet": "እስካሁን የገቡት የጥናት ቡድን የለም",
       "Study Group Name": "የጥናት ቡድን ስም",
@@ -100,8 +101,8 @@
     },
     "DashboardCore": {
       "Create Class": "ክፍል ይፍጠሩ",
-      "Error fetching classrooms": "ክፍላትን መፍጠር አልተቻለም",
-      "No classrooms joined yet": "እስካሁን የገቡት ክፍላት የለም"
+      "Error fetching classrooms": "ክፍሎችን መፍጠር አልተቻለም",
+      "No classrooms joined yet": "እስካሁን የገቡት ክፍሎች የለም"
     },
     "History": {
       "Quiz History": "ታሪክን ይፈትኑ",
@@ -121,7 +122,7 @@
     "GradeReport": {
       "Grade Report": "የትምህርት ዉጤት",
       "Name": "ስም",
-      "Enrolled Classes": "የተመዘገቡት ክፍላት",
+      "Enrolled Classes": "የተመዘገቡት ክፍሎች",
       "No grades available yet": "እስካሁን የተመዘገቡት ዉጤቶች የለም"
     },
     "FlashCards": {
@@ -150,5 +151,8 @@
       "Invite Students": "ተማሪዎችን ይጋብዙ",
       "Upload grades": "የትምህርት ዉጤቶችን ይስጡ",
       "Create Content": "ይዘት ይፍጠሩ"
-    }
+    },
+    "en": "እንግሊዝኛ",
+    "fr": "ፈረንሳይኛ",
+    "am": "አማርኛ"
   }

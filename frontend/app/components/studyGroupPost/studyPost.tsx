@@ -41,7 +41,7 @@ const Post = ({ info, studygroup_id }: Props) => {
           <div className="w-7 h-7 mt-1 bg-blue-900 rounded-full"></div>
           <div>
             <h3 className="">
-              <span className="font-bold">{info.creator_name}</span> has posted some notes
+              <span className="font-bold">Simon</span> has posted some notes
             </h3>
             <p className="text-xs text-gray-500">{info.created_at}</p>
           </div>

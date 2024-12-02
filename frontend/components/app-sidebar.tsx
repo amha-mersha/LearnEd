@@ -47,6 +47,7 @@ export function AppSidebar() {
   const [isPending, startTransition] = useTransition();
   const [currentLocale, setCurrentLocale] = useState<string>("en");
   const t = useTranslations("Sidebar");
+  const tt = useTranslations("");
 
   useEffect(() => {
     const userRole = Cookie.get("role");
@@ -66,9 +67,9 @@ export function AppSidebar() {
   };
 
   const languageOptions = [
-    { value: "en", label: "English" },
-    { value: "fr", label: "French" },
-    { value: "am", label: "Amharic" },
+    { value: "en", label: tt("en") },
+    { value: "fr", label: tt("fr") },
+    { value: "am", label: tt("am") },
   ];
 
   const items = [
@@ -195,7 +196,7 @@ export function AppSidebar() {
           </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
-              <a href="/logout" className="flex items-center p-2 rounded-lg">
+              <a href="/" className="flex items-center p-2 rounded-lg">
                 <LogOut className="mr-3 w-5 h-5" />
                 <span>{t("signout")}</span>
               </a>

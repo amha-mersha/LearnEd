@@ -23,7 +23,7 @@ const StudyGroupPage = () => {
   // const token = localStorage.getItem('token');
   const token = Cookie.get("token");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const t = useTranslations("DashboardCore")
+  const t = useTranslations("StudyGroup")
 
   const {
     data: studyGroups = [],

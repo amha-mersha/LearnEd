@@ -53,7 +53,7 @@ const Page = () => {
         )}
 
       </div>
-      <div className="justify-center w-full flex flex-wrap">
+      <div className="pl-14 w-full flex flex-wrap">
         {isLoading ? (
           // Render skeletons when loading
           <>

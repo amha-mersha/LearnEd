@@ -86,7 +86,7 @@ export default function CreateStudyGroupModal({
           </div>
           
           <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? "Creating..." : "Create Study group"}
+            {isLoading ? "Creating..." : t("Study Group Name")}
           </Button>
           {isError && (
             <p className="text-red-500">{t("Failed to create study group")}</p>

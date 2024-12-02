@@ -23,7 +23,7 @@ interface GradeReportCardProps {
 
 const GradeReportCard: React.FC<GradeReportCardProps> = ({ classroom }) => {
   const records = classroom.grades.records;
-  const t = useTranslations("ReportCard")
+  const t = useTranslations("ReportCard");
 
   const totalGrade =
     (records.reduce((acc, record) => acc + record.grade, 0) /
@@ -37,9 +37,7 @@ const GradeReportCard: React.FC<GradeReportCardProps> = ({ classroom }) => {
           {/* Course Name */}
           <div className="flex flex-row">
             <p className="text-lg">{t("Teacher")}:</p>
-            <p className="text-lg font-semibold pl-1">
-              Prof. Simon D
-            </p>
+            <p className="text-lg font-semibold pl-1">Prof. Leykun</p>
           </div>
           <div className="flex flex-row">
             <p className="text-lg">{t("Class")}:</p>
@@ -49,9 +47,7 @@ const GradeReportCard: React.FC<GradeReportCardProps> = ({ classroom }) => {
           </div>
           <div className="flex flex-row">
             <p className="text-lg">{t("Total Students")}:</p>
-            <p className="text-lg font-semibold pl-1">
-              34
-            </p>
+            <p className="text-lg font-semibold pl-1">3</p>
           </div>
         </div>
         <Table className="ml-52 max-w-xl">
