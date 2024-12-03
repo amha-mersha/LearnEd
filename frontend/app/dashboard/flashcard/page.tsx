@@ -7,6 +7,7 @@ import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetFlashcardsQuery } from "@/lib/redux/api/getApi";
 import Cookie from "js-cookie";
+import { useTranslations } from "next-intl";
 
 export default function FlashCards({ searchParams }: { searchParams: any }) {
   const postId = searchParams.post_id;
@@ -24,6 +25,7 @@ export default function FlashCards({ searchParams }: { searchParams: any }) {
   const [isFlipped, setIsFlipped] = useState(false);
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
+  const t = useTranslations("FlashCards")
 
   const flipCard = () => {
     setIsFlipped(!isFlipped);
@@ -96,7 +98,7 @@ export default function FlashCards({ searchParams }: { searchParams: any }) {
   if (isError || data.message.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-        No flashcards found.
+        {t("No flashcards found")}
       </div>
     );
   }
@@ -119,7 +121,7 @@ export default function FlashCards({ searchParams }: { searchParams: any }) {
               className="absolute w-full h-full bg-white rounded-lg shadow-lg p-6 [backface-visibility:hidden] cursor-pointer"
               onClick={flipCard}
             >
-              <h2 className="text-2xl font-bold mb-4">Question:</h2>
+              <h2 className="text-2xl font-bold mb-4">{t("Question")}:</h2>
               <p className="text-lg">
                 {data.message[currentCard].question}
               </p>
@@ -128,7 +130,7 @@ export default function FlashCards({ searchParams }: { searchParams: any }) {
               className="absolute w-full h-full bg-white rounded-lg shadow-lg p-6 [backface-visibility:hidden] [transform:rotateY(180deg)] cursor-pointer"
               onClick={flipCard}
             >
-              <h2 className="text-2xl font-bold mb-4">Answer:</h2>
+              <h2 className="text-2xl font-bold mb-4">{t("Answer")}:</h2>
               <p className="text-lg">
                 {data.message[currentCard].explanation}
               </p>
@@ -158,7 +160,7 @@ export default function FlashCards({ searchParams }: { searchParams: any }) {
           className="mt-4"
         />
         <p className="text-center mt-2">
-          Card {currentCard + 1} of {data.message.length}
+          {t("Card")} {currentCard + 1} {t("of")} {data.message.length}
         </p>
       </div>
     </div>

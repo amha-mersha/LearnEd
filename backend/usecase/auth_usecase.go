@@ -102,3 +102,15 @@ func (usecase *AuthUsecase) ChangePassword(c context.Context, user dtos.ChangePa
 
 	return nil
 }
+
+func (usecase *AuthUsecase) GetInfo(c context.Context, userID string) (dtos.UserData, domain.CodedError) {
+	foundUser, err := usecase.repository.GetUserByID(c, userID)
+	if err != nil {
+		return dtos.UserData{}, err
+	}
+
+	return dtos.UserData{
+		Name: foundUser.Name,
+		Type: foundUser.Type,
+	}, nil
+}

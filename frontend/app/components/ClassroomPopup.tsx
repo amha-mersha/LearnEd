@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/select";
 import { useCreateClassroomMutation } from "@/lib/redux/api/getApi";
 import Cookies from "js-cookie";
+import { useTranslations } from "next-intl";
 
 export default function CreateClassroomModal({
   isOpen,
@@ -36,6 +37,7 @@ export default function CreateClassroomModal({
   const [createClassroom, { isLoading, isError, isSuccess }] =
     useCreateClassroomMutation();
   const accessToken = Cookies.get("token");
+  const t = useTranslations("AppComponentsCore")
 
   const handleSubmit =async (e: React.FormEvent)=> {
     e.preventDefault();
@@ -67,13 +69,13 @@ export default function CreateClassroomModal({
       <DialogContent className="sm:max-w-[425px] py-20 px-16">
         <DialogHeader className="">
           <DialogTitle className="text-center font-black">
-            Create Classroom
+            {t("Create Classroom")}
           </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 mt-2">
           <div className="space-y-2">
             <label htmlFor="classroomName" className="text-sm font-medium">
-              Classroom Name
+              {t("Classroom Name")}
             </label>
             <Input
               id="classroomName"
@@ -85,7 +87,7 @@ export default function CreateClassroomModal({
           </div>
           <div className="space-y-2">
             <label htmlFor="courseName" className="text-sm font-medium">
-              Course Name
+              {t("Course Name")}
             </label>
             <Input
               id="courseName"
@@ -96,7 +98,7 @@ export default function CreateClassroomModal({
             />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium">Season and Year</label>
+            <label className="text-sm font-medium">{t("Season and Year")}</label>
             <div className="flex space-x-4">
               <Select onValueChange={(value: string) => setSeason(value)}>
                 <SelectTrigger className="w-[180px]">
@@ -104,11 +106,11 @@ export default function CreateClassroomModal({
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectLabel>Season</SelectLabel>
-                    <SelectItem value="Spring">Spring</SelectItem>
-                    <SelectItem value="Summer">Summer</SelectItem>
-                    <SelectItem value="Fall">Fall</SelectItem>
-                    <SelectItem value="Winter">Winter</SelectItem>
+                    <SelectLabel>{t("Season")}</SelectLabel>
+                    <SelectItem value="Spring">{t("Spring")}</SelectItem>
+                    <SelectItem value="Summer">{t("Summer")}</SelectItem>
+                    <SelectItem value="Fall">{t("Fall")}</SelectItem>
+                    <SelectItem value="Winter">{t("Winter")}</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
@@ -128,8 +130,8 @@ export default function CreateClassroomModal({
           <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading ? "Creating..." : "Create Classroom"}
           </Button>
-          {isError && <p className="text-red-500">Failed to create classroom.</p>}
-          {isSuccess && <p className="text-green-500">Classroom created successfully!</p>}
+          {isError && <p className="text-red-500">{t("Failed to create classroom")}</p>}
+          {isSuccess && <p className="text-green-500">{t("Classroom created successfully")}</p>}
           
         </form>
       </DialogContent>

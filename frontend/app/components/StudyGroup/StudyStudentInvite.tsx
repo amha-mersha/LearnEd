@@ -4,11 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useInviteToStudyGroupMutation } from '@/lib/redux/api/getApi';
+import { useTranslations } from 'next-intl';
 
 export default function StudyStudentInvite({ isOpen, onClose, studyGroupId, onSuccess }: { isOpen: boolean; onClose: () => void; studyGroupId: string | string[]; onSuccess: () => void }) {
   const [studentEmail, setStudentEmail] = useState('');
   const [inviteToStudyGroup, { isLoading, isError, isSuccess }] = useInviteToStudyGroupMutation();
   const accessToken = localStorage.getItem('token');
+  const t = useTranslations("StudyGroup")
   
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -32,7 +34,7 @@ export default function StudyStudentInvite({ isOpen, onClose, studyGroupId, onSu
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[500px] py-24 px-20">
         <DialogHeader>
-          <DialogTitle className="text-center font-black">Invite Students</DialogTitle>
+          <DialogTitle className="text-center font-black">{t("Invite Students")}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-10 mt-2">
           <div className="space-y-2">
@@ -45,9 +47,9 @@ export default function StudyStudentInvite({ isOpen, onClose, studyGroupId, onSu
             />
           </div>
           <Button type="submit" className="w-full">
-            Invite
+            {t("Invite")}
           </Button>
-          {isError && <p className="text-red-500">Failed to invite student.</p>}
+          {isError && <p className="text-red-500">{t("Failed to invite student")}</p>}
         </form>
       </DialogContent>
     </Dialog>

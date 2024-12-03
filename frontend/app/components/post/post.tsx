@@ -4,10 +4,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal, FileText } from "lucide-react";
 import { useAddCommentMutation } from "@/lib/redux/api/getApi";
+import {useFormatter} from 'next-intl';
 import Comment from "./Comment";
 import Link from "next/link";
 import Cookie from "js-cookie";
 import BASEURL from "../../../app/baseurl";
+import { useTranslations } from "next-intl";
 
 
 interface Props {
@@ -21,7 +23,10 @@ const Post = ({ info, class_id }: Props) => {
   const [menuOpen, setMenuOpen] = useState(false); // State to manage the menu popup
   // const token = localStorage.getItem("token");
   const token = Cookie.get("token");
+  const format = useFormatter();
+  
   const [addComment, { data, isSuccess, isError }] = useAddCommentMutation();
+  const t = useTranslations("Posts")
 
   const handleComment = () => {
     addComment({
@@ -40,9 +45,9 @@ const Post = ({ info, class_id }: Props) => {
           <div className="w-7 h-7 mt-1 bg-blue-900 rounded-full"></div>
           <div>
             <h3 className="">
-              <span className="font-bold">{info.creator_name}</span> has posted some notes
+              <span className="font-bold">{info.creator_name}</span> {t("has posted some notes")}
             </h3>
-            <p className="text-xs text-gray-500">{info.data.created_at}</p>
+            <p className="text-xs text-gray-500">{format.relativeTime(info.data.created_at)}</p>
           </div>
         </div>
         {/* Button that toggles the popup menu */}

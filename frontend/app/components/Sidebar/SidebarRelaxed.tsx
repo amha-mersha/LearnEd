@@ -14,11 +14,13 @@ import { useDispatch } from "react-redux";
 import { collapse } from "@/lib/redux/slices/sidebarSlice";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 const SidebarRelaxed = () => {
   const dispatch = useDispatch();
   const pathname = usePathname();
   const [role, setRole] = useState<string | undefined>(undefined);
+  const t = useTranslations("Sidebar")
 
   useEffect(() => {
     // Fetch the role from localStorage
@@ -51,7 +53,7 @@ const SidebarRelaxed = () => {
             } flex p-2 rounded-xl mr-6 space-x-3`}
           >
             <Image className="w-6" src={classroom} alt="class"></Image>
-            <h1 className="font-semibold">Class Rooms</h1>
+            <h1 className="font-semibold">{t("classroom")}</h1>
           </div>
         </Link>
 
@@ -65,7 +67,7 @@ const SidebarRelaxed = () => {
                 } flex p-2 rounded-xl mr-6 space-x-3`}
               >
                 <Image className="w-6" src={studyperson} alt=""></Image>
-                <h1 className="font-semibold">Study Group</h1>
+                <h1 className="font-semibold">{t("studygroup")}</h1>
               </div>
             </Link>
             <Link href="/dashboard/grade-report">
@@ -75,7 +77,7 @@ const SidebarRelaxed = () => {
                 } flex p-2 rounded-xl mr-6 space-x-3`}
               >
                 <Image className="w-6" src={gradereport} alt=""></Image>
-                <h1 className="font-semibold">Grade Report</h1>
+                <h1 className="font-semibold">{t("grades")}</h1>
               </div>
             </Link>
           </>
@@ -83,19 +85,19 @@ const SidebarRelaxed = () => {
 
         <div className="flex space-x-3">
           <Image className="w-7" src={history} alt=""></Image>
-          <h1 className="font-semibold">History</h1>
+          <h1 className="font-semibold">{t("history")}</h1>
         </div>
       </div>
 
       <div className="flex mt-64 flex-col ml-16 space-y-4">
         <div className="flex space-x-3">
           <Image className="w-7" src={setting} alt=""></Image>
-          <h1 className="font-semibold">Setting</h1>
+          <h1 className="font-semibold">{t("settings")}</h1>
         </div>
 
         <div className="flex space-x-3">
           <Image className="w-7" src={logout} alt=""></Image>
-          <h1 className="font-semibold">Sign Out</h1>
+          <h1 className="font-semibold">{t("signout")}</h1>
         </div>
       </div>
     </div>

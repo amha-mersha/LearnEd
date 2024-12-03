@@ -13,6 +13,7 @@ import {
 import { ChevronDown, ChevronUp } from "lucide-react";
 import Cookie from "js-cookie";
 import { saveQuizResult } from "@/utils/quizHistory";
+import { useTranslations } from "next-intl";
 
 export default function Component({ searchParams }: { searchParams: any }) {
   // const token = localStorage.getItem("token");
@@ -35,6 +36,7 @@ export default function Component({ searchParams }: { searchParams: any }) {
   const [openExplanations, setOpenExplanations] = useState<{
     [key: number]: boolean;
   }>({});
+  const t = useTranslations("QuizComponent")
   if (isSuccess) {
     questions = data.message;
 
@@ -86,7 +88,7 @@ export default function Component({ searchParams }: { searchParams: any }) {
               }
             }
           `}</style>
-          <h1 className="text-2xl font-bold mb-6">Quiz</h1>
+          <h1 className="text-2xl font-bold mb-6">{t("title")}</h1>
           {questions.map((question: any, ind: number) => (
             <div
               key={ind}
@@ -145,7 +147,7 @@ export default function Component({ searchParams }: { searchParams: any }) {
                       ) : (
                         <ChevronDown className="w-4 h-4 mr-1" />
                       )}
-                      {openExplanations[ind] ? "Hide" : "Show"} Explanation
+                      {openExplanations[ind] ? "Hide" : "Show"} {t("explanation")}
                     </CollapsibleTrigger>
                     <CollapsibleContent className="mt-2 text-sm">
                       {question.explanation}
@@ -165,14 +167,14 @@ export default function Component({ searchParams }: { searchParams: any }) {
                 border: "3px solid transparent",
               }}
             >
-              <span className="relative z-10">Submit Answers</span>
+              <span className="relative z-10">{t("submit")}</span>
               {/* <span className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-500 opacity-50 filter blur-xl"></span> */}
             </Button>
           )}
           {submitted && (
             <div className="mt-6">
               <p className="text-2xl font-bold">
-                Total Score: {getScore()} / {questions.length}
+                {t("Total Score")}: {getScore()} / {questions.length}
               </p>
             </div>
           )}

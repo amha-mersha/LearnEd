@@ -142,6 +142,7 @@ type AuthUsecase interface {
 	Signup(c context.Context, user dtos.SignupDTO) CodedError
 	Login(c context.Context, user dtos.LoginDTO) (string, string, CodedError)
 	ChangePassword(c context.Context, user dtos.ChangePasswordDTO) CodedError
+	GetInfo(c context.Context, userID string) (dtos.UserData, CodedError)
 }
 
 type AuthRepository interface {
@@ -196,6 +197,7 @@ type ClassroomRepository interface {
 type StudyGroupUsecase interface {
 	CreateStudyGroup(c context.Context, creatorID string, studyGroup StudyGroup) CodedError
 	DeleteStudyGroup(c context.Context, studentID string, studyGroupID string) CodedError
+	GetPosts(c context.Context, tokenID string, studyGroupID string) ([]GetPostDTO, CodedError)
 	AddPost(c context.Context, creatorID string, studyGroupID string, post Post) CodedError
 	UpdatePost(c context.Context, creatorID string, studyGroupID string, postID string, post dtos.UpdatePostDTO) CodedError
 	RemovePost(c context.Context, creatorID string, studyGroupID string, postID string) CodedError

@@ -56,6 +56,43 @@ func (usecase *StudyGroupUsecase) DeleteStudyGroup(c context.Context, studentID 
 	return nil
 }
 
+func (usecase *StudyGroupUsecase) GetPosts(c context.Context, tokenID string, studyGroupID string) ([]domain.GetPostDTO, domain.CodedError) {
+	studyGroup, err := usecase.sgRepository.FindStudyGroup(c, studyGroupID)
+	if err != nil {
+		return []domain.GetPostDTO{}, err
+	}
+
+	allowed := false
+	for _, sID := range studyGroup.Students {
+		if usecase.sgRepository.StringifyID(sID) == tokenID {
+			allowed = true
+			break
+		}
+	}
+
+	if !allowed {
+		return []domain.GetPostDTO{}, domain.NewError("only students added to the study group can get posts", domain.ERR_FORBIDDEN)
+	}
+
+	res := []domain.GetPostDTO{}
+	for _, post := range studyGroup.Posts {
+		postDto := domain.GetPostDTO{
+			Data: post,
+		}
+
+		user, err := usecase.authRepository.GetUserByID(c, usecase.sgRepository.StringifyID(post.CreatorID))
+		if err != nil {
+			postDto.CreatorName = usecase.sgRepository.StringifyID(post.CreatorID)
+		} else {
+			postDto.CreatorName = user.Name
+		}
+
+		res = append(res, postDto)
+	}
+
+	return res, nil
+}
+
 func (usecase *StudyGroupUsecase) AddPost(c context.Context, creatorID string, studyGroupID string, post domain.Post) domain.CodedError {
 	if post.Content == "" {
 		return domain.NewError("post content cannot be empty", domain.ERR_BAD_REQUEST)

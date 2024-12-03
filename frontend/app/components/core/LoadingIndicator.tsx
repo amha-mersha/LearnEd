@@ -1,6 +1,8 @@
+import { useTranslations } from "next-intl";
 import React from "react";
 
 const LoadingIndicator = () => {
+  const t = useTranslations("AppComponentsCore")
   return (
     <div role="status">
       <svg
@@ -19,7 +21,7 @@ const LoadingIndicator = () => {
           fill="currentFill"
         />
       </svg>
-      <span className="sr-only">Loading...</span>
+      <span className="sr-only">{t("Loading")}</span>
     </div>
   );
 };
