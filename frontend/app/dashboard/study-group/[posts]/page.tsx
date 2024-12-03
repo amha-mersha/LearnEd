@@ -14,6 +14,7 @@ interface searchParamsType {
 }
 
 
+
 const Page = ({searchParams}: {searchParams: searchParamsType}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false); // State to track success alert
